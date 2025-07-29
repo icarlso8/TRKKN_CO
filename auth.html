@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Login - TRKKN_CoT</title>
+  <!-- <link rel="icon" type="image/png" href="TRKKN_icon.png">*/ -->
+  <link rel="icon" href="assets/TRKKN_icon.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&display=swap" rel="stylesheet"/>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { firebaseConfig } from "./firebase-config.js";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "menu.html";
+      } catch (error) {
+        alert("Error de autenticación");
+        console.error(error);
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+      alert("Sesión cerrada");
+    });
+  </script>
+  <style>
+    body { font-family: 'Mulish', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f9f9f9; }
+    .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    h2 { margin-bottom: 20px; }
+    input { display: block; margin-bottom: 15px; padding: 10px; width: 100%; }
+    button { padding: 10px 20px; background: #1E94A0; color: white; border: none; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Iniciar sesión</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Correo electrónico" required />
+      <input type="password" id="password" placeholder="Contraseña" required />
+      <button type="submit">Entrar</button>
+    </form>
+    <button id="logoutBtn">Cerrar sesión</button>
+  </div>
+</body>
+</html>
