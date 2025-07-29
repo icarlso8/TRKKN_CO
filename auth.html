@@ -29,10 +29,6 @@
       }
     });
 
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
-      await signOut(auth);
-      alert("Sesión cerrada");
-    });
   </script>
   <style>
     body { font-family: 'Mulish', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f9f9f9; }
@@ -50,7 +46,7 @@
       <input type="password" id="password" placeholder="Contraseña" required />
       <button type="submit">Entrar</button>
     </form>
-    <!-- <button id="logoutBtn">Cerrar sesión</button> -->
+
   </div>
 </body>
 </html>
