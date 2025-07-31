@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow">
+  <title>TRKKN_CO_Login</title>
+  <link rel="icon" href="assets/TRKKN_icon.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <!-- Firebase UMD SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script>
+    // ⚠️ Copia directa de firebase-config.js (sin usar import)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAA7SZYGbCZrBpurLVrW4RPbM5Zl-32Mog",
+      authDomain: "trkkn-cot-firebase.firebaseapp.com",
+      projectId: "trkkn-cot-firebase",
+      storageBucket: "trkkn-cot-firebase.firebasestorage.app",
+      messagingSenderId: "490397786735",
+      appId: "1:490397786735:web:6cc8d158f904865bdc239a"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <style>
+    body {
+      font-family: 'Mulish', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f9f9f9;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h2 { margin-bottom: 20px; }
+    input {
+      display: block;
+      margin-bottom: 15px;
+      padding: 10px;
+      width: 100%;
+    }
+    button {
+      padding: 10px 20px;
+      background: #1E94A0;
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2>Iniciar sesión</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Correo electrónico" required />
+      <input type="password" id="password" placeholder="Contraseña" required />
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const auth = firebase.auth();
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        window.location.href = "menu.html";
+      } catch (error) {
+        alert("Error de autenticación");
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
