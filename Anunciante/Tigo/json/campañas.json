@@ -1,26 +1,36 @@
 {
-  "disney_plus": [
-    { "id": "disney_c1", "nombre": "🎬 Disney+ C1" },
-    { "id": "disney_c2", "nombre": "🎬 Disney+ C2" }
-  ],
-  "hbo_max": [
-    { "id": "hbo_c1", "nombre": "🎥 HBO Max C1" },
-    { "id": "hbo_c2", "nombre": "🎥 HBO Max C2" }
-  ],
-  "30mb": [
-    { "id": "30mb_c1", "nombre": "⚡ 30 Mb C1" },
-    { "id": "30mb_c2", "nombre": "⚡ 30 Mb C2" }
-  ],
-  "50mb": [
-    { "id": "50mb_c1", "nombre": "🚀 50 Mb C1" },
-    { "id": "50mb_c2", "nombre": "🚀 50 Mb C2" }
-  ],
-  "500mb": [
-    { "id": "500mb_c1", "nombre": "📡 500 Mb C1" },
-    { "id": "500mb_c2", "nombre": "📡 500 Mb C2" }
-  ],
-  "1gb": [
-    { "id": "1gb_c1", "nombre": "🌐 1 Gb C1" },
-    { "id": "1gb_c2", "nombre": "🌐 1 Gb C2" }
-  ]
+  "home": {
+    "premium": {
+      "disney_plus": [
+        { "id": "disney_c1", "nombre": "🎬 Disney+ C1" },
+        { "id": "disney_c2", "nombre": "🎬 Disney+ C2" }
+      ],
+      "hbo_max": [
+        { "id": "hbo_c1", "nombre": "🎥 HBO Max C1" },
+        { "id": "hbo_c2", "nombre": "🎥 HBO Max C2" }
+      ]
+    }
+  },
+  "movil": {
+    "prepago": {
+      "30mb": [
+        { "id": "30mb_c1", "nombre": "⚡ 30 Mb C1" },
+        { "id": "30mb_c2", "nombre": "⚡ 30 Mb C2" }
+      ],
+      "50mb": [
+        { "id": "50mb_c1", "nombre": "🚀 50 Mb C1" },
+        { "id": "50mb_c2", "nombre": "🚀 50 Mb C2" }
+      ]
+    },
+    "pospago": {
+      "500mb": [
+        { "id": "500mb_c1", "nombre": "📡 500 Mb C1" },
+        { "id": "500mb_c2", "nombre": "📡 500 Mb C2" }
+      ],
+      "1gb": [
+        { "id": "1gb_c1", "nombre": "🌐 1 Gb C1" },
+        { "id": "1gb_c2", "nombre": "🌐 1 Gb C2" }
+      ]
+    }
+  }
 }
