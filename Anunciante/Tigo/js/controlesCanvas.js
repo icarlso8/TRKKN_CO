@@ -57,12 +57,12 @@ export async function mostrarGaleriaLogos(canvas) {
   const contenedor = document.getElementById("galeriaLogos");
   contenedor.innerHTML = ""; // Limpiar antes de renderizar
   
-  const response = await fetch("../../Anunciante/TQ/json/logos.json");
+  const response = await fetch("../../Anunciante/Tigo/json/logos.json");
   const logos = await response.json();
   
   logos.forEach(logo => {
     const img = document.createElement("img");
-    img.src = "../../Anunciante/TQ/assets/logos/" + logo.nombreArchivo;
+    img.src = "../../Anunciante/Tigo/assets/logos/" + logo.nombreArchivo;
     img.title = logo.nombre;
     img.style.width = "80px";
     img.style.cursor = "pointer";
@@ -93,12 +93,12 @@ export async function mostrarGaleriaIconos(canvas) {
   const contenedor = document.getElementById("galeriaIconos");
   contenedor.innerHTML = ""; // Limpiar antes de renderizar
 
-  const response = await fetch("../../Anunciante/TQ/json/icons.json");
+  const response = await fetch("../../Anunciante/Tigo/json/icons.json");
   const iconos = await response.json();
 
   iconos.forEach(icono => {
     const img = document.createElement("img");
-    img.src = "../../Anunciante/TQ/assets/icons/" + icono.nombreArchivo;
+    img.src = "../../Anunciante/Tigo/assets/icons/" + icono.nombreArchivo;
     img.title = icono.nombre;
     img.style.width = "80px";
     img.style.cursor = "pointer";
@@ -126,7 +126,7 @@ export async function mostrarGaleriaIconos(canvas) {
 }
 
 export async function generarCreatividadesConFondos(canvasOriginal, audienciaId, factorId, opcionId, tamañoId, nombreProducto, callback) {
-  const baseRuta = `../../Anunciante/TQ/assets/fondos/${audienciaId}`;
+  const baseRuta = `../../Anunciante/Tigo/assets/fondos/${audienciaId}`;
   const posiblesRutas = [
     `${baseRuta}/${factorId}/${opcionId}/${tamañoId}`,
     `${baseRuta}/audiencia/${audienciaId}/${tamañoId}`,
@@ -135,7 +135,7 @@ export async function generarCreatividadesConFondos(canvasOriginal, audienciaId,
   let imagenValida = null;
 
   for (const ruta of posiblesRutas) {
-    const nombreArchivo = `OmniAdsAI_TQ_${audienciaId}_${opcionId}_${tamañoId}_0001.png`;
+    const nombreArchivo = `OmniAdsAI_Tigo_${audienciaId}_${opcionId}_${tamañoId}_0001.png`;
     const rutaCompleta = `${ruta}/${nombreArchivo}`;
     const existe = await fetch(rutaCompleta, { method: "HEAD" }).then(res => res.ok).catch(() => false);
 
