@@ -140,7 +140,7 @@
 
   <script>
     async function cargarTamanosYCanvas() {
-      const jsonPath = "../../Anunciante/TQ/json/";
+      const jsonPath = "../../Anunciante/Tigo/json/";
       const canvasContainer = document.getElementById("canvasContainer");
 
       const tamanos = await fetch(`${jsonPath}tamaños.json`).then(r => r.json());
@@ -193,7 +193,7 @@
   </script>
   
   <script type="module">
-    import { mostrarGaleriaLogos, mostrarGaleriaIconos, agregarTexto, limpiarCanvas, agregarThumbnail, crearControlesTexto } from "../../Anunciante/TQ/js/controlesCanvas.js";
+    import { mostrarGaleriaLogos, mostrarGaleriaIconos, agregarTexto, limpiarCanvas, agregarThumbnail, crearControlesTexto } from "../../Anunciante/Tigo/js/controlesCanvas.js";
   
     document.addEventListener("DOMContentLoaded", () => {
       const intervalo = setInterval(() => {
@@ -277,7 +277,7 @@
   </div>
 
   <script type="module">
-    import { generarCreatividadesConFondos } from "../../Anunciante/TQ/js/controlesCanvas.js";
+    import { generarCreatividadesConFondos } from "../../Anunciante/Tigo/js/controlesCanvas.js";
   
     function obtenerValoresSeleccionados(name) {
       return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
