@@ -10,7 +10,7 @@ export function crearPlaceholder(texto) {
 }
 
 export async function cargarJerarquia() {
-  const jsonPath = "../../Anunciante/TQ/json/";
+  const jsonPath = "../../Anunciante/Tigo/json/";
   const form = document.getElementById("formulario");
 
   const section = document.createElement("fieldset");
@@ -147,4 +147,5 @@ export async function cargarJerarquia() {
       });
     }
   });
+
 }
