@@ -141,10 +141,13 @@ export async function generarCreatividadesConFondos(
   ];
 
   let imagenValida = null;
+  let rutasProbadas = [];
 
   for (const ruta of posiblesRutas) {
     const nombreArchivo = `OmniAdsAI_TQ_${audienciaId}_${opcionId}_${tamañoId}_0001.png`;
     const rutaCompleta = `${ruta}/${nombreArchivo}`;
+    rutasProbadas.push(rutaCompleta);
+
     const existe = await fetch(rutaCompleta, { method: "HEAD" })
       .then(res => res.ok)
       .catch(() => false);
@@ -155,10 +158,10 @@ export async function generarCreatividadesConFondos(
     }
   }
 
-  // ⚠️ Si no hay fondo, avisamos y salimos llamando el callback con bandera
+  // ⚠️ Si no hay fondo, devolvemos todas las rutas que probamos
   if (!imagenValida) {
     console.warn(`⚠️ Fondo no encontrado para: ${audienciaId} - ${opcionId} - ${tamañoId}`);
-    callback(null, null, true); // <- tercer parámetro indica que falló por falta de fondo
+    callback(null, null, true, rutasProbadas); // ← enviamos rutas fallidas
     return;
   }
 
@@ -181,7 +184,7 @@ export async function generarCreatividadesConFondos(
   fabric.Image.fromURL(imagenValida.ruta, (img) => {
     if (!img) {
       console.warn(`❌ No se pudo cargar la imagen: ${imagenValida.ruta}`);
-      callback(null, null, true);
+      callback(null, null, true, rutasProbadas);
       return;
     }
 
@@ -193,7 +196,7 @@ export async function generarCreatividadesConFondos(
     // Generar la imagen final
     setTimeout(() => {
       const dataURL = canvasTemp.toDataURL({ format: "png", multiplier: 1 });
-      callback(dataURL, imagenValida.nombreArchivo, false); // <- false = sí se generó
+      callback(dataURL, imagenValida.nombreArchivo, false, rutasProbadas);
     }, 300);
   }, { crossOrigin: 'anonymous' });
 }
