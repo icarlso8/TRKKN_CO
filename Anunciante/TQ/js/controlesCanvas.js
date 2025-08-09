@@ -125,7 +125,15 @@ export async function mostrarGaleriaIconos(canvas) {
   document.getElementById("modalIconos").style.display = "flex";
 }
 
-export async function generarCreatividadesConFondos(canvasOriginal, audienciaId, factorId, opcionId, tamañoId, nombreProducto, callback) {
+export async function generarCreatividadesConFondos(
+  canvasOriginal,
+  audienciaId,
+  factorId,
+  opcionId,
+  tamañoId,
+  nombreProducto,
+  callback
+) {
   const baseRuta = `../../Anunciante/TQ/assets/fondos/${audienciaId}`;
   const posiblesRutas = [
     `${baseRuta}/${factorId}/${opcionId}/${tamañoId}`,
@@ -137,7 +145,9 @@ export async function generarCreatividadesConFondos(canvasOriginal, audienciaId,
   for (const ruta of posiblesRutas) {
     const nombreArchivo = `OmniAdsAI_TQ_${audienciaId}_${opcionId}_${tamañoId}_0001.png`;
     const rutaCompleta = `${ruta}/${nombreArchivo}`;
-    const existe = await fetch(rutaCompleta, { method: "HEAD" }).then(res => res.ok).catch(() => false);
+    const existe = await fetch(rutaCompleta, { method: "HEAD" })
+      .then(res => res.ok)
+      .catch(() => false);
 
     if (existe) {
       imagenValida = { ruta: rutaCompleta, nombreArchivo };
@@ -145,30 +155,33 @@ export async function generarCreatividadesConFondos(canvasOriginal, audienciaId,
     }
   }
 
+  // ⚠️ Si no hay fondo, avisamos y salimos llamando el callback con bandera
   if (!imagenValida) {
     console.warn(`⚠️ Fondo no encontrado para: ${audienciaId} - ${opcionId} - ${tamañoId}`);
+    callback(null, null, true); // <- tercer parámetro indica que falló por falta de fondo
     return;
   }
 
-  // Crear nuevo canvas temporal
+  // Crear canvas temporal con el mismo tamaño que el original
   const canvasTemp = new fabric.Canvas(null, {
     width: canvasOriginal.getWidth(),
     height: canvasOriginal.getHeight(),
   });
 
-  // Clonar objetos del canvas original al nuevo canvas
+  // Clonar objetos del canvas original
   const objetos = canvasOriginal.getObjects();
   objetos.forEach(obj => {
     obj.clone(clon => {
-      clon.set({ selectable: true }); // ✅
+      clon.set({ selectable: true });
       canvasTemp.add(clon);
     });
   });
 
-  // Cargar fondo si existe y luego renderizar
+  // Cargar el fondo y renderizar
   fabric.Image.fromURL(imagenValida.ruta, (img) => {
     if (!img) {
       console.warn(`❌ No se pudo cargar la imagen: ${imagenValida.ruta}`);
+      callback(null, null, true);
       return;
     }
 
@@ -177,10 +190,10 @@ export async function generarCreatividadesConFondos(canvasOriginal, audienciaId,
       scaleY: canvasTemp.height / img.height,
     });
 
-    // Render final y generar imagen
+    // Generar la imagen final
     setTimeout(() => {
       const dataURL = canvasTemp.toDataURL({ format: "png", multiplier: 1 });
-      callback(dataURL, imagenValida.nombreArchivo);
+      callback(dataURL, imagenValida.nombreArchivo, false); // <- false = sí se generó
     }, 300);
   }, { crossOrigin: 'anonymous' });
 }
