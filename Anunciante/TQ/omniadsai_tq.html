@@ -357,9 +357,6 @@
         if (!galeriaGlobal) return;
         galeriaGlobal.innerHTML = "";
       
-        btnGenerar.disabled = true;
-        btnGenerar.textContent = "⏳ Generando...";
-      
         const audiencias = obtenerValoresSeleccionados("audiencia");
         const factores = obtenerFactorYOpciones();
         const productoSelect = document.getElementById("producto");
@@ -410,8 +407,6 @@
       
                     pendientes--;
                     if (pendientes === 0) {
-                      btnGenerar.disabled = false;
-                      btnGenerar.textContent = "🚀 Generar creatividades";
                       alert("🎉 Todas las creatividades se han generado correctamente.");
                     }
                   }
@@ -422,10 +417,8 @@
         });
       
         if (pendientes === 0) {
-          btnGenerar.disabled = false;
-          btnGenerar.textContent = "🚀 Generar creatividades";
           alert("⚠️ No hay creatividades para generar (revisa tus selecciones).");
-        }   
+        }
       }; // 👈 cierre de la función onclick
     }); // 👈 cierre del DOMContentLoaded
   </script> <!-- 👈 cierre del bloque script -->
