@@ -356,25 +356,24 @@
         const galeriaGlobal = document.getElementById("galeriaResultados");
         if (!galeriaGlobal) return;
         galeriaGlobal.innerHTML = "";
-
+      
         btnGenerar.disabled = true;
         btnGenerar.textContent = "⏳ Generando...";
-
+      
         const audiencias = obtenerValoresSeleccionados("audiencia");
         const factores = obtenerFactorYOpciones();
         const productoSelect = document.getElementById("producto");
         const nombreProducto = productoSelect?.value || "producto";
         const canvasRefs = window.canvasRefs;
-        let total = 0;
         let pendientes = 0;
-
+      
         audiencias.forEach(audId => {
           for (const factorId in factores) {
             factores[factorId].forEach(opcionId => {
               for (const tamañoId in canvasRefs) {
                 const ref = canvasRefs[tamañoId];
                 if (!ref.activo) continue;
-
+      
                 pendientes++;
                 generarCreatividadesConFondos(
                   ref.canvas,
@@ -386,35 +385,34 @@
                   (dataURL, nombreCreatividad) => {
                     const wrapper = document.createElement("div");
                     wrapper.className = "thumb-wrapper";
-
+      
                     const img = document.createElement("img");
                     img.src = dataURL;
                     img.className = "thumbnail-preview";
                     img.title = nombreCreatividad;
                     img.onclick = () => window.open(dataURL, "_blank");
-
+      
                     const title = document.createElement("div");
                     title.className = "thumb-title";
                     title.textContent = nombreCreatividad;
-
+      
                     const download = document.createElement("a");
                     download.href = dataURL;
                     download.download = nombreCreatividad;
                     download.className = "download-link";
                     download.textContent = "Descargar";
-
+      
                     wrapper.appendChild(img);
                     wrapper.appendChild(title);
                     wrapper.appendChild(download);
-
+      
                     galeriaGlobal.appendChild(wrapper);
-
-                    total++;
+      
                     pendientes--;
                     if (pendientes === 0) {
                       btnGenerar.disabled = false;
                       btnGenerar.textContent = "🚀 Generar creatividades";
-                      alert(`🎉 ${total} creatividades generadas correctamente.`);
+                      alert("🎉 Todas las creatividades se han generado correctamente.");
                     }
                   }
                 );
@@ -422,12 +420,12 @@
             });
           }
         });
-
+      
         if (pendientes === 0) {
           btnGenerar.disabled = false;
           btnGenerar.textContent = "🚀 Generar creatividades";
           alert("⚠️ No hay creatividades para generar (revisa tus selecciones).");
-        }
+        }   
       }; // 👈 cierre de la función onclick
     }); // 👈 cierre del DOMContentLoaded
   </script> <!-- 👈 cierre del bloque script -->
