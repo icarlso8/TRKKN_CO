@@ -116,6 +116,49 @@
       transform: scale(1.05);
       border-color: #555;
     }
+    /* Galería global de resultados */
+    #resultados {
+      margin-top: 32px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    #resultados h2 {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+    }
+    #galeriaResultados {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      align-items: start;
+    }
+    .thumb-wrapper {
+      background: #fff;
+      padding: 8px;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+    .thumb-wrapper .thumbnail-preview {
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .thumb-wrapper .thumb-title {
+      font-size: 12px;
+      margin-top: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .thumb-wrapper a.download-link {
+      display:block;
+      margin-top:6px;
+      font-size:12px;
+      color:#0b66c3;
+      text-decoration:none;
+    }
   </style>
   <script type="module" src="./js/auth.js"></script>
 </head>
@@ -310,22 +353,29 @@
       document.getElementById("formulario").insertAdjacentElement("afterend", btnGenerar); //Ubicación del botón (dinámico) de generación al final del formulario.
     
       btnGenerar.onclick = () => {
+        const galeriaGlobal = document.getElementById("galeriaResultados");
+        if (!galeriaGlobal) return;
+        galeriaGlobal.innerHTML = ""; // limpiar resultados previos
+      
+        btnGenerar.disabled = true;
+        btnGenerar.textContent = "⏳ Generando...";
+      
         const audiencias = obtenerValoresSeleccionados("audiencia");
         const factores = obtenerFactorYOpciones();
         const productoSelect = document.getElementById("producto");
         const nombreProducto = productoSelect?.value || "producto";
-    
         const canvasRefs = window.canvasRefs;
-    
         let total = 0;
-    
+        let pendientes = 0;
+      
         audiencias.forEach(audId => {
           for (const factorId in factores) {
             factores[factorId].forEach(opcionId => {
               for (const tamañoId in canvasRefs) {
                 const ref = canvasRefs[tamañoId];
                 if (!ref.activo) continue;
-    
+      
+                pendientes++;
                 generarCreatividadesConFondos(
                   ref.canvas,
                   audId,
@@ -334,28 +384,60 @@
                   tamañoId,
                   nombreProducto,
                   (dataURL, nombreCreatividad) => {
-                    // Mostrar en consola
-                    console.log(`✅ Generada: ${nombreCreatividad}`);
+                    // crear tarjeta de resultado y agregar a galeria global
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "thumb-wrapper";
+      
+                    const img = document.createElement("img");
+                    img.src = dataURL;
+                    img.className = "thumbnail-preview";
+                    img.title = nombreCreatividad;
+                    img.onclick = () => window.open(dataURL, "_blank");
+      
+                    const title = document.createElement("div");
+                    title.className = "thumb-title";
+                    title.textContent = nombreCreatividad;
+      
+                    const download = document.createElement("a");
+                    download.href = dataURL;
+                    download.download = nombreCreatividad;
+                    download.className = "download-link";
+                    download.textContent = "Descargar";
+      
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(title);
+                    wrapper.appendChild(download);
+      
+                    galeriaGlobal.appendChild(wrapper);
+      
                     total++;
-    
-                    // También puedes mostrar miniatura si quieres aquí
-                    const thumb = document.createElement("img");
-                    thumb.src = dataURL;
-                    thumb.className = "thumbnail-preview";
-                    document.getElementById(ref.galeriaId).appendChild(thumb);
+                    pendientes--;
+                    // cuando terminen todos, reactivar botón y notificar
+                    if (pendientes === 0) {
+                      btnGenerar.disabled = false;
+                      btnGenerar.textContent = "🚀 Generar creatividades";
+                      alert(`🎉 ${total} creatividades generadas correctamente.`);
+                    }
                   }
                 );
               }
             });
           }
         });
-    
-        setTimeout(() => {
-          alert("🎉 Creatividades generadas correctamente.");
-        }, 2000);
+      
+        // en caso de que no haya nada para generar
+        if (pendientes === 0) {
+          btnGenerar.disabled = false;
+          btnGenerar.textContent = "🚀 Generar creatividades";
+          alert("⚠️ No hay creatividades para generar (revisa tus selecciones).");
+        }
       };
-    });
     </script>
+
+    <section id="resultados">
+      <h2>🎞️ Creatividades generadas</h2>
+      <div id="galeriaResultados"></div>
+    </section>
 
   </body>
 </html>
