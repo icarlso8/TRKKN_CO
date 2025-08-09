@@ -350,7 +350,7 @@
       btnGenerar.style.border = "none";
       btnGenerar.style.cursor = "pointer";
     
-      document.getElementById("formulario").insertAdjacentElement("afterend", btnGenerar); //Ubicación del botón (dinámico) de generación al final del formulario.
+      document.getElementById("formulario").insertAdjacentElement("afterend", btnGenerar);
     
       btnGenerar.onclick = () => {
         const galeriaGlobal = document.getElementById("galeriaResultados");
@@ -362,7 +362,10 @@
         const productoSelect = document.getElementById("producto");
         const nombreProducto = productoSelect?.value || "producto";
         const canvasRefs = window.canvasRefs;
+        
         let pendientes = 0;
+        let totalGeneradas = 0;
+        let totalFallidas = 0;
       
         audiencias.forEach(audId => {
           for (const factorId in factores) {
@@ -379,35 +382,40 @@
                   opcionId,
                   tamañoId,
                   nombreProducto,
-                  (dataURL, nombreCreatividad) => {
-                    const wrapper = document.createElement("div");
-                    wrapper.className = "thumb-wrapper";
+                  (dataURL, nombreCreatividad, fondoNoEncontrado) => {
+                    
+                    if (fondoNoEncontrado) {
+                      totalFallidas++;
+                    } else {
+                      totalGeneradas++;
+                      const wrapper = document.createElement("div");
+                      wrapper.className = "thumb-wrapper";
       
-                    const img = document.createElement("img");
-                    img.src = dataURL;
-                    img.className = "thumbnail-preview";
-                    img.title = nombreCreatividad;
-                    img.onclick = () => window.open(dataURL, "_blank");
+                      const img = document.createElement("img");
+                      img.src = dataURL;
+                      img.className = "thumbnail-preview";
+                      img.title = nombreCreatividad;
+                      img.onclick = () => window.open(dataURL, "_blank");
       
-                    const title = document.createElement("div");
-                    title.className = "thumb-title";
-                    title.textContent = nombreCreatividad;
+                      const title = document.createElement("div");
+                      title.className = "thumb-title";
+                      title.textContent = nombreCreatividad;
       
-                    const download = document.createElement("a");
-                    download.href = dataURL;
-                    download.download = nombreCreatividad;
-                    download.className = "download-link";
-                    download.textContent = "Descargar";
+                      const download = document.createElement("a");
+                      download.href = dataURL;
+                      download.download = nombreCreatividad;
+                      download.className = "download-link";
+                      download.textContent = "Descargar";
       
-                    wrapper.appendChild(img);
-                    wrapper.appendChild(title);
-                    wrapper.appendChild(download);
-      
-                    galeriaGlobal.appendChild(wrapper);
+                      wrapper.appendChild(img);
+                      wrapper.appendChild(title);
+                      wrapper.appendChild(download);
+                      galeriaGlobal.appendChild(wrapper);
+                    }
       
                     pendientes--;
                     if (pendientes === 0) {
-                      alert("🎉 Todas las creatividades se han generado correctamente.");
+                      alert(`🎉 ${totalGeneradas} creatividades generadas correctamente. (${totalFallidas} no se generaron por falta de fondo)`);
                     }
                   }
                 );
@@ -419,8 +427,8 @@
         if (pendientes === 0) {
           alert("⚠️ No hay creatividades para generar (revisa tus selecciones).");
         }
-      }; // 👈 cierre de la función onclick
-    }); // 👈 cierre del DOMContentLoaded
+      };  // 👈 cierre de la función onclick
+    });  // 👈 cierre del DOMContentLoaded
   </script> <!-- 👈 cierre del bloque script -->
 
   <section id="resultados">
