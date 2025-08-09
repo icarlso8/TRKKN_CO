@@ -351,7 +351,7 @@
       btnGenerar.style.cursor = "pointer";
     
       document.getElementById("formulario").insertAdjacentElement("afterend", btnGenerar);
-    
+
       btnGenerar.onclick = () => {
         const galeriaGlobal = document.getElementById("galeriaResultados");
         if (!galeriaGlobal) return;
@@ -362,10 +362,11 @@
         const productoSelect = document.getElementById("producto");
         const nombreProducto = productoSelect?.value || "producto";
         const canvasRefs = window.canvasRefs;
-        
+      
         let pendientes = 0;
-        let totalGeneradas = 0;
-        let totalFallidas = 0;
+        let generadas = 0;
+        let fallidas = 0;
+        let rutasFaltantes = [];
       
         audiencias.forEach(audId => {
           for (const factorId in factores) {
@@ -382,12 +383,9 @@
                   opcionId,
                   tamañoId,
                   nombreProducto,
-                  (dataURL, nombreCreatividad, fondoNoEncontrado) => {
-                    
-                    if (fondoNoEncontrado) {
-                      totalFallidas++;
-                    } else {
-                      totalGeneradas++;
+                  (dataURL, nombreCreatividad, fondoNoEncontrado, rutasProbadas) => {
+                    if (!fondoNoEncontrado && dataURL) {
+                      // ✅ Generada correctamente
                       const wrapper = document.createElement("div");
                       wrapper.className = "thumb-wrapper";
       
@@ -410,12 +408,22 @@
                       wrapper.appendChild(img);
                       wrapper.appendChild(title);
                       wrapper.appendChild(download);
+      
                       galeriaGlobal.appendChild(wrapper);
+                      generadas++;
+                    } else {
+                      // ⚠️ Falló por falta de fondo
+                      fallidas++;
+                      rutasFaltantes.push(...rutasProbadas);
                     }
       
                     pendientes--;
                     if (pendientes === 0) {
-                      alert(`🎉 ${totalGeneradas} creatividades generadas correctamente. (${totalFallidas} no se generaron por falta de fondo)`);
+                      let mensaje = `🎉 ${generadas} creatividades generadas correctamente.`;
+                      if (fallidas > 0) {
+                        mensaje += `\n⚠️ ${fallidas} no se generaron por falta de fondo.\n\nRutas faltantes:\n- ${rutasFaltantes.join("\n- ")}`;
+                      }
+                      alert(mensaje);
                     }
                   }
                 );
