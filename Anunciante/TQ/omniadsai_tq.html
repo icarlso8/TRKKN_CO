@@ -424,7 +424,8 @@
                     if (pendientes === 0) {
                       let mensaje = `🎉 ${generadas} creatividades generadas correctamente.`;
                       if (fallidas > 0) {
-                        mensaje += `\n⚠️ ${fallidas} no se generaron por falta de fondo.\n\nRutas faltantes:\n- ${rutasFaltantes.join("\n- ")}`;
+                        mensaje += `\n⚠️ ${fallidas} no se generaron por falta de fondo.`;
+                        mensaje += `\n\n📂 Rutas faltantes:\n- ${rutasFaltantes.join("\n- ")}`;
                       }
                       alert(mensaje);
                     }
