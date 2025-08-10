@@ -366,11 +366,10 @@
         let pendientes = 0;
         let generadas = 0;
         let fallidas = 0;
-        let rutasFaltantes = [];
+        let rutasFaltantes = new Set(); // 🔹 Usamos Set para evitar duplicados
       
         audiencias.forEach(audId => {
           for (const factorId in factores) {
-            // 🚫 Evitar que "audiencia" se procese como carpeta de factor contextual
             if (factorId.toLowerCase() === "audiencia") continue;
       
             factores[factorId].forEach(opcionId => {
@@ -382,13 +381,12 @@
                 generarCreatividadesConFondos(
                   ref.canvas,
                   audId,
-                  factorId, // carpeta del factor contextual
-                  opcionId, // valor de la opción
+                  factorId,
+                  opcionId,
                   tamañoId,
                   nombreProducto,
                   (dataURL, nombreCreatividad, fondoNoEncontrado, rutasProbadas) => {
                     if (!fondoNoEncontrado && dataURL) {
-                      // ✅ Generada correctamente
                       const wrapper = document.createElement("div");
                       wrapper.className = "thumb-wrapper";
       
@@ -411,13 +409,12 @@
                       wrapper.appendChild(img);
                       wrapper.appendChild(title);
                       wrapper.appendChild(download);
-      
                       galeriaGlobal.appendChild(wrapper);
+      
                       generadas++;
                     } else {
-                      // ⚠️ Falló por falta de fondo
                       fallidas++;
-                      rutasFaltantes.push(...rutasProbadas);
+                      rutasProbadas.forEach(r => rutasFaltantes.add(r)); // 🔹 Añadimos al Set
                     }
       
                     pendientes--;
@@ -425,7 +422,7 @@
                       let mensaje = `🎉 ${generadas} creatividades generadas correctamente.`;
                       if (fallidas > 0) {
                         mensaje += `\n⚠️ ${fallidas} no se generaron por falta de fondo.`;
-                        mensaje += `\n\n📂 Rutas faltantes:\n- ${rutasFaltantes.join("\n- ")}`;
+                        mensaje += `\n\n📂 Rutas faltantes:\n- ${Array.from(rutasFaltantes).join("\n- ")}`;
                       }
                       alert(mensaje);
                     }
@@ -438,7 +435,7 @@
       
         if (pendientes === 0) {
           alert("⚠️ No hay creatividades para generar (revisa tus selecciones).");
-        }      
+        }
       };  // 👈 cierre de la función onclick
     });  // 👈 cierre del DOMContentLoaded
   </script> <!-- 👈 cierre del bloque script -->
