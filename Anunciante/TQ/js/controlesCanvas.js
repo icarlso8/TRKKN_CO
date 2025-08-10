@@ -136,42 +136,22 @@ export async function generarCreatividadesConFondos(
 ) {
   const baseRuta = `../../Anunciante/TQ/assets/fondos/${audienciaId}`;
   
-  // Rutas en orden de prioridad
+  // Solo ruta principal (sin fallback)
   const rutaPrincipal = `${baseRuta}/${factorId}/${opcionId}/${tamañoId}`;
-  const rutaFallback = `${baseRuta}/${tamañoId}`; // esta no se muestra en faltantes
+  const nombreArchivo = `OmniAdsAI_TQ_${audienciaId}_${opcionId}_${tamañoId}_0001.png`;
+  const rutaCompleta = `${rutaPrincipal}/${nombreArchivo}`;
+  
+  const existe = await fetch(rutaCompleta, { method: "HEAD" })
+    .then(res => res.ok)
+    .catch(() => false);
 
-  const posiblesRutas = [rutaPrincipal, rutaFallback];
-
-  let imagenValida = null;
-  let rutasFallidasReales = []; // ← solo rutas reales que se mostrarán
-
-  for (let i = 0; i < posiblesRutas.length; i++) {
-    const ruta = posiblesRutas[i];
-    const nombreArchivo = `OmniAdsAI_TQ_${audienciaId}_${opcionId}_${tamañoId}_0001.png`;
-    const rutaCompleta = `${ruta}/${nombreArchivo}`;
-
-    const existe = await fetch(rutaCompleta, { method: "HEAD" })
-      .then(res => res.ok)
-      .catch(() => false);
-
-    if (existe) {
-      imagenValida = { ruta: rutaCompleta, nombreArchivo };
-      break;
-    } else {
-      // Solo guardamos como faltante si es la ruta principal
-      if (ruta === rutaPrincipal) {
-        rutasFallidasReales.push(rutaCompleta);
-      }
-    }
-  }
-
-  if (!imagenValida) {
+  if (!existe) {
     console.warn(`⚠️ Fondo no encontrado para: ${audienciaId} - ${opcionId} - ${tamañoId}`);
-    callback(null, null, true, rutasFallidasReales);
+    callback(null, null, true, [rutaCompleta]);
     return;
   }
 
-  // Crear canvas temporal con el mismo tamaño que el original
+  // Crear canvas temporal
   const canvasTemp = new fabric.Canvas(null, {
     width: canvasOriginal.getWidth(),
     height: canvasOriginal.getHeight(),
@@ -186,11 +166,11 @@ export async function generarCreatividadesConFondos(
     });
   }
 
-  // Cargar el fondo y renderizar
-  fabric.Image.fromURL(imagenValida.ruta, (img) => {
+  // Cargar fondo y renderizar
+  fabric.Image.fromURL(rutaCompleta, (img) => {
     if (!img) {
-      console.warn(`❌ No se pudo cargar la imagen: ${imagenValida.ruta}`);
-      callback(null, null, true, rutasFallidasReales);
+      console.warn(`❌ No se pudo cargar la imagen: ${rutaCompleta}`);
+      callback(null, null, true, [rutaCompleta]);
       return;
     }
 
@@ -199,10 +179,10 @@ export async function generarCreatividadesConFondos(
       scaleY: canvasTemp.height / img.height,
     });
 
-    // Generar la imagen final
+    // Generar imagen final
     setTimeout(() => {
       const dataURL = canvasTemp.toDataURL({ format: "png", multiplier: 1 });
-      callback(dataURL, imagenValida.nombreArchivo, false, rutasFallidasReales);
+      callback(dataURL, nombreArchivo, false, [rutaCompleta]);
     }, 300);
   }, { crossOrigin: 'anonymous' });
 }
