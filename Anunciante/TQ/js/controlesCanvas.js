@@ -136,20 +136,19 @@ export async function generarCreatividadesConFondos(
 ) {
   const baseRuta = `../../Anunciante/TQ/assets/fondos/${audienciaId}`;
   
-  const posiblesRutas = [
-    // Ruta con factor contextual y opción
-    `${baseRuta}/${factorId}/${opcionId}/${tamañoId}`,
-    // Ruta fallback solo con tamaño (sin repetir audiencia)
-    `${baseRuta}/${tamañoId}`,
-  ];
+  // Rutas en orden de prioridad
+  const rutaPrincipal = `${baseRuta}/${factorId}/${opcionId}/${tamañoId}`;
+  const rutaFallback = `${baseRuta}/${tamañoId}`; // esta no se muestra en faltantes
+
+  const posiblesRutas = [rutaPrincipal, rutaFallback];
 
   let imagenValida = null;
-  let rutasProbadas = [];
+  let rutasFallidasReales = []; // ← solo rutas reales que se mostrarán
 
-  for (const ruta of posiblesRutas) {
+  for (let i = 0; i < posiblesRutas.length; i++) {
+    const ruta = posiblesRutas[i];
     const nombreArchivo = `OmniAdsAI_TQ_${audienciaId}_${opcionId}_${tamañoId}_0001.png`;
     const rutaCompleta = `${ruta}/${nombreArchivo}`;
-    rutasProbadas.push(rutaCompleta);
 
     const existe = await fetch(rutaCompleta, { method: "HEAD" })
       .then(res => res.ok)
@@ -158,18 +157,21 @@ export async function generarCreatividadesConFondos(
     if (existe) {
       imagenValida = { ruta: rutaCompleta, nombreArchivo };
       break;
+    } else {
+      // Solo guardamos como faltante si es la ruta principal
+      if (ruta === rutaPrincipal) {
+        rutasFallidasReales.push(rutaCompleta);
+      }
     }
   }
 
   if (!imagenValida) {
     console.warn(`⚠️ Fondo no encontrado para: ${audienciaId} - ${opcionId} - ${tamañoId}`);
-    // Eliminamos duplicados de rutas antes de enviarlas
-    const rutasUnicas = [...new Set(rutasProbadas)];
-    callback(null, null, true, rutasUnicas);
+    callback(null, null, true, rutasFallidasReales);
     return;
   }
 
-  //Crear canvas temporal con el mismo tamaño que el original
+  // Crear canvas temporal con el mismo tamaño que el original
   const canvasTemp = new fabric.Canvas(null, {
     width: canvasOriginal.getWidth(),
     height: canvasOriginal.getHeight(),
@@ -184,12 +186,11 @@ export async function generarCreatividadesConFondos(
     });
   }
 
-  // Cargar fondo y renderizar
+  // Cargar el fondo y renderizar
   fabric.Image.fromURL(imagenValida.ruta, (img) => {
     if (!img) {
       console.warn(`❌ No se pudo cargar la imagen: ${imagenValida.ruta}`);
-      const rutasUnicas = [...new Set(rutasProbadas)];
-      callback(null, null, true, rutasUnicas);
+      callback(null, null, true, rutasFallidasReales);
       return;
     }
 
@@ -201,7 +202,7 @@ export async function generarCreatividadesConFondos(
     // Generar la imagen final
     setTimeout(() => {
       const dataURL = canvasTemp.toDataURL({ format: "png", multiplier: 1 });
-      callback(dataURL, imagenValida.nombreArchivo, false, rutasProbadas);
+      callback(dataURL, imagenValida.nombreArchivo, false, rutasFallidasReales);
     }, 300);
   }, { crossOrigin: 'anonymous' });
 }
