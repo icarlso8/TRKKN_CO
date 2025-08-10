@@ -370,6 +370,9 @@
       
         audiencias.forEach(audId => {
           for (const factorId in factores) {
+            // 🚫 Evitar que "audiencia" se procese como carpeta de factor contextual
+            if (factorId.toLowerCase() === "audiencia") continue;
+      
             factores[factorId].forEach(opcionId => {
               for (const tamañoId in canvasRefs) {
                 const ref = canvasRefs[tamañoId];
@@ -379,8 +382,8 @@
                 generarCreatividadesConFondos(
                   ref.canvas,
                   audId,
-                  factorId,
-                  opcionId,
+                  factorId, // carpeta del factor contextual
+                  opcionId, // valor de la opción
                   tamañoId,
                   nombreProducto,
                   (dataURL, nombreCreatividad, fondoNoEncontrado, rutasProbadas) => {
@@ -434,7 +437,7 @@
       
         if (pendientes === 0) {
           alert("⚠️ No hay creatividades para generar (revisa tus selecciones).");
-        }
+        }      
       };  // 👈 cierre de la función onclick
     });  // 👈 cierre del DOMContentLoaded
   </script> <!-- 👈 cierre del bloque script -->
