@@ -135,11 +135,12 @@ export async function generarCreatividadesConFondos(
   callback
 ) {
   const baseRuta = `../../Anunciante/TQ/assets/fondos/${audienciaId}`;
+  
   const posiblesRutas = [
-    // Ruta específica con factor contextual y opción
+    // Ruta con factor contextual y opción
     `${baseRuta}/${factorId}/${opcionId}/${tamañoId}`,
-    // Ruta fallback solo con factor contextual (sin audiencia duplicada)
-    `${baseRuta}/${audienciaId}/${tamañoId}`,
+    // Ruta fallback solo con tamaño (sin repetir audiencia)
+    `${baseRuta}/${tamañoId}`,
   ];
 
   let imagenValida = null;
@@ -160,14 +161,15 @@ export async function generarCreatividadesConFondos(
     }
   }
 
-  // ⚠️ Si no hay fondo, devolvemos todas las rutas que probamos
   if (!imagenValida) {
     console.warn(`⚠️ Fondo no encontrado para: ${audienciaId} - ${opcionId} - ${tamañoId}`);
-    callback(null, null, true, rutasProbadas); // ← enviamos rutas fallidas
+    // Eliminamos duplicados de rutas antes de enviarlas
+    const rutasUnicas = [...new Set(rutasProbadas)];
+    callback(null, null, true, rutasUnicas);
     return;
   }
 
-  // Crear canvas temporal con el mismo tamaño que el original
+  //Crear canvas temporal con el mismo tamaño que el original
   const canvasTemp = new fabric.Canvas(null, {
     width: canvasOriginal.getWidth(),
     height: canvasOriginal.getHeight(),
@@ -175,18 +177,19 @@ export async function generarCreatividadesConFondos(
 
   // Clonar objetos del canvas original
   const objetos = canvasOriginal.getObjects();
-  objetos.forEach(obj => {
+  for (const obj of objetos) {
     obj.clone(clon => {
       clon.set({ selectable: true });
       canvasTemp.add(clon);
     });
-  });
+  }
 
-  // Cargar el fondo y renderizar
+  // Cargar fondo y renderizar
   fabric.Image.fromURL(imagenValida.ruta, (img) => {
     if (!img) {
       console.warn(`❌ No se pudo cargar la imagen: ${imagenValida.ruta}`);
-      callback(null, null, true, rutasProbadas);
+      const rutasUnicas = [...new Set(rutasProbadas)];
+      callback(null, null, true, rutasUnicas);
       return;
     }
 
