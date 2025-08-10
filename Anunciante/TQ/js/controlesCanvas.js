@@ -136,8 +136,10 @@ export async function generarCreatividadesConFondos(
 ) {
   const baseRuta = `../../Anunciante/TQ/assets/fondos/${audienciaId}`;
   const posiblesRutas = [
+    // Ruta específica con factor contextual y opción
     `${baseRuta}/${factorId}/${opcionId}/${tamañoId}`,
-    `${baseRuta}/audiencia/${audienciaId}/${tamañoId}`,
+    // Ruta fallback solo con factor contextual (sin audiencia duplicada)
+    `${baseRuta}/${audienciaId}/${tamañoId}`,
   ];
 
   let imagenValida = null;
