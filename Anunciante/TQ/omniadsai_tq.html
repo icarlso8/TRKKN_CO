@@ -365,8 +365,7 @@
       
         let pendientes = 0;
         let generadas = 0;
-        let fallidas = 0;
-        let rutasFaltantes = new Set(); // 🔹 Usamos Set para evitar duplicados
+        let rutasFaltantes = new Set(); // 🔹 Guardamos rutas sin fondos
       
         audiencias.forEach(audId => {
           for (const factorId in factores) {
@@ -387,6 +386,8 @@
                   nombreProducto,
                   (dataURL, nombreCreatividad, fondoNoEncontrado, rutasProbadas) => {
                     if (!fondoNoEncontrado && dataURL) {
+                      generadas++; // ✅ Contamos cada creatividad generada
+      
                       const wrapper = document.createElement("div");
                       wrapper.className = "thumb-wrapper";
       
@@ -411,17 +412,16 @@
                       wrapper.appendChild(download);
                       galeriaGlobal.appendChild(wrapper);
       
-                      generadas++;
                     } else {
-                      fallidas++;
-                      rutasProbadas.forEach(r => rutasFaltantes.add(r)); // 🔹 Añadimos al Set
+                      // 🔹 Guardamos rutas sin fondos
+                      rutasProbadas.forEach(r => rutasFaltantes.add(r));
                     }
       
                     pendientes--;
                     if (pendientes === 0) {
                       let mensaje = `🎉 ${generadas} creatividades generadas correctamente.`;
-                      if (fallidas > 0) {
-                        mensaje += `\n⚠️ ${fallidas} no se generaron por falta de fondo.`;
+                      if (rutasFaltantes.size > 0) {
+                        mensaje += `\n⚠️ ${rutasFaltantes.size} rutas que no cuentan con fondos:`;
                         mensaje += `\n\n📂 Rutas faltantes:\n- ${Array.from(rutasFaltantes).join("\n- ")}`;
                       }
                       alert(mensaje);
