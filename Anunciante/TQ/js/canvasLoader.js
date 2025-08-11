@@ -2,6 +2,16 @@ export async function cargarTamanosYCanvas() {
   const jsonPath = "../../Anunciante/TQ/json/";
   const canvasContainer = document.getElementById("canvasContainer");
 
+  // --- Limpiar canvases anteriores ---
+  if (window.canvasRefs) {
+    Object.values(window.canvasRefs).forEach(ref => {
+      if (ref.canvas && typeof ref.canvas.dispose === "function") {
+        ref.canvas.dispose(); // destruye instancia fabric para liberar memoria
+      }
+    });
+  }
+  window.canvasRefs = {}; // reiniciar referencias
+
   canvasContainer.innerHTML = "";
 
   const checkboxes = document.querySelectorAll('input[name="tamanos"]:checked');
@@ -19,8 +29,6 @@ export async function cargarTamanosYCanvas() {
 
   const tamanosFiltrados = tamanos.filter(t => tamanosSeleccionados.includes(t.id));
 
-  if (!window.canvasRefs) window.canvasRefs = {};
-
   tamanosFiltrados.forEach(t => {
     const wrapper = document.createElement("div");
     wrapper.style.display = "flex";
@@ -31,7 +39,7 @@ export async function cargarTamanosYCanvas() {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.id = `check_${t.id}`;
-    checkbox.checked = true; // O cambia a false si quieres que no inicie activo
+    checkbox.checked = true;
     checkbox.style.marginBottom = "8px";
 
     const label = document.createElement("label");
@@ -50,24 +58,20 @@ export async function cargarTamanosYCanvas() {
     wrapper.appendChild(canvas);
     canvasContainer.appendChild(wrapper);
 
-    // Crear instancia fabric
     const fabricCanvas = new fabric.Canvas(canvas.id, {
       backgroundColor: "#ffffff",
       selection: true,
     });
 
-    // Guardar referencias
     window.canvasRefs[t.id] = {
       canvas: fabricCanvas,
       activo: checkbox.checked,
-      wrapper: wrapper,    // Para facilitar manejo de controles
-      controles: null,     // Aquí guardaremos contenedor controles si se crea
+      wrapper: wrapper,
+      controles: null,
       galeriaId: null,
     };
 
-    // Función para crear controles (botones y galería)
     function crearControles() {
-      // Si controles ya existen, no crear de nuevo
       if (window.canvasRefs[t.id].controles) return;
 
       const ref = window.canvasRefs[t.id];
@@ -79,7 +83,6 @@ export async function cargarTamanosYCanvas() {
       controls.style.marginBottom = "20px";
       controls.className = "controles-canvas";
 
-      // Botones
       const btnLogo = document.createElement("button");
       btnLogo.textContent = "➕logo";
       btnLogo.onclick = () => {
@@ -115,7 +118,6 @@ export async function cargarTamanosYCanvas() {
       controls.appendChild(btnTexto);
       controls.appendChild(btnLimpiar);
 
-      // Controles texto
       import("./controlesCanvas.js").then(mod => {
         const [fontSelector, colorPicker, shadowToggle] = mod.crearControlesTexto(ref);
         controls.appendChild(fontSelector);
@@ -123,7 +125,6 @@ export async function cargarTamanosYCanvas() {
         controls.appendChild(shadowToggle);
       });
 
-      // Galería miniaturas
       const galeria = document.createElement("div");
       galeria.className = "galeria-thumbs";
       galeria.id = `galeria_${t.id}`;
@@ -132,24 +133,20 @@ export async function cargarTamanosYCanvas() {
       ref.wrapper.appendChild(controls);
       ref.wrapper.appendChild(galeria);
 
-      // Guardar controles creados
       ref.controles = controls;
     }
 
-    // Función para eliminar controles
     function eliminarControles() {
       const ref = window.canvasRefs[t.id];
       if (ref.controles) {
         ref.controles.remove();
         ref.controles = null;
       }
-      // También elimina la galería miniaturas si existe
       const galeria = ref.wrapper.querySelector(".galeria-thumbs");
       if (galeria) galeria.remove();
       ref.galeriaId = null;
     }
 
-    // Inicialmente, si checkbox está activo, crear controles
     if (checkbox.checked) {
       crearControles();
       canvas.style.opacity = "1";
@@ -157,7 +154,6 @@ export async function cargarTamanosYCanvas() {
       canvas.style.opacity = "0.3";
     }
 
-    // Listener checkbox para activar/desactivar canvas y controles
     checkbox.addEventListener("change", () => {
       window.canvasRefs[t.id].activo = checkbox.checked;
       canvas.style.opacity = checkbox.checked ? "1" : "0.3";
