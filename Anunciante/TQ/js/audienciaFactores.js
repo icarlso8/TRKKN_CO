@@ -122,6 +122,14 @@ export async function cargarAudienciaFactores(productoId) {
     checkbox.id = `tamaño_${tamaño.id}`;
     checkbox.checked = true;
 
+    // Aquí agregamos el listener para recargar canvas al cambiar tamaño
+    checkbox.addEventListener("change", () => {
+      // Si la función existe, la ejecuta
+      if (typeof cargarTamanosYCanvas === "function") {
+        cargarTamanosYCanvas();
+      }
+    });
+
     const label = document.createElement("label");
     label.setAttribute("for", checkbox.id);
     label.textContent = ` ${tamaño.nombre}`;
