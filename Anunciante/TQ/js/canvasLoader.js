@@ -46,24 +46,35 @@ export async function cargarTamanosYCanvas() {
     wrapper.style.alignItems = "center";
     wrapper.style.marginBottom = "24px";
 
+    // Checkbox
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.id = `check_${t.id}`;
     checkbox.checked = true;
-    checkbox.style.marginBottom = "8px";
+    checkbox.style.margin = "0 6px";
 
+    // Label con formato: 🖼️ 300 x 250 ( [checkbox] Controles)
     const label = document.createElement("label");
     label.setAttribute("for", checkbox.id);
-    label.textContent = `🖼️ ${t.nombre}`;
     label.style.marginBottom = "8px";
     label.style.fontWeight = "bold";
+    label.style.display = "inline-flex";
+    label.style.alignItems = "center";
 
+    const textoInicial = document.createTextNode(`🖼️ ${t.nombre} (`);
+    const textoFinal = document.createTextNode(" Controles)");
+
+    label.appendChild(textoInicial);
+    label.appendChild(checkbox);
+    label.appendChild(textoFinal);
+
+    // Canvas
     const canvas = document.createElement("canvas");
     canvas.id = `canvas_${t.id}`;
     canvas.width = t.ancho;
     canvas.height = t.alto;
 
-    wrapper.appendChild(checkbox);
+    // Armado en el wrapper
     wrapper.appendChild(label);
     wrapper.appendChild(canvas);
     canvasContainer.appendChild(wrapper);
