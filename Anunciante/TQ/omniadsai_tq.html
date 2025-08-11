@@ -434,18 +434,23 @@
               if (done) {
                 pendientes--;
                 if (pendientes === 0) {
-                  let mensaje = `🎉 ${generadas} creatividades generadas correctamente.`;
-                  if (rutasFaltantes.size > 0) {
-                    mensaje += `\n⚠️ ${rutasFaltantes.size} rutas que no cuentan con fondos.`;
-                    mensaje += `\n\n📂 Rutas faltantes:\n- ${Array.from(rutasFaltantes).join("\n- ")}`;
+                  // Esperar a que el DOM termine de insertar y renderizar la última creatividad
+                  requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                      let mensaje = `🎉 ${generadas} creatividades generadas correctamente.`;
+                      if (rutasFaltantes.size > 0) {
+                        mensaje += `\n⚠️ ${rutasFaltantes.size} rutas que no cuentan con fondos.`;
+                        mensaje += `\n\n📂 Rutas faltantes:\n- ${Array.from(rutasFaltantes).join("\n- ")}`;
+                      }
+                      alert(mensaje);
+                    }
                   }
-                  alert(mensaje);
                 }
               }
             }
           );
         });
-      };  // 👈 cierre de la función onclick
+      };  // 👈 cierre de la función onclick 
     });  // 👈 cierre del DOMContentLoaded
   </script> <!-- 👈 cierre del bloque script -->
 
