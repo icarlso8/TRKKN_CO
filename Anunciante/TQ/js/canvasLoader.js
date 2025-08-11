@@ -1,18 +1,13 @@
-import { fabric } from "https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js";
-
 export async function cargarTamanosYCanvas() {
   const jsonPath = "../../Anunciante/TQ/json/";
   const canvasContainer = document.getElementById("canvasContainer");
 
-  // Limpiar canvasContainer antes de cargar (por si recargas)
   canvasContainer.innerHTML = "";
 
-  // Leer tamaños seleccionados del formulario
   const checkboxes = document.querySelectorAll('input[name="tamanos"]:checked');
   const tamanosSeleccionados = Array.from(checkboxes).map(cb => cb.value);
 
   if (tamanosSeleccionados.length === 0) {
-    // No hay tamaños seleccionados
     const aviso = document.createElement("div");
     aviso.textContent = "⚠️ Selecciona al menos un tamaño para mostrar los canvas.";
     aviso.style.color = "red";
@@ -22,7 +17,6 @@ export async function cargarTamanosYCanvas() {
 
   const tamanos = await fetch(`${jsonPath}tamaños.json`).then(r => r.json());
 
-  // Filtrar tamaños.json para cargar solo seleccionados
   const tamanosFiltrados = tamanos.filter(t => tamanosSeleccionados.includes(t.id));
 
   tamanosFiltrados.forEach(t => {
@@ -54,15 +48,16 @@ export async function cargarTamanosYCanvas() {
     wrapper.appendChild(canvas);
     canvasContainer.appendChild(wrapper);
 
+    // Aquí usamos fabric global
     const fabricCanvas = new fabric.Canvas(canvas.id, {
       backgroundColor: "#ffffff",
-      selection: true
+      selection: true,
     });
 
     if (!window.canvasRefs) window.canvasRefs = {};
     window.canvasRefs[t.id] = {
       canvas: fabricCanvas,
-      activo: checkbox.checked
+      activo: checkbox.checked,
     };
 
     checkbox.addEventListener("change", () => {
