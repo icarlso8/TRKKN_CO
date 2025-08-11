@@ -122,7 +122,7 @@ export async function cargarAudienciaFactores(productoId) {
     checkbox.name = "tamanos";
     checkbox.value = tamaño.id;
     checkbox.id = `tamaño_${tamaño.id}`;
-    checkbox.checked = true;
+    checkbox.checked = false; // Checkboxes deshabilitados en un inicio
 
     // Aquí agregamos el listener para recargar canvas al cambiar tamaño
     checkbox.addEventListener("change", () => {
@@ -147,4 +147,5 @@ export async function cargarAudienciaFactores(productoId) {
 
   section.appendChild(divTamanos);
 }
+
 
