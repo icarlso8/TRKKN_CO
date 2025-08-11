@@ -185,6 +185,7 @@
       const productoSelect = document.getElementById("producto");
       productoSelect.addEventListener("change", async () => {
         await cargarAudienciaFactores(productoSelect.value);
+        await cargarTamanosYCanvas();
       });
     });
   </script>
