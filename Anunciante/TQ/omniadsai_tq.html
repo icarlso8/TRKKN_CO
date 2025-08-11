@@ -179,7 +179,7 @@
       // cargar audiencias y factores vacíos inicialmente (pasamos string vacío)
       await cargarAudienciaFactores("");
       await borradoPorTeclado();
-      await cargarTamanosYCanvas();
+      // await cargarTamanosYCanvas(); NO LLAMAR cargarTamanosYCanvas() al cargar la página (antes sí la llamabas al cargar audiencias).
       
       // Al cambiar el producto en el dropdown recarga audiencias y factores
       const productoSelect = document.getElementById("producto");
