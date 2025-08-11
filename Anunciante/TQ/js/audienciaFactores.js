@@ -1,3 +1,5 @@
+import { cargarTamanosYCanvas } from "./canvasLoader.js";
+
 export async function cargarAudienciaFactores(productoId) {
   const jsonPath = "../../Anunciante/TQ/json/";
   const form = document.getElementById("formulario");
@@ -145,3 +147,4 @@ export async function cargarAudienciaFactores(productoId) {
 
   section.appendChild(divTamanos);
 }
+
