@@ -90,7 +90,7 @@ export async function cargarAudienciaFactores(productoId) {
     section.appendChild(divOpciones);
   });
 
-  // --- NUEVO: Mostrar tamaños disponibles ordenados según tamaños.json ---
+  // --- Mostrar tamaños disponibles ordenados según tamanos.json ---
   // Crear set con tamaños disponibles desde factores
   const tamañosSet = new Set();
   factores.forEach(factor => {
@@ -99,10 +99,9 @@ export async function cargarAudienciaFactores(productoId) {
     }
   });
 
-  // Orden oficial segun tamanos.json
-  const ordenTamanos = tamanosJson.map(t => t.nombre);
-  // Filtrar y ordenar los tamaños que realmente están disponibles
-  const tamañosDisponiblesOrdenados = ordenTamanos.filter(t => tamañosSet.has(t));
+  // Filtrar y ordenar los tamaños que realmente están disponibles, usando 'id'
+  const tamañosDisponiblesOrdenados = tamanosJson
+    .filter(t => tamañosSet.has(t.id));
 
   const tituloTamanos = document.createElement("div");
   tituloTamanos.className = "form-section";
@@ -119,13 +118,13 @@ export async function cargarAudienciaFactores(productoId) {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.name = "tamanos";
-    checkbox.value = tamaño;
-    checkbox.id = `tamaño_${tamaño}`;
+    checkbox.value = tamaño.id;
+    checkbox.id = `tamaño_${tamaño.id}`;
     checkbox.checked = true;
 
     const label = document.createElement("label");
     label.setAttribute("for", checkbox.id);
-    label.textContent = ` ${tamaño}`;
+    label.textContent = ` ${tamaño.nombre}`;
 
     const wrapper = document.createElement("div");
     wrapper.style.display = "flex";
