@@ -138,39 +138,40 @@ export async function generarCreatividadesConFondos(
   const rutaFondosJSON = `${rutaBase}/fondos.json`;
 
   let fondos = [];
-  let faltantes = [];
 
-  // 1️⃣ Leer fondos.json
+  // 1️⃣ Validar si existe fondos.json
+  let existeFondosJSON = true;
   try {
     const resp = await fetch(rutaFondosJSON);
-    if (!resp.ok) throw new Error("fondos.json no encontrado");
-    fondos = await resp.json();
+    if (!resp.ok) {
+      existeFondosJSON = false;
+    } else {
+      fondos = await resp.json();
+    }
   } catch (e) {
-    console.warn(`⚠️ No se encontró fondos.json en: ${rutaBase}`);
-    callback(null, null, true, [rutaFondosJSON]);
+    existeFondosJSON = false;
+  }
+
+  if (!existeFondosJSON) {
+    console.warn(`⚠️ No se encontraron fondos en: ${rutaBase}`);
+    // callback(null, null, true, [rutaFondosJSON]) ahora reporta solo la ruta base
+    callback(null, null, true, [rutaBase]);
     return;
   }
 
-  // 2️⃣ Iterar sobre todos los fondos encontrados
+  // 2️⃣ Si hay fondos.json, iterar y generar
+  let totalGeneradas = 0;
+
   for (let archivo of fondos) {
     const rutaCompleta = `${rutaBase}/${archivo}`;
 
-    const existe = await fetch(rutaCompleta, { method: "HEAD" })
-      .then(res => res.ok)
-      .catch(() => false);
-
-    if (!existe) {
-      faltantes.push(rutaCompleta);
-      continue;
-    }
-
-    // 3️⃣ Crear canvas temporal
+    // Crear canvas temporal
     const canvasTemp = new fabric.Canvas(null, {
       width: canvasOriginal.getWidth(),
       height: canvasOriginal.getHeight(),
     });
 
-    // Clonar objetos del canvas original
+    // Clonar objetos
     const objetos = canvasOriginal.getObjects();
     for (const obj of objetos) {
       await new Promise(resolve => obj.clone(clon => {
@@ -180,11 +181,11 @@ export async function generarCreatividadesConFondos(
       }));
     }
 
-    // 4️⃣ Cargar el fondo y renderizar
+    // Cargar fondo y renderizar
     await new Promise(resolve => {
       fabric.Image.fromURL(rutaCompleta, (img) => {
         if (!img) {
-          faltantes.push(rutaCompleta);
+          console.warn(`❌ No se pudo cargar: ${rutaCompleta}`);
           resolve();
           return;
         }
@@ -196,16 +197,12 @@ export async function generarCreatividadesConFondos(
 
         setTimeout(() => {
           const dataURL = canvasTemp.toDataURL({ format: "png", multiplier: 1 });
-          callback(dataURL, archivo, false, faltantes);
+          totalGeneradas++;
+          callback(dataURL, archivo, false, [], totalGeneradas);
           resolve();
         }, 300);
       }, { crossOrigin: 'anonymous' });
     });
-  }
-
-  // 5️⃣ Si todos fallaron
-  if (fondos.length > 0 && faltantes.length === fondos.length) {
-    console.warn(`❌ No se encontró ningún fondo válido en: ${rutaBase}`);
   }
 }
 
