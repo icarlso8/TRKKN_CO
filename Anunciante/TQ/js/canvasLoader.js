@@ -173,9 +173,23 @@ export async function cargarTamanosYCanvas() {
       canvas.style.opacity = "0.3";
     }
 
+    // 🔹 Ajuste: Bloquear selección y edición de objetos al desactivar
     checkbox.addEventListener("change", () => {
-      window.canvasRefs[t.id].activo = checkbox.checked;
+      const ref = window.canvasRefs[t.id];
+      ref.activo = checkbox.checked;
+
+      // Opacidad
       canvas.style.opacity = checkbox.checked ? "1" : "0.3";
+
+      // Bloquear/desbloquear selección en Fabric.js
+      ref.canvas.selection = checkbox.checked;
+      ref.canvas.forEachObject(obj => {
+        obj.selectable = checkbox.checked;
+        obj.evented = checkbox.checked;
+      });
+      ref.canvas.renderAll();
+
+      // Controles
       if (checkbox.checked) {
         crearControles();
       } else {
@@ -184,5 +198,3 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
-
-
