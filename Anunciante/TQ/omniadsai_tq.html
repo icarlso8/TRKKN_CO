@@ -353,89 +353,89 @@
       document.getElementById("formulario").insertAdjacentElement("afterend", btnGenerar);
 
       btnGenerar.onclick = () => {
-        const galeriaGlobal = document.getElementById("galeriaResultados");
-        if (!galeriaGlobal) return;
-        galeriaGlobal.innerHTML = "";
+          const galeriaGlobal = document.getElementById("galeriaResultados");
+          if (!galeriaGlobal) return;
+          galeriaGlobal.innerHTML = "";
       
-        const audiencias = obtenerValoresSeleccionados("audiencia");
-        const factores = obtenerFactorYOpciones();
-        const productoSelect = document.getElementById("producto");
-        const nombreProducto = productoSelect?.value || "producto";
-        const canvasRefs = window.canvasRefs;
+          const audiencias = obtenerValoresSeleccionados("audiencia");
+          const factores = obtenerFactorYOpciones();
+          const productoSelect = document.getElementById("producto");
+          const nombreProducto = productoSelect?.value || "producto";
+          const canvasRefs = window.canvasRefs;
       
-        let pendientes = 0;
-        let generadas = 0;
-        let rutasFaltantes = new Set(); // 🔹 Guardamos rutas sin fondos
+          // 🔹 Reinicia contador global
+          window.totalGeneradas = 0;
       
-        audiencias.forEach(audId => {
-          for (const factorId in factores) {
-            if (factorId.toLowerCase() === "audiencia") continue;
+          let pendientes = 0;
+          let fallidas = 0;
+          let rutasFaltantes = new Set();
       
-            factores[factorId].forEach(opcionId => {
-              for (const tamañoId in canvasRefs) {
-                const ref = canvasRefs[tamañoId];
-                if (!ref.activo) continue;
+          audiencias.forEach(audId => {
+              for (const factorId in factores) {
+                  if (factorId.toLowerCase() === "audiencia") continue;
       
-                pendientes++;
-                generarCreatividadesConFondos(
-                  ref.canvas,
-                  audId,
-                  factorId,
-                  opcionId,
-                  tamañoId,
-                  nombreProducto,
-                  (dataURL, nombreCreatividad, fondoNoEncontrado, rutasProbadas) => {
-                    if (!fondoNoEncontrado && dataURL) {
-                      generadas++; // ✅ Contamos cada creatividad generada
+                  factores[factorId].forEach(opcionId => {
+                      for (const tamañoId in canvasRefs) {
+                          const ref = canvasRefs[tamañoId];
+                          if (!ref.activo) continue;
       
-                      const wrapper = document.createElement("div");
-                      wrapper.className = "thumb-wrapper";
+                          pendientes++;
+                          generarCreatividadesConFondos(
+                              ref.canvas,
+                              audId,
+                              factorId,
+                              opcionId,
+                              tamañoId,
+                              nombreProducto,
+                              (dataURL, nombreCreatividad, fondoNoEncontrado, rutasProbadas) => {
+                                  if (!fondoNoEncontrado && dataURL) {
+                                      const wrapper = document.createElement("div");
+                                      wrapper.className = "thumb-wrapper";
       
-                      const img = document.createElement("img");
-                      img.src = dataURL;
-                      img.className = "thumbnail-preview";
-                      img.title = nombreCreatividad;
-                      img.onclick = () => window.open(dataURL, "_blank");
+                                      const img = document.createElement("img");
+                                      img.src = dataURL;
+                                      img.className = "thumbnail-preview";
+                                      img.title = nombreCreatividad;
+                                      img.onclick = () => window.open(dataURL, "_blank");
       
-                      const title = document.createElement("div");
-                      title.className = "thumb-title";
-                      title.textContent = nombreCreatividad;
+                                      const title = document.createElement("div");
+                                      title.className = "thumb-title";
+                                      title.textContent = nombreCreatividad;
       
-                      const download = document.createElement("a");
-                      download.href = dataURL;
-                      download.download = nombreCreatividad;
-                      download.className = "download-link";
-                      download.textContent = "Descargar";
+                                      const download = document.createElement("a");
+                                      download.href = dataURL;
+                                      download.download = nombreCreatividad;
+                                      download.className = "download-link";
+                                      download.textContent = "Descargar";
       
-                      wrapper.appendChild(img);
-                      wrapper.appendChild(title);
-                      wrapper.appendChild(download);
-                      galeriaGlobal.appendChild(wrapper);
+                                      wrapper.appendChild(img);
+                                      wrapper.appendChild(title);
+                                      wrapper.appendChild(download);
+                                      galeriaGlobal.appendChild(wrapper);
+                                  } else {
+                                      fallidas++;
+                                      rutasProbadas.forEach(r => rutasFaltantes.add(r));
+                                  }
       
-                    } else {
-                      // 🔹 Guardamos rutas sin fondos
-                      rutasProbadas.forEach(r => rutasFaltantes.add(r));
-                    }
-      
-                    pendientes--;
-                    if (pendientes === 0) {
-                      let mensaje = `🎉 ${generadas} Creatividades generadas correctamente.`;
-                      if (rutasFaltantes.size > 0) {
-                        mensaje += `\n⚠️ ${rutasFaltantes.size} Ruta(s) sin fondos:`;
-                        mensaje += `\n\n📂 Listado de rutas sin fondos:\n- ${Array.from(rutasFaltantes).join("\n- ")}`;
+                                  pendientes--;
+                                  if (pendientes === 0) {
+                                      let mensaje = `🎉 ${window.totalGeneradas} creatividades generadas correctamente.`;
+                                      if (rutasFaltantes.size > 0) {
+                                          mensaje += `\n⚠️ ${rutasFaltantes.size} rutas que no cuentan con fondos.`;
+                                          mensaje += `\n\n📂 Rutas faltantes:\n- ${Array.from(rutasFaltantes).join("\n- ")}`;
+                                      }
+                                      alert(mensaje);
+                                  }
+                              }
+                          );
                       }
-                      alert(mensaje);
-                    }
-                  }
-                );
+                  });
               }
-            });
-          }
-        });
+          });
       
-        if (pendientes === 0) {
-          alert("⚠️ No hay creatividades para generar (revisa tus selecciones).");
-        }
+          if (pendientes === 0) {
+              alert("⚠️ No hay creatividades para generar (revisa tus selecciones).");
+          }
       };  // 👈 cierre de la función onclick
     });  // 👈 cierre del DOMContentLoaded
   </script> <!-- 👈 cierre del bloque script -->
