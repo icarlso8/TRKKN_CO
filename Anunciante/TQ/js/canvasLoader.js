@@ -62,7 +62,7 @@ export async function cargarTamanosYCanvas() {
     label.style.alignItems = "center";
 
     const textoInicial = document.createTextNode(`🖼️ ${t.nombre} /`);
-    const textoFinal = document.createTextNode("Controles)");
+    const textoFinal = document.createTextNode("Controles");
 
     label.appendChild(textoInicial);
     label.appendChild(checkbox);
@@ -184,4 +184,5 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
