@@ -23,7 +23,7 @@ export async function cargarAudienciaFactores(productoId) {
     return;
   }
 
-  // Cargo audiencias y factores desde JSON
+  // Cargo audiencias, factores y tamaños desde JSON
   const todasAudiencias = await fetch(`${jsonPath}audiencias.json`).then(r => r.json());
   const factores = await fetch(`${jsonPath}factores.json`).then(r => r.json());
   const tamanosJson = await fetch(`${jsonPath}tamaños.json`).then(r => r.json());
@@ -90,20 +90,19 @@ export async function cargarAudienciaFactores(productoId) {
     section.appendChild(divOpciones);
   });
 
-  // --- Mostrar tamaños disponibles ordenados segun tamaños.json ---
-  const ordenTamanos = tamanosJson.map(t => t.nombre);
-
-  // Obtener tamaños únicos de factores
+  // --- NUEVO: Mostrar tamaños disponibles ordenados según tamaños.json ---
+  // Crear set con tamaños disponibles desde factores
   const tamañosSet = new Set();
   factores.forEach(factor => {
     if (factor.tamanos_disponibles && factor.tamanos_disponibles.length > 0) {
       factor.tamanos_disponibles.forEach(t => tamañosSet.add(t));
     }
   });
-  const tamañosDisponibles = Array.from(tamañosSet);
 
-  // Ordenar tamaños según tamaños.json
-  const tamañosOrdenados = ordenTamanos.filter(t => tamañosDisponibles.includes(t));
+  // Orden oficial segun tamanos.json
+  const ordenTamanos = tamanosJson.map(t => t.nombre);
+  // Filtrar y ordenar los tamaños que realmente están disponibles
+  const tamañosDisponiblesOrdenados = ordenTamanos.filter(t => tamañosSet.has(t));
 
   const tituloTamanos = document.createElement("div");
   tituloTamanos.className = "form-section";
@@ -116,7 +115,7 @@ export async function cargarAudienciaFactores(productoId) {
   divTamanos.style.flexWrap = "wrap";
   divTamanos.style.gap = "16px";
 
-  tamañosOrdenados.forEach(tamaño => {
+  tamañosDisponiblesOrdenados.forEach(tamaño => {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.name = "tamanos";
