@@ -1,46 +1,37 @@
-import { mostrarGaleriaLogos, mostrarGaleriaIconos, agregarTexto, limpiarCanvas, agregarThumbnail, crearControlesTexto } from "./controlesCanvas.js";
-
 export async function cargarTamanosYCanvas() {
   const jsonPath = "../../Anunciante/TQ/json/";
   const canvasContainer = document.getElementById("canvasContainer");
 
-  // Limpiar canvasContainer antes de cargar (por si recargas)
   canvasContainer.innerHTML = "";
 
-  // Leer tamaños seleccionados del formulario
   const checkboxes = document.querySelectorAll('input[name="tamanos"]:checked');
   const tamanosSeleccionados = Array.from(checkboxes).map(cb => cb.value);
 
   if (tamanosSeleccionados.length === 0) {
-    // No hay tamaños seleccionados
     const aviso = document.createElement("div");
-    aviso.textContent = "⚠️ Selecciona al menos un tamaño para mostrar los canvas.";
-    aviso.style.color = "red";
+    aviso.textContent = "Selecciona los tamaños para desplegar los canvas ✅";
+    aviso.style.fontSize = "14px";
     canvasContainer.appendChild(aviso);
     return;
   }
 
   const tamanos = await fetch(`${jsonPath}tamaños.json`).then(r => r.json());
 
-  // Filtrar tamaños.json para cargar solo seleccionados
   const tamanosFiltrados = tamanos.filter(t => tamanosSeleccionados.includes(t.id));
 
-  // Limpiar referencias anteriores
-  window.canvasRefs = window.canvasRefs || {};
+  if (!window.canvasRefs) window.canvasRefs = {};
 
   tamanosFiltrados.forEach(t => {
-    // Crear wrapper contenedor
     const wrapper = document.createElement("div");
     wrapper.style.display = "flex";
     wrapper.style.flexDirection = "column";
     wrapper.style.alignItems = "center";
     wrapper.style.marginBottom = "24px";
 
-    // Checkbox para activar/desactivar canvas
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.id = `check_${t.id}`;
-    checkbox.checked = false; // NO seleccionado por defecto
+    checkbox.checked = true; // O cambia a false si quieres que no inicie activo
     checkbox.style.marginBottom = "8px";
 
     const label = document.createElement("label");
@@ -49,72 +40,74 @@ export async function cargarTamanosYCanvas() {
     label.style.marginBottom = "8px";
     label.style.fontWeight = "bold";
 
-    // Canvas
     const canvas = document.createElement("canvas");
     canvas.id = `canvas_${t.id}`;
     canvas.width = t.ancho;
     canvas.height = t.alto;
-    canvas.style.opacity = "0.3"; // Por defecto deshabilitado (opaco)
 
     wrapper.appendChild(checkbox);
     wrapper.appendChild(label);
     wrapper.appendChild(canvas);
     canvasContainer.appendChild(wrapper);
 
-    // Crear instancia Fabric.js
+    // Crear instancia fabric
     const fabricCanvas = new fabric.Canvas(canvas.id, {
       backgroundColor: "#ffffff",
-      selection: true
+      selection: true,
     });
 
-    // Guardar referencia global
+    // Guardar referencias
     window.canvasRefs[t.id] = {
       canvas: fabricCanvas,
-      activo: false,
+      activo: checkbox.checked,
+      wrapper: wrapper,    // Para facilitar manejo de controles
+      controles: null,     // Aquí guardaremos contenedor controles si se crea
       galeriaId: null,
-      wrapper
     };
 
-    // Función para crear controles (botones, galería)
+    // Función para crear controles (botones y galería)
     function crearControles() {
-      // Eliminar controles existentes si los hay
-      const controlesExistentes = wrapper.querySelector(".controles-canvas");
-      if (controlesExistentes) controlesExistentes.remove();
+      // Si controles ya existen, no crear de nuevo
+      if (window.canvasRefs[t.id].controles) return;
 
-      const galeriaExistente = wrapper.querySelector(".galeria-thumbs");
-      if (galeriaExistente) galeriaExistente.remove();
+      const ref = window.canvasRefs[t.id];
 
-      // Crear contenedor controles
       const controls = document.createElement("div");
-      controls.className = "controles-canvas";
       controls.style.display = "flex";
       controls.style.gap = "10px";
       controls.style.marginTop = "10px";
       controls.style.marginBottom = "20px";
-
-      const ref = window.canvasRefs[t.id];
+      controls.className = "controles-canvas";
 
       // Botones
       const btnLogo = document.createElement("button");
       btnLogo.textContent = "➕logo";
-      btnLogo.onclick = () => mostrarGaleriaLogos(ref.canvas);
+      btnLogo.onclick = () => {
+        import("./controlesCanvas.js").then(mod => mod.mostrarGaleriaLogos(ref.canvas));
+      };
 
       const btnIcono = document.createElement("button");
       btnIcono.textContent = "➕ícono";
-      btnIcono.onclick = () => mostrarGaleriaIconos(ref.canvas);
+      btnIcono.onclick = () => {
+        import("./controlesCanvas.js").then(mod => mod.mostrarGaleriaIconos(ref.canvas));
+      };
 
       const btnTexto = document.createElement("button");
       btnTexto.textContent = "📝texto";
       btnTexto.onclick = () => {
-        agregarTexto(ref.canvas);
-        setTimeout(() => agregarThumbnail(ref.canvas, ref.galeriaId), 200);
+        import("./controlesCanvas.js").then(mod => {
+          mod.agregarTexto(ref.canvas);
+          setTimeout(() => mod.agregarThumbnail(ref.canvas, ref.galeriaId), 200);
+        });
       };
 
       const btnLimpiar = document.createElement("button");
       btnLimpiar.textContent = "🧽Limpiar";
       btnLimpiar.onclick = () => {
-        limpiarCanvas(ref.canvas);
-        setTimeout(() => agregarThumbnail(ref.canvas, ref.galeriaId), 200);
+        import("./controlesCanvas.js").then(mod => {
+          mod.limpiarCanvas(ref.canvas);
+          setTimeout(() => mod.agregarThumbnail(ref.canvas, ref.galeriaId), 200);
+        });
       };
 
       controls.appendChild(btnLogo);
@@ -123,10 +116,12 @@ export async function cargarTamanosYCanvas() {
       controls.appendChild(btnLimpiar);
 
       // Controles texto
-      const [fontSelector, colorPicker, shadowToggle] = crearControlesTexto(ref);
-      controls.appendChild(fontSelector);
-      controls.appendChild(colorPicker);
-      controls.appendChild(shadowToggle);
+      import("./controlesCanvas.js").then(mod => {
+        const [fontSelector, colorPicker, shadowToggle] = mod.crearControlesTexto(ref);
+        controls.appendChild(fontSelector);
+        controls.appendChild(colorPicker);
+        controls.appendChild(shadowToggle);
+      });
 
       // Galería miniaturas
       const galeria = document.createElement("div");
@@ -134,25 +129,43 @@ export async function cargarTamanosYCanvas() {
       galeria.id = `galeria_${t.id}`;
       ref.galeriaId = galeria.id;
 
-      wrapper.appendChild(controls);
-      wrapper.appendChild(galeria);
+      ref.wrapper.appendChild(controls);
+      ref.wrapper.appendChild(galeria);
+
+      // Guardar controles creados
+      ref.controles = controls;
+    }
+
+    // Función para eliminar controles
+    function eliminarControles() {
+      const ref = window.canvasRefs[t.id];
+      if (ref.controles) {
+        ref.controles.remove();
+        ref.controles = null;
+      }
+      // También elimina la galería miniaturas si existe
+      const galeria = ref.wrapper.querySelector(".galeria-thumbs");
+      if (galeria) galeria.remove();
+      ref.galeriaId = null;
+    }
+
+    // Inicialmente, si checkbox está activo, crear controles
+    if (checkbox.checked) {
+      crearControles();
+      canvas.style.opacity = "1";
+    } else {
+      canvas.style.opacity = "0.3";
     }
 
     // Listener checkbox para activar/desactivar canvas y controles
     checkbox.addEventListener("change", () => {
-      const ref = window.canvasRefs[t.id];
-      ref.activo = checkbox.checked;
+      window.canvasRefs[t.id].activo = checkbox.checked;
       canvas.style.opacity = checkbox.checked ? "1" : "0.3";
 
       if (checkbox.checked) {
         crearControles();
       } else {
-        // Remover controles y galería si desactivado
-        const controlesExistentes = wrapper.querySelector(".controles-canvas");
-        if (controlesExistentes) controlesExistentes.remove();
-
-        const galeriaExistente = wrapper.querySelector(".galeria-thumbs");
-        if (galeriaExistente) galeriaExistente.remove();
+        eliminarControles();
       }
     });
   });
