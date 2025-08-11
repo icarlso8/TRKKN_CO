@@ -11,6 +11,7 @@ export async function cargarTamanosYCanvas() {
     const aviso = document.createElement("div");
     aviso.textContent = "Selecciona los tamaños para desplegar los canvas ✅";
     // aviso.style.color = "red";
+    aviso.style.fontSize = "14px";
     canvasContainer.appendChild(aviso);
     return;
   }
@@ -66,4 +67,5 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
