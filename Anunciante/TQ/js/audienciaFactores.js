@@ -16,7 +16,7 @@ export async function cargarAudienciaFactores(productoId) {
 
   if (!productoId) {
     const msg = document.createElement("div");
-    msg.textContent = "Por favor selecciona un producto para ver las audiencias y factores.";
+    msg.textContent = "Selecciona el producto para validar audiencias y factores contextuales disponibles 👌";
     msg.style.fontStyle = "italic";
     section.appendChild(msg);
     return;
@@ -89,3 +89,4 @@ export async function cargarAudienciaFactores(productoId) {
     section.appendChild(divOpciones);
   });
 }
+
