@@ -12,7 +12,7 @@ export async function cargarAudienciaFactores(productoId) {
     form.appendChild(section);
   }
 
-  section.innerHTML = `<legend>🌐 Audiencias y Factores Contextuales</legend>`;
+  section.innerHTML = `<legend>🌐 Audiencias (Factores Contextuales)</legend>`;
 
   if (!productoId) {
     const msg = document.createElement("div");
@@ -90,6 +90,7 @@ export async function cargarAudienciaFactores(productoId) {
     section.appendChild(divOpciones);
   });
 }
+
 
 
 
