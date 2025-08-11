@@ -361,81 +361,90 @@
         const factores = obtenerFactorYOpciones();
         const productoSelect = document.getElementById("producto");
         const nombreProducto = productoSelect?.value || "producto";
-        const canvasRefs = window.canvasRefs;
+        const canvasRefs = window.canvasRefs || {};
       
-        let pendientes = 0;
-        let generadas = 0;
-        let rutasFaltantes = new Set(); // 🔹 Guardamos rutas sin fondos
-      
+        // construir combinaciones (audiencia x factor x opcion x tamaño)
+        const combos = [];
         audiencias.forEach(audId => {
           for (const factorId in factores) {
             if (factorId.toLowerCase() === "audiencia") continue;
-      
             factores[factorId].forEach(opcionId => {
               for (const tamañoId in canvasRefs) {
                 const ref = canvasRefs[tamañoId];
                 if (!ref.activo) continue;
-      
-                pendientes++;
-                generarCreatividadesConFondos(
-                  ref.canvas,
-                  audId,
-                  factorId,
-                  opcionId,
-                  tamañoId,
-                  nombreProducto,
-                  (dataURL, nombreCreatividad, fondoNoEncontrado, rutasProbadas) => {
-                    if (!fondoNoEncontrado && dataURL) {
-                      generadas++; // ✅ Contamos cada creatividad generada
-      
-                      const wrapper = document.createElement("div");
-                      wrapper.className = "thumb-wrapper";
-      
-                      const img = document.createElement("img");
-                      img.src = dataURL;
-                      img.className = "thumbnail-preview";
-                      img.title = nombreCreatividad;
-                      img.onclick = () => window.open(dataURL, "_blank");
-      
-                      const title = document.createElement("div");
-                      title.className = "thumb-title";
-                      title.textContent = nombreCreatividad;
-      
-                      const download = document.createElement("a");
-                      download.href = dataURL;
-                      download.download = nombreCreatividad;
-                      download.className = "download-link";
-                      download.textContent = "Descargar";
-      
-                      wrapper.appendChild(img);
-                      wrapper.appendChild(title);
-                      wrapper.appendChild(download);
-                      galeriaGlobal.appendChild(wrapper);
-      
-                    } else {
-                      // 🔹 Guardamos rutas sin fondos
-                      rutasProbadas.forEach(r => rutasFaltantes.add(r));
-                    }
-      
-                    pendientes--;
-                    if (pendientes === 0) {
-                      let mensaje = `🎉 ${generadas} Creatividades generadas correctamente.`;
-                      if (rutasFaltantes.size > 0) {
-                        mensaje += `\n⚠️ ${rutasFaltantes.size} Ruta(s) sin fondos:`;
-                        mensaje += `\n\n📂 Listado de rutas sin fondos:\n- ${Array.from(rutasFaltantes).join("\n- ")}`;
-                      }
-                      alert(mensaje);
-                    }
-                  }
-                );
+                combos.push({ ref, audId, factorId, opcionId, tamañoId });
               }
             });
           }
         });
       
-        if (pendientes === 0) {
+        if (combos.length === 0) {
           alert("⚠️ No hay creatividades para generar (revisa tus selecciones).");
+          return;
         }
+      
+        // contador por combinación (no por imagen) — esperamos a que cada combinación marque done = true
+        let pendientes = combos.length;
+        const rutasFaltantes = new Set();
+        let generadas = 0;
+      
+        combos.forEach(c => {
+          generarCreatividadesConFondos(
+            c.ref.canvas,
+            c.audId,
+            c.factorId,
+            c.opcionId,
+            c.tamañoId,
+            nombreProducto,
+            (dataURL, nombreCreatividad, fondoNoEncontrado, rutasProbadas, done) => {
+              // rutas sin fondos (fondos.json no existe)
+              if (fondoNoEncontrado) {
+                (rutasProbadas || []).forEach(r => rutasFaltantes.add(r));
+              }
+      
+              // recibimos una creatividad lista → mostrarla y contarla
+              if (dataURL) {
+                generadas++;
+                const wrapper = document.createElement("div");
+                wrapper.className = "thumb-wrapper";
+      
+                const img = document.createElement("img");
+                img.src = dataURL;
+                img.className = "thumbnail-preview";
+                img.title = nombreCreatividad;
+                img.onclick = () => window.open(dataURL, "_blank");
+      
+                const title = document.createElement("div");
+                title.className = "thumb-title";
+                title.textContent = nombreCreatividad;
+      
+                const download = document.createElement("a");
+                download.href = dataURL;
+                download.download = nombreCreatividad;
+                download.className = "download-link";
+                download.textContent = "Descargar";
+      
+                wrapper.appendChild(img);
+                wrapper.appendChild(title);
+                wrapper.appendChild(download);
+                galeriaGlobal.appendChild(wrapper);
+              }
+      
+              // cuando la combinación indique done=true, restamos pendientes
+              if (done) {
+                pendientes--;
+                if (pendientes === 0) {
+                  let mensaje = `🎉 ${generadas} creatividades generadas correctamente.`;
+                  if (rutasFaltantes.size > 0) {
+                    mensaje += `\n⚠️ ${rutasFaltantes.size} rutas que no cuentan con fondos.`;
+                    mensaje += `\n\n📂 Rutas faltantes:\n- ${Array.from(rutasFaltantes).join("\n- ")}`;
+                  }
+                  alert(mensaje);
+                }
+              }
+            }
+          );
+        });
       };  // 👈 cierre de la función onclick
     });  // 👈 cierre del DOMContentLoaded
   </script> <!-- 👈 cierre del bloque script -->
