@@ -26,6 +26,7 @@ export async function cargarAudienciaFactores(productoId) {
   // Cargo audiencias y factores desde JSON
   const todasAudiencias = await fetch(`${jsonPath}audiencias.json`).then(r => r.json());
   const factores = await fetch(`${jsonPath}factores.json`).then(r => r.json());
+  const tamanosJson = await fetch(`${jsonPath}tamaños.json`).then(r => r.json());
 
   // Obtengo solo las audiencias para el productoId
   const audiencias = todasAudiencias[productoId] || [];
@@ -89,7 +90,10 @@ export async function cargarAudienciaFactores(productoId) {
     section.appendChild(divOpciones);
   });
 
-  // --- NUEVO: Mostrar tamaños disponibles a partir de todos los factores ---
+  // --- Mostrar tamaños disponibles ordenados segun tamaños.json ---
+  const ordenTamanos = tamanosJson.map(t => t.nombre);
+
+  // Obtener tamaños únicos de factores
   const tamañosSet = new Set();
   factores.forEach(factor => {
     if (factor.tamanos_disponibles && factor.tamanos_disponibles.length > 0) {
@@ -98,6 +102,9 @@ export async function cargarAudienciaFactores(productoId) {
   });
   const tamañosDisponibles = Array.from(tamañosSet);
 
+  // Ordenar tamaños según tamaños.json
+  const tamañosOrdenados = ordenTamanos.filter(t => tamañosDisponibles.includes(t));
+
   const tituloTamanos = document.createElement("div");
   tituloTamanos.className = "form-section";
   tituloTamanos.innerHTML = `<strong>📐 Tamaños:</strong>`;
@@ -105,22 +112,29 @@ export async function cargarAudienciaFactores(productoId) {
 
   const divTamanos = document.createElement("div");
   divTamanos.className = "form-section checkbox-opciones";
+  divTamanos.style.display = "flex";
+  divTamanos.style.flexWrap = "wrap";
+  divTamanos.style.gap = "16px";
 
-  tamañosDisponibles.forEach(tamaño => {
+  tamañosOrdenados.forEach(tamaño => {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.name = "tamanos";
     checkbox.value = tamaño;
     checkbox.id = `tamaño_${tamaño}`;
-    checkbox.checked = true; // marcado por defecto
+    checkbox.checked = true;
 
     const label = document.createElement("label");
     label.setAttribute("for", checkbox.id);
     label.textContent = ` ${tamaño}`;
-    label.style.marginRight = "16px";
 
-    divTamanos.appendChild(checkbox);
-    divTamanos.appendChild(label);
+    const wrapper = document.createElement("div");
+    wrapper.style.display = "flex";
+    wrapper.style.alignItems = "center";
+    wrapper.appendChild(checkbox);
+    wrapper.appendChild(label);
+
+    divTamanos.appendChild(wrapper);
   });
 
   section.appendChild(divTamanos);
