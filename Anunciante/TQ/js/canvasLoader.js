@@ -88,8 +88,7 @@ export async function cargarTamanosYCanvas() {
       canvas: fabricCanvas,
       activo: checkbox.checked,
       wrapper: wrapper,
-      controles: null,
-      galeriaId: null,
+      controles: null
     };
 
     function crearControles() {
@@ -120,7 +119,6 @@ export async function cargarTamanosYCanvas() {
       btnTexto.onclick = () => {
         import("./controlesCanvas.js").then(mod => {
           mod.agregarTexto(ref.canvas);
-          setTimeout(() => mod.agregarThumbnail(ref.canvas, ref.galeriaId), 200);
         });
       };
 
@@ -129,7 +127,6 @@ export async function cargarTamanosYCanvas() {
       btnLimpiar.onclick = () => {
         import("./controlesCanvas.js").then(mod => {
           mod.limpiarCanvas(ref.canvas);
-          setTimeout(() => mod.agregarThumbnail(ref.canvas, ref.galeriaId), 200);
         });
       };
 
@@ -145,13 +142,7 @@ export async function cargarTamanosYCanvas() {
         controls.appendChild(shadowToggle);
       });
 
-      const galeria = document.createElement("div");
-      galeria.className = "galeria-thumbs";
-      galeria.id = `galeria_${t.id}`;
-      ref.galeriaId = galeria.id;
-
       ref.wrapper.appendChild(controls);
-      ref.wrapper.appendChild(galeria);
       ref.controles = controls;
     }
 
@@ -161,9 +152,6 @@ export async function cargarTamanosYCanvas() {
         ref.controles.remove();
         ref.controles = null;
       }
-      const galeria = ref.wrapper.querySelector(".galeria-thumbs");
-      if (galeria) galeria.remove();
-      ref.galeriaId = null;
     }
 
     if (checkbox.checked) {
@@ -173,7 +161,7 @@ export async function cargarTamanosYCanvas() {
       canvas.style.opacity = "0.3";
     }
 
-    // 🔹 Ajuste: Bloquear selección y edición de objetos al desactivar
+    // Bloquear selección y edición de objetos al desactivar
     checkbox.addEventListener("change", () => {
       const ref = window.canvasRefs[t.id];
       ref.activo = checkbox.checked;
