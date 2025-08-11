@@ -143,7 +143,7 @@ export async function generarCreatividadesConFondos(canvas, audiencia, factorId,
                     if (Array.isArray(jsonFondos) && jsonFondos.length > 0) {
                         fondosEncontrados = true;
                         fondos = jsonFondos;
-                        break; // Si encontró un fondos.json válido, detiene la búsqueda
+                        break;
                     }
                 }
             } catch (err) {
@@ -152,9 +152,13 @@ export async function generarCreatividadesConFondos(canvas, audiencia, factorId,
         }
 
         if (!fondosEncontrados) {
-            // 📂 Ruta sin fondos
             callback(null, null, true, rutasFondos);
             return resolve();
+        }
+
+        // 🔹 Asegurar contador global
+        if (typeof window.totalGeneradas === "undefined") {
+            window.totalGeneradas = 0;
         }
 
         // 🔹 Generar creatividad para cada fondo encontrado
@@ -167,9 +171,7 @@ export async function generarCreatividadesConFondos(canvas, audiencia, factorId,
                     height: canvas.height
                 });
 
-                // Copiar contenido del canvas actual
                 canvasTemp.loadFromJSON(canvas.toJSON(), () => {
-                    // Colocar fondo
                     canvasTemp.setBackgroundImage(img, canvasTemp.renderAll.bind(canvasTemp), {
                         scaleX: canvas.width / img.width,
                         scaleY: canvas.height / img.height
@@ -178,14 +180,11 @@ export async function generarCreatividadesConFondos(canvas, audiencia, factorId,
                     setTimeout(() => {
                         const dataURL = canvasTemp.toDataURL({ format: "png", multiplier: 1 });
 
-                        // 🔹 Contador global de creatividades
-                        if (typeof window.totalGeneradas === "undefined") {
-                            window.totalGeneradas = 0;
-                        }
-                        window.totalGeneradas++;
+                        window.totalGeneradas++; // ⬅ Incrementa el contador
 
                         const nombreCreatividad = `OmniAdsAI_TQ_${audiencia}_${opcionId}_${tamañoId}_${String(window.totalGeneradas).padStart(4, "0")}.png`;
                         callback(dataURL, nombreCreatividad, false, [], window.totalGeneradas);
+
                         resolve();
                     }, 300);
                 });
