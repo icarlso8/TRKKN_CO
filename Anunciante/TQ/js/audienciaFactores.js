@@ -57,8 +57,7 @@ export async function cargarAudienciaFactores(productoId) {
 
   section.appendChild(divAud);
 
-  // Ahora solo mostrar factores que están disponibles para las audiencias seleccionadas (opcional)
-  // Por simplicidad mostramos todos los factores (puedes filtrar si quieres)
+  // Mostrar factores (sin filtro por audiencias para simplificar)
   factores.forEach(factor => {
     const tituloFactor = document.createElement("div");
     tituloFactor.className = "form-section";
@@ -89,9 +88,40 @@ export async function cargarAudienciaFactores(productoId) {
 
     section.appendChild(divOpciones);
   });
+
+  // --- NUEVO: Mostrar tamaños disponibles a partir de todos los factores ---
+  const tamañosSet = new Set();
+  factores.forEach(factor => {
+    if (factor.tamanos_disponibles && factor.tamanos_disponibles.length > 0) {
+      factor.tamanos_disponibles.forEach(t => tamañosSet.add(t));
+    }
+  });
+  const tamañosDisponibles = Array.from(tamañosSet);
+
+  const tituloTamanos = document.createElement("div");
+  tituloTamanos.className = "form-section";
+  tituloTamanos.innerHTML = `<strong>📐 Tamaños:</strong>`;
+  section.appendChild(tituloTamanos);
+
+  const divTamanos = document.createElement("div");
+  divTamanos.className = "form-section checkbox-opciones";
+
+  tamañosDisponibles.forEach(tamaño => {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "tamanos";
+    checkbox.value = tamaño;
+    checkbox.id = `tamaño_${tamaño}`;
+    checkbox.checked = true; // marcado por defecto
+
+    const label = document.createElement("label");
+    label.setAttribute("for", checkbox.id);
+    label.textContent = ` ${tamaño}`;
+    label.style.marginRight = "16px";
+
+    divTamanos.appendChild(checkbox);
+    divTamanos.appendChild(label);
+  });
+
+  section.appendChild(divTamanos);
 }
-
-
-
-
-
