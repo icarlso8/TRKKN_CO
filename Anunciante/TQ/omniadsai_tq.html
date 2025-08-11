@@ -172,12 +172,21 @@
     import { cargarJerarquia } from "./js/infoProduct.js";
     import { cargarAudienciaFactores } from "./js/audienciaFactores.js";
     import { borradoPorTeclado } from "./js/controlesCanvas.js";
-  
+    
     document.addEventListener("DOMContentLoaded", async () => {
-      await cargarJerarquia();
-      await cargarAudienciaFactores();
+      await cargarJerarquia(); // carga productos en select
+      
+      // cargar audiencias y factores vacíos inicialmente (pasamos string vacío)
+      await cargarAudienciaFactores("");
+      
       await borradoPorTeclado();
       await cargarTamanosYCanvas();
+      
+      // Al cambiar el producto en el dropdown recarga audiencias y factores
+      const productoSelect = document.getElementById("producto");
+      productoSelect.addEventListener("change", async () => {
+        await cargarAudienciaFactores(productoSelect.value);
+      });
     });
   </script>
 
