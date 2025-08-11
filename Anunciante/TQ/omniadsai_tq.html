@@ -419,10 +419,10 @@
       
                     pendientes--;
                     if (pendientes === 0) {
-                      let mensaje = `🎉 ${generadas} creatividades generadas correctamente.`;
+                      let mensaje = `🎉 ${generadas} Creatividades generadas correctamente.`;
                       if (rutasFaltantes.size > 0) {
-                        mensaje += `\n⚠️ ${rutasFaltantes.size} rutas que no cuentan con fondos:`;
-                        mensaje += `\n\n📂 Rutas faltantes:\n- ${Array.from(rutasFaltantes).join("\n- ")}`;
+                        mensaje += `\n⚠️ ${rutasFaltantes.size} Ruta(s) sin fondos:`;
+                        mensaje += `\n\n📂 Listado de rutas sin fondos:\n- ${Array.from(rutasFaltantes).join("\n- ")}`;
                       }
                       alert(mensaje);
                     }
