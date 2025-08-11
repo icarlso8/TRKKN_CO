@@ -9,8 +9,8 @@ export async function cargarTamanosYCanvas() {
 
   if (tamanosSeleccionados.length === 0) {
     const aviso = document.createElement("div");
-    aviso.textContent = "⚠️ Selecciona al menos un tamaño para mostrar los canvas.";
-    aviso.style.color = "red";
+    aviso.textContent = "Selecciona los tamaños para desplegar los canvas ✅";
+    // aviso.style.color = "red";
     canvasContainer.appendChild(aviso);
     return;
   }
@@ -66,3 +66,4 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
