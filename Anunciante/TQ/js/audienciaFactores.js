@@ -12,11 +12,11 @@ export async function cargarAudienciaFactores(productoId) {
     form.appendChild(section);
   }
 
-  section.innerHTML = `<legend>🌐 Audiencia (Factores Contextuales)</legend>`;
+  section.innerHTML = `<legend>🌐 Audiencias y Factores Contextuales</legend>`;
 
   if (!productoId) {
     const msg = document.createElement("div");
-    msg.textContent = "Selecciona el producto para validar audiencias y factores contextuales disponibles ✔️";
+    msg.textContent = "Selecciona el producto para validar audiencias y factores contextuales disponibles ✅";
     msg.style.fontStyle = "italic";
     section.appendChild(msg);
     return;
@@ -32,7 +32,7 @@ export async function cargarAudienciaFactores(productoId) {
   // Rellenar audiencias con checkboxes
   const tituloAud = document.createElement("div");
   tituloAud.className = "form-section";
-  tituloAud.innerHTML = `<strong>🎯 Audiencia:</strong>`;
+  tituloAud.innerHTML = `<strong>🎯 Audiencias:</strong>`;
   section.appendChild(tituloAud);
 
   const divAud = document.createElement("div");
@@ -89,5 +89,6 @@ export async function cargarAudienciaFactores(productoId) {
     section.appendChild(divOpciones);
   });
 }
+
 
 
