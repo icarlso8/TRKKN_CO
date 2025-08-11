@@ -126,73 +126,95 @@ export async function mostrarGaleriaIconos(canvas) {
 }
 
 export async function generarCreatividadesConFondos(canvas, audiencia, factorId, opcionId, tamañoId, producto, callback) {
-    return new Promise(async (resolve) => {
-        const rutasFondos = [
-            `../../Anunciante/TQ/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}/fondos.json`,
-            `../../Anunciante/TQ/assets/fondos/${audiencia}/${tamañoId}/fondos.json`
-        ];
+  const rutasFondos = [
+    `../../Anunciante/TQ/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}/fondos.json`,
+    `../../Anunciante/TQ/assets/fondos/${audiencia}/${tamañoId}/fondos.json`
+  ];
+  const rutasDirectorios = rutasFondos.map(r => r.replace(/\/fondos\.json$/, ''));
 
-        let fondosEncontrados = false;
-        let fondos = [];
+  let fondos = null;
+  let rutaEncontrada = null;
 
-        for (const ruta of rutasFondos) {
-            try {
-                const resp = await fetch(ruta);
-                if (resp.ok) {
-                    const jsonFondos = await resp.json();
-                    if (Array.isArray(jsonFondos) && jsonFondos.length > 0) {
-                        fondosEncontrados = true;
-                        fondos = jsonFondos;
-                        break;
-                    }
-                }
-            } catch (err) {
-                console.warn(`No se encontró: ${ruta}`);
-            }
+  // Buscar el primer fondos.json válido
+  for (let i = 0; i < rutasFondos.length; i++) {
+    try {
+      const resp = await fetch(rutasFondos[i]);
+      if (resp.ok) {
+        const json = await resp.json();
+        if (Array.isArray(json) && json.length > 0) {
+          fondos = json;
+          rutaEncontrada = rutasDirectorios[i];
+          break;
         }
+      }
+    } catch (e) {
+      // silencio: se intenta la siguiente ruta
+    }
+  }
 
-        if (!fondosEncontrados) {
-            callback(null, null, true, rutasFondos);
-            return resolve();
-        }
+  if (!fondos) {
+    // No hay fondos.json en ninguna ruta probada -> informar como "sin fondo" y marcar done
+    console.warn(`⚠️ No se encontraron fondos.json en: ${rutasDirectorios.join(', ')}`);
+    callback(null, null, true, rutasDirectorios, true);
+    return;
+  }
 
-        // 🔹 Asegurar contador global
-        if (typeof window.totalGeneradas === "undefined") {
-            window.totalGeneradas = 0;
-        }
+  // Por cada archivo listado en fondos.json, generar una creatividad
+  for (const archivo of fondos) {
+    const fondoPath = `${rutaEncontrada}/${archivo}`;
+    let img;
+    try {
+      img = await new Promise((resolve, reject) => {
+        fabric.Image.fromURL(fondoPath, function (oImg) {
+          if (!oImg) return reject(new Error('No se pudo cargar imagen'));
+          resolve(oImg);
+        }, { crossOrigin: 'anonymous' });
+      });
+    } catch (e) {
+      console.warn(`❌ No se pudo cargar: ${fondoPath}`);
+      // continuar con el siguiente fondo
+      continue;
+    }
 
-        // 🔹 Generar creatividad para cada fondo encontrado
-        for (const fondo of fondos) {
-            const fondoPath = `../../Anunciante/TQ/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}/${fondo}`;
-            try {
-                const img = await fabric.Image.fromURL(fondoPath, { crossOrigin: "anonymous" });
-                const canvasTemp = new fabric.Canvas(null, {
-                    width: canvas.width,
-                    height: canvas.height
-                });
+    // Crear canvas temporal con las mismas dimensiones que el canvas pasado
+    const width = (typeof canvas.getWidth === 'function') ? canvas.getWidth() : (canvas.width || 300);
+    const height = (typeof canvas.getHeight === 'function') ? canvas.getHeight() : (canvas.height || 250);
+    const canvasTemp = new fabric.Canvas(null, { width, height });
 
-                canvasTemp.loadFromJSON(canvas.toJSON(), () => {
-                    canvasTemp.setBackgroundImage(img, canvasTemp.renderAll.bind(canvasTemp), {
-                        scaleX: canvas.width / img.width,
-                        scaleY: canvas.height / img.height
-                    });
+    // Clonar objetos del canvas original al temporal
+    const objetos = canvas.getObjects();
+    for (const obj of objetos) {
+      await new Promise(resolveClone => {
+        obj.clone(clon => {
+          clon.set({ selectable: true });
+          canvasTemp.add(clon);
+          resolveClone();
+        });
+      });
+    }
 
-                    setTimeout(() => {
-                        const dataURL = canvasTemp.toDataURL({ format: "png", multiplier: 1 });
-
-                        window.totalGeneradas++; // ⬅ Incrementa el contador
-
-                        const nombreCreatividad = `OmniAdsAI_TQ_${audiencia}_${opcionId}_${tamañoId}_${String(window.totalGeneradas).padStart(4, "0")}.png`;
-                        callback(dataURL, nombreCreatividad, false, [], window.totalGeneradas);
-
-                        resolve();
-                    }, 300);
-                });
-            } catch (err) {
-                console.error(`Error cargando fondo: ${fondoPath}`, err);
-            }
-        }
+    // Poner el fondo escalado y renderizar
+    canvasTemp.setBackgroundImage(img, canvasTemp.renderAll.bind(canvasTemp), {
+      scaleX: canvasTemp.getWidth() / img.width,
+      scaleY: canvasTemp.getHeight() / img.height
     });
+
+    await new Promise(r => setTimeout(r, 200)); // pequeña espera para asegurar render
+
+    const dataURL = canvasTemp.toDataURL({ format: 'png', multiplier: 1 });
+
+    // Contador global de creatividades
+    if (typeof window.totalGeneradas === 'undefined') window.totalGeneradas = 0;
+    window.totalGeneradas++;
+
+    const nombreCreatividad = `OmniAdsAI_TQ_${audiencia}_${opcionId}_${tamañoId}_${String(window.totalGeneradas).padStart(4, "0")}.png`;
+
+    // Llamamos callback por cada creatividad generada. done = false (aún no terminó la combinación)
+    callback(dataURL, nombreCreatividad, false, [], false);
+  }
+
+  // Finalmente notificamos que la combinación terminó (done = true)
+  callback(null, null, false, [], true);
 }
 
 export function borradoPorTeclado() {
