@@ -125,85 +125,91 @@ export async function mostrarGaleriaIconos(canvas) {
   document.getElementById("modalIconos").style.display = "flex";
 }
 
-export async function generarCreatividadesConFondos(
-  canvasOriginal,
-  audienciaId,
-  factorId,
-  opcionId,
-  tamañoId,
-  nombreProducto,
-  callback
-) {
-  const rutaBase = `../../Anunciante/TQ/assets/fondos/${audienciaId}/${factorId}/${opcionId}/${tamañoId}`;
+export async function generarCreatividadesConFondos(canvas, audiencia, factorId, opcionId, tamañoId, producto, callback) {
+  // --- SIN fallback: solo la ruta exacta ---
+  const rutaBase = `../../Anunciante/TQ/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}`;
   const rutaFondosJSON = `${rutaBase}/fondos.json`;
 
-  let fondos = [];
-
-  // 1️⃣ Validar si existe fondos.json
-  let existeFondosJSON = true;
+  // 1) validar existencia de fondos.json en la ruta exacta
+  let fondos;
   try {
-    const resp = await fetch(rutaFondosJSON);
-    if (!resp.ok) {
-      existeFondosJSON = false;
-    } else {
-      fondos = await resp.json();
-    }
-  } catch (e) {
-    existeFondosJSON = false;
-  }
-
-  if (!existeFondosJSON) {
-    console.warn(`⚠️ No se encontraron fondos en: ${rutaBase}`);
-    // callback(null, null, true, [rutaFondosJSON]) ahora reporta solo la ruta base
-    callback(null, null, true, [rutaBase]);
+    const resp = await fetch(rutaFondosJSON, { cache: "no-store" });
+    if (!resp.ok) throw new Error("fondos.json no encontrado");
+    const parsed = await resp.json();
+    if (!Array.isArray(parsed) || parsed.length === 0) throw new Error("fondos.json vacío");
+    fondos = parsed;
+  } catch (err) {
+    console.warn(`⚠️ No se encontró fondos.json en: ${rutaBase}`);
+    // Informamos que la RUTA no cuenta con fondos y marcamos la COMBINACIÓN como terminada (done = true)
+    callback(null, null, true, [rutaBase], true);
     return;
   }
 
-  // 2️⃣ Si hay fondos.json, iterar y generar
-  let totalGeneradas = 0;
-
-  for (let archivo of fondos) {
+  // 2) procesar secuencialmente cada archivo listado en fondos.json
+  for (const archivo of fondos) {
     const rutaCompleta = `${rutaBase}/${archivo}`;
 
-    // Crear canvas temporal
-    const canvasTemp = new fabric.Canvas(null, {
-      width: canvasOriginal.getWidth(),
-      height: canvasOriginal.getHeight(),
-    });
-
-    // Clonar objetos
-    const objetos = canvasOriginal.getObjects();
-    for (const obj of objetos) {
-      await new Promise(resolve => obj.clone(clon => {
-        clon.set({ selectable: true });
-        canvasTemp.add(clon);
-        resolve();
-      }));
+    // cargar la imagen como Promise
+    let img;
+    try {
+      img = await new Promise((resolve, reject) => {
+        fabric.Image.fromURL(rutaCompleta, oImg => {
+          if (!oImg) return reject(new Error("no se pudo cargar imagen"));
+          resolve(oImg);
+        }, { crossOrigin: "anonymous" });
+      });
+    } catch (e) {
+      console.warn(`❌ No se pudo cargar el fondo: ${rutaCompleta}`);
+      // saltamos a siguiente fondo
+      continue;
     }
 
-    // Cargar fondo y renderizar
-    await new Promise(resolve => {
-      fabric.Image.fromURL(rutaCompleta, (img) => {
-        if (!img) {
-          console.warn(`❌ No se pudo cargar: ${rutaCompleta}`);
-          resolve();
-          return;
-        }
+    // crear canvas temporal con las dimensiones del canvas original (usar getWidth/getHeight)
+    const width = (typeof canvas.getWidth === "function") ? canvas.getWidth() : (canvas.width || 300);
+    const height = (typeof canvas.getHeight === "function") ? canvas.getHeight() : (canvas.height || 250);
+    const canvasTemp = new fabric.Canvas(null, { width, height });
 
-        canvasTemp.setBackgroundImage(img, canvasTemp.renderAll.bind(canvasTemp), {
-          scaleX: canvasTemp.width / img.width,
-          scaleY: canvasTemp.height / img.height,
+    // clonar objetos (await por cada clone para asegurar consistencia)
+    const objetos = canvas.getObjects();
+    for (const obj of objetos) {
+      await new Promise(resolveClone => {
+        obj.clone(clon => {
+          clon.set({ selectable: true });
+          canvasTemp.add(clon);
+          resolveClone();
         });
+      });
+    }
 
-        setTimeout(() => {
-          const dataURL = canvasTemp.toDataURL({ format: "png", multiplier: 1 });
-          totalGeneradas++;
-          callback(dataURL, archivo, false, [], totalGeneradas);
-          resolve();
-        }, 300);
-      }, { crossOrigin: 'anonymous' });
+    // poner fondo escalado y esperar a que se renderice
+    await new Promise(resolveBg => {
+      canvasTemp.setBackgroundImage(img, () => {
+        canvasTemp.renderAll();
+        resolveBg();
+      }, {
+        scaleX: canvasTemp.getWidth() / img.width,
+        scaleY: canvasTemp.getHeight() / img.height
+      });
     });
+
+    // pequeña espera para asegurar render final
+    await new Promise(r => setTimeout(r, 80));
+
+    // generar dataURL
+    const dataURL = canvasTemp.toDataURL({ format: "png", multiplier: 1 });
+
+    // contador global (opcional, si lo usas)
+    if (typeof window.totalGeneradas === "undefined") window.totalGeneradas = 0;
+    window.totalGeneradas++;
+
+    const nombreCreatividad = `OmniAdsAI_TQ_${audiencia}_${opcionId}_${tamañoId}_${String(window.totalGeneradas).padStart(4, "0")}.png`;
+
+    // informar cada creatividad generada (done = false → la COMBINACIÓN aún NO terminó)
+    callback(dataURL, nombreCreatividad, false, [], false);
   }
+
+  // 3) cuando terminamos todos los fondos en esta combinación notificamos done = true
+  callback(null, null, false, [], true);
 }
 
 export function borradoPorTeclado() {
