@@ -134,57 +134,79 @@ export async function generarCreatividadesConFondos(
   nombreProducto,
   callback
 ) {
-  const baseRuta = `../../Anunciante/TQ/assets/fondos/${audienciaId}`;
-  
-  // Solo ruta principal (sin fallback)
-  const rutaPrincipal = `${baseRuta}/${factorId}/${opcionId}/${tamañoId}`;
-  const nombreArchivo = `OmniAdsAI_TQ_${audienciaId}_${opcionId}_${tamañoId}_0001.png`;
-  const rutaCompleta = `${rutaPrincipal}/${nombreArchivo}`;
-  
-  const existe = await fetch(rutaCompleta, { method: "HEAD" })
-    .then(res => res.ok)
-    .catch(() => false);
+  const rutaBase = `../../Anunciante/TQ/assets/fondos/${audienciaId}/${factorId}/${opcionId}/${tamañoId}`;
+  const rutaFondosJSON = `${rutaBase}/fondos.json`;
 
-  if (!existe) {
-    console.warn(`⚠️ Fondo no encontrado para: ${audienciaId} - ${opcionId} - ${tamañoId}`);
-    callback(null, null, true, [rutaCompleta]);
+  let fondos = [];
+  let faltantes = [];
+
+  // 1️⃣ Leer fondos.json
+  try {
+    const resp = await fetch(rutaFondosJSON);
+    if (!resp.ok) throw new Error("fondos.json no encontrado");
+    fondos = await resp.json();
+  } catch (e) {
+    console.warn(`⚠️ No se encontró fondos.json en: ${rutaBase}`);
+    callback(null, null, true, [rutaFondosJSON]);
     return;
   }
 
-  // Crear canvas temporal
-  const canvasTemp = new fabric.Canvas(null, {
-    width: canvasOriginal.getWidth(),
-    height: canvasOriginal.getHeight(),
-  });
+  // 2️⃣ Iterar sobre todos los fondos encontrados
+  for (let archivo of fondos) {
+    const rutaCompleta = `${rutaBase}/${archivo}`;
 
-  // Clonar objetos del canvas original
-  const objetos = canvasOriginal.getObjects();
-  for (const obj of objetos) {
-    obj.clone(clon => {
-      clon.set({ selectable: true });
-      canvasTemp.add(clon);
+    const existe = await fetch(rutaCompleta, { method: "HEAD" })
+      .then(res => res.ok)
+      .catch(() => false);
+
+    if (!existe) {
+      faltantes.push(rutaCompleta);
+      continue;
+    }
+
+    // 3️⃣ Crear canvas temporal
+    const canvasTemp = new fabric.Canvas(null, {
+      width: canvasOriginal.getWidth(),
+      height: canvasOriginal.getHeight(),
+    });
+
+    // Clonar objetos del canvas original
+    const objetos = canvasOriginal.getObjects();
+    for (const obj of objetos) {
+      await new Promise(resolve => obj.clone(clon => {
+        clon.set({ selectable: true });
+        canvasTemp.add(clon);
+        resolve();
+      }));
+    }
+
+    // 4️⃣ Cargar el fondo y renderizar
+    await new Promise(resolve => {
+      fabric.Image.fromURL(rutaCompleta, (img) => {
+        if (!img) {
+          faltantes.push(rutaCompleta);
+          resolve();
+          return;
+        }
+
+        canvasTemp.setBackgroundImage(img, canvasTemp.renderAll.bind(canvasTemp), {
+          scaleX: canvasTemp.width / img.width,
+          scaleY: canvasTemp.height / img.height,
+        });
+
+        setTimeout(() => {
+          const dataURL = canvasTemp.toDataURL({ format: "png", multiplier: 1 });
+          callback(dataURL, archivo, false, faltantes);
+          resolve();
+        }, 300);
+      }, { crossOrigin: 'anonymous' });
     });
   }
 
-  // Cargar fondo y renderizar
-  fabric.Image.fromURL(rutaCompleta, (img) => {
-    if (!img) {
-      console.warn(`❌ No se pudo cargar la imagen: ${rutaCompleta}`);
-      callback(null, null, true, [rutaCompleta]);
-      return;
-    }
-
-    canvasTemp.setBackgroundImage(img, canvasTemp.renderAll.bind(canvasTemp), {
-      scaleX: canvasTemp.width / img.width,
-      scaleY: canvasTemp.height / img.height,
-    });
-
-    // Generar imagen final
-    setTimeout(() => {
-      const dataURL = canvasTemp.toDataURL({ format: "png", multiplier: 1 });
-      callback(dataURL, nombreArchivo, false, [rutaCompleta]);
-    }, 300);
-  }, { crossOrigin: 'anonymous' });
+  // 5️⃣ Si todos fallaron
+  if (fondos.length > 0 && faltantes.length === fondos.length) {
+    console.warn(`❌ No se encontró ningún fondo válido en: ${rutaBase}`);
+  }
 }
 
 export function borradoPorTeclado() {
