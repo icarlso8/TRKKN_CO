@@ -2,34 +2,44 @@ export async function cargarTamanosYCanvas() {
   const jsonPath = "../../Anunciante/TQ/json/";
   const canvasContainer = document.getElementById("canvasContainer");
 
-  // --- Limpiar canvases anteriores ---
-  if (window.canvasRefs) {
-    Object.values(window.canvasRefs).forEach(ref => {
-      if (ref.canvas && typeof ref.canvas.dispose === "function") {
-        ref.canvas.dispose(); // destruye instancia fabric para liberar memoria
-      }
-    });
-  }
-  window.canvasRefs = {}; // reiniciar referencias
-
-  canvasContainer.innerHTML = "";
+  if (!window.canvasRefs) window.canvasRefs = {};
 
   const checkboxes = document.querySelectorAll('input[name="tamanos"]:checked');
   const tamanosSeleccionados = Array.from(checkboxes).map(cb => cb.value);
 
+  // Quitar canvases que ya no estén seleccionados
+  Object.keys(window.canvasRefs).forEach(id => {
+    if (!tamanosSeleccionados.includes(id)) {
+      const ref = window.canvasRefs[id];
+      if (ref.canvas && typeof ref.canvas.dispose === "function") {
+        ref.canvas.dispose();
+      }
+      ref.wrapper.remove();
+      delete window.canvasRefs[id];
+    }
+  });
+
+  // Si no hay tamaños seleccionados, mostrar aviso
   if (tamanosSeleccionados.length === 0) {
-    const aviso = document.createElement("div");
-    aviso.textContent = "Selecciona los tamaños para desplegar los canvas ✅";
-    aviso.style.fontSize = "14px";
-    canvasContainer.appendChild(aviso);
+    if (!canvasContainer.querySelector(".aviso-sin-tamanos")) {
+      const aviso = document.createElement("div");
+      aviso.textContent = "Selecciona los tamaños para desplegar los canvas ✅";
+      aviso.style.fontSize = "14px";
+      aviso.className = "aviso-sin-tamanos";
+      canvasContainer.appendChild(aviso);
+    }
     return;
+  } else {
+    const aviso = canvasContainer.querySelector(".aviso-sin-tamanos");
+    if (aviso) aviso.remove();
   }
 
   const tamanos = await fetch(`${jsonPath}tamaños.json`).then(r => r.json());
-
   const tamanosFiltrados = tamanos.filter(t => tamanosSeleccionados.includes(t.id));
 
   tamanosFiltrados.forEach(t => {
+    if (window.canvasRefs[t.id]) return; // Si ya existe, no recrear
+
     const wrapper = document.createElement("div");
     wrapper.style.display = "flex";
     wrapper.style.flexDirection = "column";
@@ -75,7 +85,6 @@ export async function cargarTamanosYCanvas() {
       if (window.canvasRefs[t.id].controles) return;
 
       const ref = window.canvasRefs[t.id];
-
       const controls = document.createElement("div");
       controls.style.display = "flex";
       controls.style.gap = "10px";
@@ -132,7 +141,6 @@ export async function cargarTamanosYCanvas() {
 
       ref.wrapper.appendChild(controls);
       ref.wrapper.appendChild(galeria);
-
       ref.controles = controls;
     }
 
@@ -157,7 +165,6 @@ export async function cargarTamanosYCanvas() {
     checkbox.addEventListener("change", () => {
       window.canvasRefs[t.id].activo = checkbox.checked;
       canvas.style.opacity = checkbox.checked ? "1" : "0.3";
-
       if (checkbox.checked) {
         crearControles();
       } else {
