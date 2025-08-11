@@ -1,15 +1,25 @@
-// Anunciante/TQ/js/audienciaFactores.js
-
-export async function cargarAudienciaFactores() {
+export async function cargarAudienciaFactores(productoId) {
   const jsonPath = "../../Anunciante/TQ/json/";
   const form = document.getElementById("formulario");
 
-  const section = document.createElement("fieldset");
-  section.className = "form-group";
-  section.innerHTML = `<legend>🌐 Audiencia (Factores Contextuales)</legend>`;
-  form.appendChild(section);
+  let section = document.getElementById("audiencia-factores-section");
+  if (!section) {
+    section = document.createElement("fieldset");
+    section.id = "audiencia-factores-section";
+    section.className = "form-group";
+    section.innerHTML = `<legend>🌐 Audiencia (Factores Contextuales)</legend>`;
+    form.appendChild(section);
+  } else {
+    section.querySelectorAll(":scope > *:not(legend)").forEach(el => el.remove());
+  }
 
-  const audiencias = await fetch(`${jsonPath}audiencias.json`).then(r => r.json());
+  if (!productoId) {
+    section.innerHTML += `<p>Selecciona un producto para ver las audiencias y factores.</p>`;
+    return;
+  }
+
+  const audienciasPorProducto = await fetch(`${jsonPath}audiencias.json`).then(r => r.json());
+  const audiencias = audienciasPorProducto[productoId] || [];
 
   // Título Audiencia
   const tituloAud = document.createElement("div");
@@ -17,7 +27,6 @@ export async function cargarAudienciaFactores() {
   tituloAud.innerHTML = `<strong>🎯 Audiencia:</strong>`;
   section.appendChild(tituloAud);
 
-  // Opciones de audiencia con sangría
   const divAud = document.createElement("div");
   divAud.className = "form-section checkbox-opciones";
 
@@ -38,9 +47,16 @@ export async function cargarAudienciaFactores() {
   });
   section.appendChild(divAud);
 
-  const factores = await fetch(`${jsonPath}factores.json`).then(r => r.json());
+  const factoresGlobales = await fetch(`${jsonPath}factores.json`).then(r => r.json());
 
-  factores.forEach(factor => {
+  const factoresIds = new Set();
+  audiencias.forEach(aud => {
+    (aud.factores_disponibles || []).forEach(f => factoresIds.add(f));
+  });
+
+  const factoresFiltrados = factoresGlobales.filter(factor => factoresIds.has(factor.id));
+
+  factoresFiltrados.forEach(factor => {
     const tituloFactor = document.createElement("div");
     tituloFactor.className = "form-section";
     tituloFactor.innerHTML = `<strong>${factor.emoji} ${factor.nombre}:</strong>`;
@@ -67,7 +83,6 @@ export async function cargarAudienciaFactores() {
         divOpciones.appendChild(wrapper);
       });
     }
-
     section.appendChild(divOpciones);
   });
 }
