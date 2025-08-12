@@ -18,40 +18,6 @@ export function limpiarCanvas(canvas) {
   canvas.backgroundColor = "#ffffff";
   canvas.renderAll();
 }
-
-export function agregarThumbnail(canvas, galeriaId) {
-  canvas.discardActiveObject().renderAll();
-  const dataURL = canvas.toDataURL({ format: "png" });
-
-  const galeria = document.getElementById(galeriaId);
-  if (!galeria) return;
-
-  const thumb = document.createElement("div");
-  thumb.style.position = "relative";
-
-  const img = document.createElement("img");
-  img.src = dataURL;
-  img.className = "thumbnail-preview";
-
-  const btnEliminar = document.createElement("button");
-  btnEliminar.textContent = "✖";
-  btnEliminar.style.position = "absolute";
-  btnEliminar.style.top = "-6px";
-  btnEliminar.style.right = "-6px";
-  btnEliminar.style.padding = "2px 6px";
-  btnEliminar.style.border = "none";
-  btnEliminar.style.borderRadius = "50%";
-  btnEliminar.style.backgroundColor = "#f44336";
-  btnEliminar.style.color = "white";
-  btnEliminar.style.cursor = "pointer";
-  btnEliminar.style.fontSize = "12px";
-  btnEliminar.title = "Eliminar miniatura";
-  btnEliminar.onclick = () => thumb.remove();
-
-  thumb.appendChild(img);
-  thumb.appendChild(btnEliminar);
-  galeria.appendChild(thumb);
-}
   
 export async function mostrarGaleriaLogos(canvas) {
   const contenedor = document.getElementById("galeriaLogos");
