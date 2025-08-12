@@ -92,11 +92,23 @@ export async function mostrarGaleriaIconos(canvas) {
 }
 
 export async function generarCreatividadesConFondos(canvas, audiencia, factorId, opcionId, tamañoId, producto, callback) {
-  console.log("📏 DEBUG TamañoId:", tamañoId);
-  console.log("📂 Carpeta esperada:", `../../Anunciante/TQ/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}`);
-  console.log("🎯 Otros parámetros:", { audiencia, factorId, opcionId, producto });
+  console.log("🛠️ Parámetros recibidos:");
+  console.log("  audiencia:", audiencia);
+  console.log("  factorId:", factorId);
+  console.log("  opcionId:", opcionId);
+  console.log("  tamañoId:", tamañoId);
+  console.log("  producto:", producto);
+  
+  // Validación rápida de parámetros
+  if (!audiencia || !factorId || !opcionId || !tamañoId) {
+    console.error("❌ Parámetros incompletos para construir ruta de fondos.");
+    callback(null, null, true, [], true);
+    return;
+  }
+
   // --- SIN fallback: solo la ruta exacta ---
   const rutaBase = `../../Anunciante/TQ/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}`;
+  console.log("📂 Ruta construida para fondos:", rutaBase);
   const rutaFondosJSON = `${rutaBase}/fondos.json`;
 
   // 1) validar existencia de fondos.json en la ruta exacta
