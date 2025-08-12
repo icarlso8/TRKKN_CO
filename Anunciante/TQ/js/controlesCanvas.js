@@ -265,91 +265,92 @@ export function crearControlesTexto(ref) {
     }
   };
 
-  const shadowToggle = document.createElement("button");
-  shadowToggle.textContent = "🌗";
-  shadowToggle.style.width = "40px";
-  shadowToggle.style.height = "40px";
-  shadowToggle.style.borderRadius = "6px";
-  shadowToggle.style.cursor = "pointer";
-  shadowToggle.title = "Alternar sombra en texto";
-
-  shadowToggle.onclick = () => {
-    const active = ref.canvas.getActiveObject();
-    if (active && (active.type === "textbox" || active.type === "text")) {
-      const hasShadow = !!active.shadow;
-      if (hasShadow) {
-        active.set("shadow", null);
-      } else {
+  export function crearControlesTexto(ref) {
+    // ... código previo sin cambios ...
+  
+    const shadowColorPicker = document.createElement("input");
+    shadowColorPicker.type = "color";
+    shadowColorPicker.value = "#000000";
+    shadowColorPicker.title = "Color de sombra";
+    shadowColorPicker.style.width = "40px";
+    shadowColorPicker.style.height = "40px";
+    shadowColorPicker.style.padding = "0";
+    shadowColorPicker.style.borderRadius = "6px";
+    shadowColorPicker.style.cursor = "pointer";
+    shadowColorPicker.style.marginLeft = "6px";
+  
+    const shadowOpacitySlider = document.createElement("input");
+    shadowOpacitySlider.type = "range";
+    shadowOpacitySlider.min = "0";
+    shadowOpacitySlider.max = "1";
+    shadowOpacitySlider.step = "0.05";
+    shadowOpacitySlider.value = "0.3";
+    shadowOpacitySlider.title = "Opacidad sombra";
+    shadowOpacitySlider.style.width = "60px";
+    shadowOpacitySlider.style.marginLeft = "6px";
+    shadowOpacitySlider.style.cursor = "pointer";
+  
+    const shadowToggle = document.createElement("button");
+    shadowToggle.textContent = "🌗";
+    shadowToggle.style.width = "40px";
+    shadowToggle.style.height = "40px";
+    shadowToggle.style.borderRadius = "6px";
+    shadowToggle.style.cursor = "pointer";
+    shadowToggle.title = "Alternar sombra en texto";
+  
+    shadowToggle.onclick = () => {
+      const active = ref.canvas.getActiveObject();
+      if (active && (active.type === "textbox" || active.type === "text")) {
+        const hasShadow = !!active.shadow;
+        if (hasShadow) {
+          active.set("shadow", null);
+        } else {
+          active.set("shadow", {
+            color: shadowColorPicker.value + toHexAlpha(parseFloat(shadowOpacitySlider.value)),
+            blur: 5,
+            offsetX: 2,
+            offsetY: 2
+          });
+        }
+        ref.canvas.requestRenderAll();
+      }
+    };
+  
+    shadowColorPicker.oninput = () => {
+      const active = ref.canvas.getActiveObject();
+      if (active && active.shadow) {
+        const hex = shadowColorPicker.value;
+        const alpha = parseFloat(shadowOpacitySlider.value);
         active.set("shadow", {
-          color: shadowColorPicker.value + shadowOpacitySlider.value,
+          color: hex + toHexAlpha(alpha),
           blur: 5,
           offsetX: 2,
           offsetY: 2
         });
+        ref.canvas.requestRenderAll();
       }
-      ref.canvas.requestRenderAll();
+    };
+  
+    shadowOpacitySlider.oninput = () => {
+      const active = ref.canvas.getActiveObject();
+      if (active && active.shadow) {
+        const hex = shadowColorPicker.value;
+        const alpha = parseFloat(shadowOpacitySlider.value);
+        active.set("shadow", {
+          color: hex + toHexAlpha(alpha),
+          blur: 5,
+          offsetX: 2,
+          offsetY: 2
+        });
+        ref.canvas.requestRenderAll();
+      }
+    };
+  
+    // Función para convertir opacidad 0-1 a hex (2 dígitos)
+    function toHexAlpha(alpha) {
+      const hex = Math.round(alpha * 255).toString(16).padStart(2, "0");
+      return hex;
     }
-  };
-
-  // Nuevo: selector de color para sombra
-  const shadowColorPicker = document.createElement("input");
-  shadowColorPicker.type = "color";
-  shadowColorPicker.value = "#000000";
-  shadowColorPicker.title = "Color de sombra";
-  shadowColorPicker.style.width = "40px";
-  shadowColorPicker.style.height = "40px";
-  shadowColorPicker.style.padding = "0";
-  shadowColorPicker.style.borderRadius = "6px";
-  shadowColorPicker.style.cursor = "pointer";
-  shadowColorPicker.style.marginLeft = "6px";
-
-  shadowColorPicker.oninput = () => {
-    const active = ref.canvas.getActiveObject();
-    if (active && active.shadow) {
-      const hex = shadowColorPicker.value;
-      const alpha = parseFloat(shadowOpacitySlider.value);
-      active.set("shadow", {
-        color: hex + toHexAlpha(alpha),
-        blur: 5,
-        offsetX: 2,
-        offsetY: 2
-      });
-      ref.canvas.requestRenderAll();
-    }
-  };
-
-  // Nuevo: slider para opacidad sombra (0 a 1)
-  const shadowOpacitySlider = document.createElement("input");
-  shadowOpacitySlider.type = "range";
-  shadowOpacitySlider.min = "0";
-  shadowOpacitySlider.max = "1";
-  shadowOpacitySlider.step = "0.05";
-  shadowOpacitySlider.value = "0.3";
-  shadowOpacitySlider.title = "Opacidad sombra";
-  shadowOpacitySlider.style.width = "60px";
-  shadowOpacitySlider.style.marginLeft = "6px";
-  shadowOpacitySlider.style.cursor = "pointer";
-
-  shadowOpacitySlider.oninput = () => {
-    const active = ref.canvas.getActiveObject();
-    if (active && active.shadow) {
-      const hex = shadowColorPicker.value;
-      const alpha = parseFloat(shadowOpacitySlider.value);
-      active.set("shadow", {
-        color: hex + toHexAlpha(alpha),
-        blur: 5,
-        offsetX: 2,
-        offsetY: 2
-      });
-      ref.canvas.requestRenderAll();
-    }
-  };
-
-  // Función para convertir opacidad 0-1 a hex (2 dígitos)
-  function toHexAlpha(alpha) {
-    const hex = Math.round(alpha * 255).toString(16).padStart(2, "0");
-    return hex;
+  
+    return [fontSelector, colorPicker, shadowToggle, shadowColorPicker, shadowOpacitySlider];
   }
-
-  return [fontSelector, colorPicker, shadowToggle, shadowColorPicker, shadowOpacitySlider];
-}
