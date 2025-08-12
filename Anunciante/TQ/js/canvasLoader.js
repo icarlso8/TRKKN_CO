@@ -139,6 +139,19 @@ export async function cargarTamanosYCanvas() {
       controls.appendChild(btnTexto);
       controls.appendChild(btnLimpiar);
 
+      const btnForma = document.createElement("button");
+        btnForma.textContent = "⬛";  // emoji cuadrado
+        btnForma.title = "Añadir forma";
+        btnForma.style.width = "40px";
+        btnForma.style.height = "40px";
+        btnForma.style.borderRadius = "6px";
+        btnForma.style.cursor = "pointer";
+        btnForma.onclick = () => {
+          import("./controlesCanvas.js").then(mod => mod.agregarForma(ref.canvas, "rectangulo"));
+        };
+        
+        controls.appendChild(btnForma);
+
       import("./controlesCanvas.js").then(mod => {
         const [fontSelector, colorPicker, shadowToggle, shadowColorPicker, shadowOpacitySlider] = mod.crearControlesTexto(ref);
         controls.appendChild(fontSelector);
@@ -192,6 +205,7 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
 
 
