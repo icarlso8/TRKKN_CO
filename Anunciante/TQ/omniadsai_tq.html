@@ -207,24 +207,28 @@
   
             const btnLogo = document.createElement("button");
             btnLogo.textContent = "®️";
+            btnLogo.title = "Añadir logo";
             btnLogo.onclick = () => {
               mostrarGaleriaLogos(ref.canvas);
             };
   
             const btnIcono = document.createElement("button");
             btnIcono.textContent = "ℹ️";
+            btnIcono.title = "Añadir ícono";
             btnIcono.onclick = () => {
               mostrarGaleriaIconos(ref.canvas);
             };
   
             const btnTexto = document.createElement("button");
             btnTexto.textContent = "✏️";
+            btnTexto.title = "Añadir texto";
             btnTexto.onclick = () => {
               agregarTexto(ref.canvas);
             };
   
             const btnLimpiar = document.createElement("button");
             btnLimpiar.textContent = "🔄";
+            btnLimpiar.title = "Limpiar canvas";
             btnLimpiar.onclick = () => {
               limpiarCanvas(ref.canvas);
             };
