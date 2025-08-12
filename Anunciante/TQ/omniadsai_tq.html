@@ -191,7 +191,7 @@
   </script>
   
   <script type="module">
-    import { mostrarGaleriaLogos, mostrarGaleriaIconos, agregarTexto, limpiarCanvas, agregarThumbnail, crearControlesTexto } from "../../Anunciante/TQ/js/controlesCanvas.js";
+    import { mostrarGaleriaLogos, mostrarGaleriaIconos, agregarTexto, limpiarCanvas, crearControlesTexto } from "../../Anunciante/TQ/js/controlesCanvas.js";
   
     document.addEventListener("DOMContentLoaded", () => {
       const intervalo = setInterval(() => {
@@ -221,14 +221,12 @@
             btnTexto.textContent = "📝texto";
             btnTexto.onclick = () => {
               agregarTexto(ref.canvas);
-              setTimeout(() => agregarThumbnail(ref.canvas, ref.galeriaId), 200);
             };
   
             const btnLimpiar = document.createElement("button");
             btnLimpiar.textContent = "🧽Limpiar";
             btnLimpiar.onclick = () => {
               limpiarCanvas(ref.canvas);
-              setTimeout(() => agregarThumbnail(ref.canvas, ref.galeriaId), 200);
             };
   
             controls.appendChild(btnLogo);
