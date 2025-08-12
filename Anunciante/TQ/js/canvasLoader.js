@@ -148,7 +148,7 @@ export async function cargarTamanosYCanvas() {
       
       // Botón de forma para la fila 2
       const btnForma = document.createElement("button");
-      btnForma.textContent = "⬛";  // emoji cuadrado
+      btnForma.textContent = "💠";
       btnForma.title = "Añadir forma";
       btnForma.style.width = "40px";
       btnForma.style.height = "40px";
@@ -216,6 +216,7 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
 
 
