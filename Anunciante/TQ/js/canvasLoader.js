@@ -97,11 +97,13 @@ export async function cargarTamanosYCanvas() {
       const ref = window.canvasRefs[t.id];
       const controls = document.createElement("div");
       controls.style.display = "flex";
+      controls.style.flexDirection = "column";   // 👈 clave para apilar filas
       controls.style.gap = "10px";
       controls.style.marginTop = "10px";
       controls.style.marginBottom = "20px";
       controls.className = "controles-canvas";
 
+      // --- Botones fila 1 ---
       const btnLogo = document.createElement("button");
       btnLogo.textContent = "®️";
       btnLogo.title = "Añadir logo";
@@ -168,7 +170,8 @@ export async function cargarTamanosYCanvas() {
       
       // Añadir filas al contenedor principal
       controls.append(fila1, fila2);
-   
+
+      // Montar el bloque de controles en el wrapper
       ref.wrapper.appendChild(controls);
       ref.controles = controls;
     }
@@ -213,6 +216,7 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
 
 
