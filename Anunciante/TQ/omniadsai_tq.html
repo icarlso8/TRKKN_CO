@@ -192,6 +192,10 @@
   
   <script type="module">
     import { mostrarGaleriaLogos, mostrarGaleriaIconos, agregarTexto, limpiarCanvas, crearControlesTexto } from "../../Anunciante/TQ/js/controlesCanvas.js";
+
+      console.log("📏 DEBUG TamañoId:", tamañoId);
+      console.log("📂 Carpeta esperada:", `../../Anunciante/TQ/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}`);
+      console.log("🎯 Otros parámetros:", { audiencia, factorId, opcionId, producto });
   
     document.addEventListener("DOMContentLoaded", () => {
       const intervalo = setInterval(() => {
