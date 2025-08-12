@@ -212,7 +212,7 @@ export function borradoPorTeclado() {
 
 export function crearControlesTexto(ref) {
   const fontSelector = document.createElement("select");
-  ["Arial", "Verdana", "Times New Roman", "Courier New", "Georgia"].forEach(font => {
+  ["Arial", "Verdana", "Times New Roman", "Courier New", "Georgia", "Calibri"].forEach(font => {
     const option = document.createElement("option");
     option.value = font;
     option.textContent = font;
