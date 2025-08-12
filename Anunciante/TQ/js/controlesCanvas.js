@@ -218,6 +218,16 @@ export function crearControlesTexto(ref) {
     option.textContent = font;
     fontSelector.appendChild(option);
   });
+
+  // Estilos para que sea cuadrado y pequeño, ocultando el texto visible
+  fontSelector.style.width = "40px";
+  fontSelector.style.height = "40px";
+  fontSelector.style.padding = "0";
+  fontSelector.style.textIndent = "-9999px"; // Oculta texto visible
+  fontSelector.style.borderRadius = "6px";
+  fontSelector.style.cursor = "pointer";
+  fontSelector.title = "Seleccionar fuente";
+
   fontSelector.onchange = () => {
     const active = ref.canvas.getActiveObject();
     if (active && (active.type === "textbox" || active.type === "text")) {
@@ -229,6 +239,15 @@ export function crearControlesTexto(ref) {
   const colorPicker = document.createElement("input");
   colorPicker.type = "color";
   colorPicker.value = "#000000";
+
+  // Estilos para que sea cuadrado y pequeño
+  colorPicker.style.width = "40px";
+  colorPicker.style.height = "40px";
+  colorPicker.style.padding = "0";
+  colorPicker.style.borderRadius = "6px";
+  colorPicker.style.cursor = "pointer";
+  colorPicker.title = "Seleccionar color";
+
   colorPicker.oninput = () => {
     const active = ref.canvas.getActiveObject();
     if (active && (active.type === "textbox" || active.type === "text")) {
@@ -239,6 +258,12 @@ export function crearControlesTexto(ref) {
 
   const shadowToggle = document.createElement("button");
   shadowToggle.textContent = "🌗";
+  shadowToggle.style.width = "40px";
+  shadowToggle.style.height = "40px";
+  shadowToggle.style.borderRadius = "6px";
+  shadowToggle.style.cursor = "pointer";
+  shadowToggle.title = "Alternar sombra";
+
   shadowToggle.onclick = () => {
     const active = ref.canvas.getActiveObject();
     if (active && (active.type === "textbox" || active.type === "text")) {
