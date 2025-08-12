@@ -161,6 +161,18 @@ export async function cargarTamanosYCanvas() {
         controls.appendChild(shadowOpacitySlider);
       });
 
+      import("./controlesCanvas.js").then(mod => {
+        const [fontSelector, colorPicker, shadowToggle, shadowColorPicker, shadowOpacitySlider] = mod.crearControlesTexto(ref);
+        controls.appendChild(fontSelector);
+        controls.appendChild(colorPicker);
+        controls.appendChild(shadowToggle);
+        controls.appendChild(shadowColorPicker);
+        controls.appendChild(shadowOpacitySlider);
+        
+        const controlesFormas = mod.crearControlesFormas(ref);
+        controlesFormas.forEach(control => controls.appendChild(control));
+      });
+
       ref.wrapper.appendChild(controls);
       ref.controles = controls;
     }
@@ -205,6 +217,7 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
 
 
