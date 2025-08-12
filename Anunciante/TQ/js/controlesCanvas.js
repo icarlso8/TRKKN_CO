@@ -238,7 +238,7 @@ export function crearControlesTexto(ref) {
   };
 
   const shadowToggle = document.createElement("button");
-  shadowToggle.textContent = "🌑 Sombra";
+  shadowToggle.textContent = "🌗";
   shadowToggle.onclick = () => {
     const active = ref.canvas.getActiveObject();
     if (active && (active.type === "textbox" || active.type === "text")) {
