@@ -92,7 +92,6 @@ export async function mostrarGaleriaIconos(canvas) {
 }
 
 export async function generarCreatividadesConFondos(canvas, audiencia, factorId, opcionId, tamañoId, producto, callback) {
-  console.log("📏 Parámetros:", { audiencia, factorId, opcionId, tamañoId, producto });
   // --- SIN fallback: solo la ruta exacta ---
   const rutaBase = `../../Anunciante/TQ/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}`;
   const rutaFondosJSON = `${rutaBase}/fondos.json`;
