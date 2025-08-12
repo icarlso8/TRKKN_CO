@@ -91,6 +91,9 @@ export async function mostrarGaleriaIconos(canvas) {
   document.getElementById("modalIconos").style.display = "flex";
 }
 
+console.log("📏 DEBUG TamañoId:", tamañoId);
+console.log("📂 Carpeta esperada:", `../../Anunciante/TQ/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}`);
+console.log("🎯 Otros parámetros:", { audiencia, factorId, opcionId, producto });
 export async function generarCreatividadesConFondos(canvas, audiencia, factorId, opcionId, tamañoId, producto, callback) {
   // --- SIN fallback: solo la ruta exacta ---
   const rutaBase = `../../Anunciante/TQ/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}`;
