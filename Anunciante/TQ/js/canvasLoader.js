@@ -134,32 +134,41 @@ export async function cargarTamanosYCanvas() {
         });
       };
 
-      controls.appendChild(btnLogo);
-      controls.appendChild(btnIcono);
-      controls.appendChild(btnTexto);
-      controls.appendChild(btnLimpiar);
-
+      // Crear filas
+      const fila1 = document.createElement("div");
+      fila1.className = "fila1";
+      
+      const fila2 = document.createElement("div");
+      fila2.className = "fila2";
+      
+      // Botones de la fila 1
+      fila1.append(btnLogo, btnIcono, btnTexto, btnLimpiar);
+      
+      // Botón de forma para la fila 2
       const btnForma = document.createElement("button");
-        btnForma.textContent = "⬛";  // emoji cuadrado
-        btnForma.title = "Añadir forma";
-        btnForma.style.width = "40px";
-        btnForma.style.height = "40px";
-        btnForma.style.borderRadius = "6px";
-        btnForma.style.cursor = "pointer";
-        btnForma.onclick = () => {
-          import("./controlesCanvas.js").then(mod => mod.agregarForma(ref.canvas, "rectangulo"));
-        };
-        
-        controls.appendChild(btnForma);
-
-     import("./controlesCanvas.js").then(mod => {
-      const controlesTexto = mod.crearControlesTexto(ref);
-      controls.appendChild(controlesTexto);
-    
-      const controlesFormas = mod.crearControlesFormas(ref);
-      controlesFormas.forEach(control => controls.appendChild(control));
-    });
- 
+      btnForma.textContent = "⬛";  // emoji cuadrado
+      btnForma.title = "Añadir forma";
+      btnForma.style.width = "40px";
+      btnForma.style.height = "40px";
+      btnForma.style.borderRadius = "6px";
+      btnForma.style.cursor = "pointer";
+      btnForma.onclick = () => {
+        import("./controlesCanvas.js").then(mod => mod.agregarForma(ref.canvas, "rectangulo"));
+      };
+      fila2.append(btnForma);
+      
+      // Controles extra (texto y formas)
+      import("./controlesCanvas.js").then(mod => {
+        const controlesTexto = mod.crearControlesTexto(ref);
+        fila1.appendChild(controlesTexto);
+      
+        const controlesFormas = mod.crearControlesFormas(ref);
+        controlesFormas.forEach(control => fila2.appendChild(control));
+      });
+      
+      // Añadir filas al contenedor principal
+      controls.append(fila1, fila2);
+   
       ref.wrapper.appendChild(controls);
       ref.controles = controls;
     }
@@ -204,6 +213,7 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
 
 
