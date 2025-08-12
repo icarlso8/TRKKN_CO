@@ -238,10 +238,12 @@
             controls.appendChild(btnTexto);
             controls.appendChild(btnLimpiar);
 
-            const [fontSelector, colorPicker, shadowToggle] = crearControlesTexto(ref);
+            const [fontSelector, colorPicker, shadowToggle, shadowColorPicker, shadowOpacitySlider] = crearControlesTexto(ref);
             controls.appendChild(fontSelector);
             controls.appendChild(colorPicker);
             controls.appendChild(shadowToggle);
+            controls.appendChild(shadowColorPicker);
+            controls.appendChild(shadowOpacitySlider);
 
             // Crear contenedor de miniaturas (galería)
             const galeria = document.createElement("div");
