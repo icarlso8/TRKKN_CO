@@ -352,3 +352,57 @@ export function crearControlesTexto(ref) {
 
   return [fontSelector, colorPicker, shadowToggle, shadowColorPicker, shadowOpacitySlider];
 }
+
+export function agregarForma(canvas, tipo = "rectangulo") {
+  let forma;
+
+  switch (tipo) {
+    case "circulo":
+      forma = new fabric.Circle({
+        radius: 40,
+        fill: "#00aaff",
+        left: 50,
+        top: 50,
+        stroke: "#000",
+        strokeWidth: 2,
+        shadow: null,
+        selectable: true,
+      });
+      break;
+
+    case "rectanguloRedondeado":
+      forma = new fabric.Rect({
+        width: 100,
+        height: 60,
+        fill: "#ffaa00",
+        left: 50,
+        top: 50,
+        stroke: "#000",
+        strokeWidth: 2,
+        rx: 12,
+        ry: 12,
+        shadow: null,
+        selectable: true,
+      });
+      break;
+
+    case "rectangulo":
+    default:
+      forma = new fabric.Rect({
+        width: 100,
+        height: 60,
+        fill: "#ff5500",
+        left: 50,
+        top: 50,
+        stroke: "#000",
+        strokeWidth: 2,
+        shadow: null,
+        selectable: true,
+      });
+      break;
+  }
+
+  canvas.add(forma);
+  canvas.setActiveObject(forma);
+  canvas.requestRenderAll();
+}
