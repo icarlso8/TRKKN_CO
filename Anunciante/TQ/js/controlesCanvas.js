@@ -211,6 +211,12 @@ export function borradoPorTeclado() {
 }
 
 export function crearControlesTexto(ref) {
+  const container = document.createElement("div");
+  container.className = "controles-texto";
+  container.style.display = "flex";
+  container.style.gap = "6px";
+  container.style.alignItems = "center";
+  
   const fontSelector = document.createElement("select");
   ["Arial", "Verdana", "Times New Roman", "Courier New", "Georgia", "Calibri"].forEach(font => {
     const option = document.createElement("option");
@@ -350,7 +356,13 @@ export function crearControlesTexto(ref) {
     return hex;
   }
 
-  return [fontSelector, colorPicker, shadowToggle, shadowColorPicker, shadowOpacitySlider];
+  container.appendChild(fontSelector);
+  container.appendChild(colorPicker);
+  container.appendChild(shadowToggle);
+  container.appendChild(shadowColorPicker);
+  container.appendChild(shadowOpacitySlider);
+
+  return container;
 }
 
 export function agregarForma(canvas, tipo = "rectangulo") {
