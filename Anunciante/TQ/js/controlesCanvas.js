@@ -226,7 +226,7 @@ export function crearControlesTexto(ref) {
   fontSelector.style.textIndent = "-9999px"; // Oculta texto visible
   fontSelector.style.borderRadius = "6px";
   fontSelector.style.cursor = "pointer";
-  fontSelector.title = "Seleccionar fuente";
+  fontSelector.title = "Seleccionar fuente de texto";
 
   fontSelector.onchange = () => {
     const active = ref.canvas.getActiveObject();
@@ -246,7 +246,7 @@ export function crearControlesTexto(ref) {
   colorPicker.style.padding = "0";
   colorPicker.style.borderRadius = "6px";
   colorPicker.style.cursor = "pointer";
-  colorPicker.title = "Seleccionar color";
+  colorPicker.title = "Seleccionar color de texto";
 
   colorPicker.oninput = () => {
     const active = ref.canvas.getActiveObject();
@@ -262,7 +262,7 @@ export function crearControlesTexto(ref) {
   shadowToggle.style.height = "40px";
   shadowToggle.style.borderRadius = "6px";
   shadowToggle.style.cursor = "pointer";
-  shadowToggle.title = "Alternar sombra";
+  shadowToggle.title = "Alternar sombra en texto";
 
   shadowToggle.onclick = () => {
     const active = ref.canvas.getActiveObject();
