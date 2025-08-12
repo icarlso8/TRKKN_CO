@@ -406,3 +406,166 @@ export function agregarForma(canvas, tipo = "rectangulo") {
   canvas.setActiveObject(forma);
   canvas.requestRenderAll();
 }
+
+export function crearControlesFormas(ref) {
+  // Selector tipo de forma (dropdown)
+  const shapeSelector = document.createElement("select");
+  ["rectangulo", "circulo", "cuadrado", "rectanguloRedondeado"].forEach(tipo => {
+    const option = document.createElement("option");
+    option.value = tipo;
+    option.textContent = {
+      rectangulo: "⬛",
+      circulo: "⚪",
+      cuadrado: "⬜",
+      rectanguloRedondeado: "▭"
+    }[tipo];
+    shapeSelector.appendChild(option);
+  });
+  shapeSelector.style.width = "40px";
+  shapeSelector.style.height = "40px";
+  shapeSelector.style.borderRadius = "6px";
+  shapeSelector.style.cursor = "pointer";
+  shapeSelector.title = "Seleccionar forma";
+
+  // Color de relleno
+  const fillColorPicker = document.createElement("input");
+  fillColorPicker.type = "color";
+  fillColorPicker.value = "#000000";
+  fillColorPicker.style.width = "40px";
+  fillColorPicker.style.height = "40px";
+  fillColorPicker.style.borderRadius = "6px";
+  fillColorPicker.style.cursor = "pointer";
+  fillColorPicker.title = "Color de relleno";
+
+  // Color borde
+  const strokeColorPicker = document.createElement("input");
+  strokeColorPicker.type = "color";
+  strokeColorPicker.value = "#000000";
+  strokeColorPicker.style.width = "40px";
+  strokeColorPicker.style.height = "40px";
+  strokeColorPicker.style.borderRadius = "6px";
+  strokeColorPicker.style.cursor = "pointer";
+  strokeColorPicker.title = "Color del borde";
+
+  // Grosor borde
+  const strokeWidthSlider = document.createElement("input");
+  strokeWidthSlider.type = "range";
+  strokeWidthSlider.min = "0";
+  strokeWidthSlider.max = "20";
+  strokeWidthSlider.value = "1";
+  strokeWidthSlider.style.width = "60px";
+  strokeWidthSlider.style.marginLeft = "6px";
+  strokeWidthSlider.style.cursor = "pointer";
+  strokeWidthSlider.title = "Grosor del borde";
+
+  // Sombra: toggle, color y opacidad (reusa los controles de texto)
+  const shadowColorPicker = document.createElement("input");
+  shadowColorPicker.type = "color";
+  shadowColorPicker.value = "#000000";
+  shadowColorPicker.title = "Color de sombra";
+  shadowColorPicker.style.width = "40px";
+  shadowColorPicker.style.height = "40px";
+  shadowColorPicker.style.borderRadius = "6px";
+  shadowColorPicker.style.cursor = "pointer";
+  shadowColorPicker.style.marginLeft = "6px";
+
+  const shadowOpacitySlider = document.createElement("input");
+  shadowOpacitySlider.type = "range";
+  shadowOpacitySlider.min = "0";
+  shadowOpacitySlider.max = "1";
+  shadowOpacitySlider.step = "0.05";
+  shadowOpacitySlider.value = "0.3";
+  shadowOpacitySlider.title = "Opacidad sombra";
+  shadowOpacitySlider.style.width = "60px";
+  shadowOpacitySlider.style.marginLeft = "6px";
+  shadowOpacitySlider.style.cursor = "pointer";
+
+  const shadowToggle = document.createElement("button");
+  shadowToggle.textContent = "🌗";
+  shadowToggle.style.width = "40px";
+  shadowToggle.style.height = "40px";
+  shadowToggle.style.borderRadius = "6px";
+  shadowToggle.style.cursor = "pointer";
+  shadowToggle.title = "Alternar sombra en forma";
+
+  // Eventos para actualizar la forma seleccionada
+  shapeSelector.onchange = () => {
+    const active = ref.canvas.getActiveObject();
+    if (!active) return;
+    const tipo = shapeSelector.value;
+
+    // Crear nueva forma y reemplazar la actual
+    const left = active.left;
+    const top = active.top;
+    const width = active.width * active.scaleX;
+    const height = active.height * active.scaleY;
+
+    let nuevaForma;
+    if (tipo === "rectangulo") {
+      nuevaForma = new fabric.Rect({ left, top, width, height, fill: active.fill, stroke: active.stroke, strokeWidth: active.strokeWidth, rx: 0, ry: 0 });
+    } else if (tipo === "circulo") {
+      const radio = Math.min(width, height) / 2;
+      nuevaForma = new fabric.Circle({ left, top, radius: radio, fill: active.fill, stroke: active.stroke, strokeWidth: active.strokeWidth });
+    } else if (tipo === "cuadrado") {
+      const lado = Math.min(width, height);
+      nuevaForma = new fabric.Rect({ left, top, width: lado, height: lado, fill: active.fill, stroke: active.stroke, strokeWidth: active.strokeWidth, rx: 0, ry: 0 });
+    } else if (tipo === "rectanguloRedondeado") {
+      nuevaForma = new fabric.Rect({ left, top, width, height, fill: active.fill, stroke: active.stroke, strokeWidth: active.strokeWidth, rx: 10, ry: 10 });
+    }
+
+    // Copiar sombra si tiene
+    if (active.shadow) {
+      nuevaForma.set("shadow", active.shadow);
+    }
+
+    ref.canvas.remove(active);
+    ref.canvas.add(nuevaForma);
+    ref.canvas.setActiveObject(nuevaForma);
+    ref.canvas.requestRenderAll();
+  };
+
+  function actualizarPropiedades() {
+    const active = ref.canvas.getActiveObject();
+    if (!active) return;
+
+    active.set({
+      fill: fillColorPicker.value,
+      stroke: strokeColorPicker.value,
+      strokeWidth: parseFloat(strokeWidthSlider.value),
+    });
+
+    if (shadowToggle.dataset.sombraActiva === "true") {
+      active.set("shadow", {
+        color: shadowColorPicker.value + toHexAlpha(parseFloat(shadowOpacitySlider.value)),
+        blur: 5,
+        offsetX: 2,
+        offsetY: 2,
+      });
+    } else {
+      active.set("shadow", null);
+    }
+
+    ref.canvas.requestRenderAll();
+  }
+
+  fillColorPicker.oninput = actualizarPropiedades;
+  strokeColorPicker.oninput = actualizarPropiedades;
+  strokeWidthSlider.oninput = actualizarPropiedades;
+  shadowColorPicker.oninput = actualizarPropiedades;
+  shadowOpacitySlider.oninput = actualizarPropiedades;
+
+  shadowToggle.dataset.sombraActiva = "false";
+  shadowToggle.onclick = () => {
+    const activo = shadowToggle.dataset.sombraActiva === "true";
+    shadowToggle.dataset.sombraActiva = activo ? "false" : "true";
+    actualizarPropiedades();
+  };
+
+  // Función para convertir opacidad 0-1 a hex (2 dígitos)
+  function toHexAlpha(alpha) {
+    const hex = Math.round(alpha * 255).toString(16).padStart(2, "0");
+    return hex;
+  }
+
+  return [shapeSelector, fillColorPicker, strokeColorPicker, strokeWidthSlider, shadowToggle, shadowColorPicker, shadowOpacitySlider];
+}
