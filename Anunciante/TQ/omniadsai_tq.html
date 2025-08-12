@@ -320,7 +320,7 @@
         const combos = [];
         audiencias.forEach(audId => {
           for (const factorId in factores) {
-            if (factorId.toLowerCase() === "audiencia") continue;
+            if (factorId.toLowerCase() === "audiencia" || factorId.toLowerCase() === "tamanos") continue; // Ignorar factor "tamanos"
             factores[factorId].forEach(opcionId => {
               for (const tamañoId in canvasRefs) {
                 const ref = canvasRefs[tamañoId];
@@ -330,7 +330,7 @@
             });
           }
         });
-      
+
         if (combos.length === 0) {
           alert("⚠️ No hay creatividades para generar (revisa tus selecciones).");
           return;
