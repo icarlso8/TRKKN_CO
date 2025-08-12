@@ -140,10 +140,12 @@ export async function cargarTamanosYCanvas() {
       controls.appendChild(btnLimpiar);
 
       import("./controlesCanvas.js").then(mod => {
-        const [fontSelector, colorPicker, shadowToggle] = mod.crearControlesTexto(ref);
+        const [fontSelector, colorPicker, shadowToggle, shadowColorPicker, shadowOpacitySlider] = mod.crearControlesTexto(ref);
         controls.appendChild(fontSelector);
         controls.appendChild(colorPicker);
         controls.appendChild(shadowToggle);
+        controls.appendChild(shadowColorPicker);
+        controls.appendChild(shadowOpacitySlider);
       });
 
       ref.wrapper.appendChild(controls);
@@ -190,5 +192,6 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
 
