@@ -248,6 +248,15 @@ export function crearControlesTexto(ref) {
   colorPicker.style.cursor = "pointer";
   colorPicker.title = "Seleccionar color de texto";
 
+  // Quitar apariencia nativa para poder personalizar (funciona en Chrome, Firefox)
+  colorPicker.style.webkitAppearance = "none";
+  colorPicker.style.mozAppearance = "none";
+  colorPicker.style.appearance = "none";
+  
+  // Añadir borde interior para simular que el cuadro de color es más pequeño
+  colorPicker.style.border = "none";
+  colorPicker.style.boxShadow = "inset 0 0 0 6px white"; // espacio blanco interno para reducir cuadro visible
+
   colorPicker.oninput = () => {
     const active = ref.canvas.getActiveObject();
     if (active && (active.type === "textbox" || active.type === "text")) {
