@@ -94,8 +94,8 @@ export async function mostrarGaleriaIconos(canvas) {
 export async function generarCreatividadesConFondos(canvas, audiencia, factorId, opcionId, tamañoId, producto, callback) {
   console.log("🛠️ Parámetros recibidos:");
   console.log("  audiencia:", audiencia);
-  console.log("  factorId:", factorId);
-  console.log("  opcionId:", opcionId);
+  console.log("  factorId:", factorId); //EL ERROR ESTABA ACÁ "factorId: tamanos"
+  console.log("  opcionId:", opcionId); //EL ERROR ESTABA ACÁ "opcionId: 300x250"
   console.log("  tamañoId:", tamañoId);
   console.log("  producto:", producto);
   
