@@ -104,18 +104,21 @@ export async function cargarTamanosYCanvas() {
 
       const btnLogo = document.createElement("button");
       btnLogo.textContent = "®️";
+      btnLogo.title = "Añadir logo";
       btnLogo.onclick = () => {
         import("./controlesCanvas.js").then(mod => mod.mostrarGaleriaLogos(ref.canvas));
       };
 
       const btnIcono = document.createElement("button");
       btnIcono.textContent = "ℹ️";
+      btnIcono.title = "Añadir ícono";
       btnIcono.onclick = () => {
         import("./controlesCanvas.js").then(mod => mod.mostrarGaleriaIconos(ref.canvas));
       };
 
       const btnTexto = document.createElement("button");
       btnTexto.textContent = "✏️";
+      btnTexto.title = "Añadir texto";
       btnTexto.onclick = () => {
         import("./controlesCanvas.js").then(mod => {
           mod.agregarTexto(ref.canvas);
@@ -124,6 +127,7 @@ export async function cargarTamanosYCanvas() {
 
       const btnLimpiar = document.createElement("button");
       btnLimpiar.textContent = "🔄";
+      btnLimpiar.title = "Limpiar canva";
       btnLimpiar.onclick = () => {
         import("./controlesCanvas.js").then(mod => {
           mod.limpiarCanvas(ref.canvas);
@@ -186,4 +190,5 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
