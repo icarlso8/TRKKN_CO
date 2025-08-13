@@ -51,7 +51,7 @@ export async function cargarTamanosYCanvas() {
     checkbox.type = "checkbox";
     checkbox.id = `check_${t.id}`;
     checkbox.checked = true;
-    checkbox.style.margin = "0 6px";
+    //checkbox.style.margin = "0 6px";
 
     // Label con formato: 🖼️ 300 x 250 ( [checkbox] Controles)
     const label = document.createElement("label");
@@ -217,6 +217,7 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
 
 
