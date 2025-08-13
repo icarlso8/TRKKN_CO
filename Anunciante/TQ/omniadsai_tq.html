@@ -162,19 +162,22 @@
     .fila1, .fila2 {
       display: flex;
       flex-wrap: wrap;
-      gap: 2px;
+      gap: 2px;              /* espacio entre elementos */
       margin-bottom: 6px;
     }
-    /* Ajustar tamaño de botones en ambas filas */
+    
+    /* Tamaño uniforme para botones */
     .fila1 button,
     .fila2 button {
-      width: 30px;       /* ancho */
-      height: 30px;      /* alto */
-      font-size: 20px;   /* tamaño de emoji o texto */
+      width: 30px;           /* ancho */
+      height: 30px;          /* alto */
+      font-size: 20px;       /* tamaño de emoji o texto */
       padding: 0;
       border-radius: 6px;
+      box-sizing: border-box; /* asegura tamaño exacto incluyendo bordes */
     }
-    /* Opcional: hacer también más pequeños los select, color pickers y sliders */
+    
+    /* Tamaño uniforme para selects y color pickers */
     .fila1 select,
     .fila2 select,
     .fila1 input[type="color"],
@@ -183,10 +186,14 @@
       height: 30px;
       padding: 0;
       border-radius: 6px;
+      box-sizing: border-box;
     }
+    
+    /* Sliders más compactos */
     .fila1 input[type="range"],
     .fila2 input[type="range"] {
       height: 20px;
+      box-sizing: border-box;
     }
   </style>
   <script type="module" src="./js/auth.js"></script>
