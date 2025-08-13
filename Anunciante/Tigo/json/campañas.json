@@ -5,7 +5,7 @@
         { "id": "disney_c1", "nombre": "🎬 Disney+ C1" },
         { "id": "disney_c2", "nombre": "🎬 Disney+ C2" }
       ],
-      "hbo_max": [
+      "hbomax": [
         { "id": "hbo_c1", "nombre": "🎥 HBO Max C1" },
         { "id": "hbo_c2", "nombre": "🎥 HBO Max C2" }
       ]
