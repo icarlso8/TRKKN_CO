@@ -79,6 +79,7 @@ export async function cargarJerarquia() {
   label.innerHTML = `<strong>📝 Descripción:</strong>`;
 
   const textarea = document.createElement("textarea");
+  textarea.classList.add("textarea-jerarquia"); // Clase específica del tetxarea de infoProduct
   textarea.id = "descripcion";
   textarea.name = "descripcion";
   textarea.rows = 3;
@@ -151,5 +152,6 @@ export async function cargarJerarquia() {
   });
 
 }
+
 
 
