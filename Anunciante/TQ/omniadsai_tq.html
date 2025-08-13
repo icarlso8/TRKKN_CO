@@ -173,7 +173,6 @@
       gap: 2px;               /* 🔹 espacio entre elementos dentro de la fila, controla el espacio horizontal y vertical entre los botones dentro de la misma fila. */
       margin-bottom: 2px;
     }
-    
     /* Tamaño uniforme para botones */
     .fila1 button,
     .fila2 button {
@@ -184,7 +183,6 @@
       border-radius: 6px;
       box-sizing: border-box; /* asegura tamaño exacto incluyendo bordes */
     }
-    
     /* Tamaño uniforme para selects y color pickers */
     .fila1 select,
     .fila2 select,
@@ -196,12 +194,27 @@
       border-radius: 6px;
       box-sizing: border-box;
     }
-    
     /* Sliders más compactos */
     .fila1 input[type="range"],
     .fila2 input[type="range"] {
       height: 20px;
       box-sizing: border-box;
+    }
+    #main-container {
+      display: flex;
+      gap: 20px;
+    }
+    
+    #col-formularios,
+    #col-canvas,
+    #col-gemini {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    #col-canvas {
+      overflow-y: auto;
+      max-height: 90vh; /* se ajusta a la altura de la pantalla */
     }
   </style>
   <script type="module" src="./js/auth.js"></script>
