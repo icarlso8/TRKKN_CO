@@ -283,7 +283,7 @@ export function crearControlesTexto(ref) {
   shadowColorPicker.style.padding = "0";
   shadowColorPicker.style.borderRadius = "6px";
   shadowColorPicker.style.cursor = "pointer";
-  shadowColorPicker.style.marginLeft = "6px";
+  //shadowColorPicker.style.marginLeft = "6px";
 
   const shadowOpacitySlider = document.createElement("input");
   shadowOpacitySlider.type = "range";
@@ -293,7 +293,7 @@ export function crearControlesTexto(ref) {
   shadowOpacitySlider.value = "0.3";
   shadowOpacitySlider.title = "Opacidad sombra";
   shadowOpacitySlider.style.width = "60px";
-  shadowOpacitySlider.style.marginLeft = "6px";
+  //shadowOpacitySlider.style.marginLeft = "6px";
   shadowOpacitySlider.style.cursor = "pointer";
 
   const shadowToggle = document.createElement("button");
@@ -472,7 +472,7 @@ export function crearControlesFormas(ref) {
   strokeWidthSlider.max = "20";
   strokeWidthSlider.value = "1";
   strokeWidthSlider.style.width = "60px";
-  strokeWidthSlider.style.marginLeft = "6px";
+  //strokeWidthSlider.style.marginLeft = "6px";
   strokeWidthSlider.style.cursor = "pointer";
   strokeWidthSlider.title = "Grosor del borde";
 
@@ -486,7 +486,7 @@ export function crearControlesFormas(ref) {
   shadowColorPicker.style.gap = "2px";
   shadowColorPicker.style.borderRadius = "6px";
   shadowColorPicker.style.cursor = "pointer";
-  shadowColorPicker.style.marginLeft = "6px";
+  //shadowColorPicker.style.marginLeft = "6px";
 
   const shadowOpacitySlider = document.createElement("input");
   shadowOpacitySlider.type = "range";
@@ -496,7 +496,7 @@ export function crearControlesFormas(ref) {
   shadowOpacitySlider.value = "0.3";
   shadowOpacitySlider.title = "Opacidad sombra";
   shadowOpacitySlider.style.width = "60px";
-  shadowOpacitySlider.style.marginLeft = "6px";
+  //shadowOpacitySlider.style.marginLeft = "6px";
   shadowOpacitySlider.style.cursor = "pointer";
 
   const shadowToggle = document.createElement("button");
