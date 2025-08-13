@@ -216,6 +216,17 @@
       overflow-y: auto;
       max-height: 90vh; /* se ajusta a la altura de la pantalla */
     }
+    .canvas-column-group {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    
+    .canvas-column-group legend {
+      font-weight: bold;
+      font-size: 1.1em;
+      padding: 0 10px;
+    }
   </style>
   <script type="module" src="./js/auth.js"></script>
 </head>
@@ -232,7 +243,10 @@
 
     <!-- Columna central: Canvas -->
     <div id="col-canvas" style="flex: 2; display: flex; flex-direction: column; gap: 20px;">
-      <div class="canvas-wrapper" id="canvasContainer"></div>
+      <fieldset class="canvas-column-group">
+        <legend>🎨 Tamaños / Plantillas</legend>
+        <div class="canvas-wrapper" id="canvasContainer"></div>
+      </fieldset>
     </div>
 
     <!-- Columna derecha: Gemini AI -->
