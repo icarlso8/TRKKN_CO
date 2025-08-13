@@ -228,6 +228,7 @@ export function crearControlesTexto(ref) {
   // Estilos para que sea cuadrado y pequeño, ocultando el texto visible
   fontSelector.style.width = "30px";
   fontSelector.style.height = "30px";
+  fontSelector.style.gap = "2px";
   fontSelector.style.padding = "0";
   fontSelector.style.textIndent = "-9999px"; // Oculta texto visible
   fontSelector.style.borderRadius = "6px";
@@ -278,6 +279,7 @@ export function crearControlesTexto(ref) {
   shadowColorPicker.title = "Color de sombra";
   shadowColorPicker.style.width = "30px";
   shadowColorPicker.style.height = "30px";
+  shadowColorPicker.style.gap = "2px";
   shadowColorPicker.style.padding = "0";
   shadowColorPicker.style.borderRadius = "6px";
   shadowColorPicker.style.cursor = "pointer";
@@ -298,6 +300,7 @@ export function crearControlesTexto(ref) {
   shadowToggle.textContent = "🌗";
   shadowToggle.style.width = "30px";
   shadowToggle.style.height = "30px";
+  shadowToggle.style.gap = "2px";
   shadowToggle.style.borderRadius = "6px";
   shadowToggle.style.cursor = "pointer";
   shadowToggle.title = "Alternar sombra en texto";
@@ -435,6 +438,7 @@ export function crearControlesFormas(ref) {
   });
   shapeSelector.style.width = "30px";
   shapeSelector.style.height = "30px";
+  shapeSelector.style.gap = "2px";
   shapeSelector.style.borderRadius = "6px";
   shapeSelector.style.cursor = "pointer";
   shapeSelector.title = "Seleccionar forma";
@@ -445,6 +449,7 @@ export function crearControlesFormas(ref) {
   fillColorPicker.value = "#000000";
   fillColorPicker.style.width = "30px";
   fillColorPicker.style.height = "30px";
+  fillColorPicker.style.gap = "2px";
   fillColorPicker.style.borderRadius = "6px";
   fillColorPicker.style.cursor = "pointer";
   fillColorPicker.title = "Color de relleno";
@@ -455,6 +460,7 @@ export function crearControlesFormas(ref) {
   strokeColorPicker.value = "#000000";
   strokeColorPicker.style.width = "30px";
   strokeColorPicker.style.height = "30px";
+  strokeColorPicker.style.gap = "2px";
   strokeColorPicker.style.borderRadius = "6px";
   strokeColorPicker.style.cursor = "pointer";
   strokeColorPicker.title = "Color del borde";
@@ -477,6 +483,7 @@ export function crearControlesFormas(ref) {
   shadowColorPicker.title = "Color de sombra";
   shadowColorPicker.style.width = "30px";
   shadowColorPicker.style.height = "30px";
+  shadowColorPicker.style.gap = "2px";
   shadowColorPicker.style.borderRadius = "6px";
   shadowColorPicker.style.cursor = "pointer";
   shadowColorPicker.style.marginLeft = "6px";
@@ -496,6 +503,7 @@ export function crearControlesFormas(ref) {
   shadowToggle.textContent = "🌗";
   shadowToggle.style.width = "30px";
   shadowToggle.style.height = "30px";
+  shadowToggle.style.gap = "2px";
   shadowToggle.style.borderRadius = "6px";
   shadowToggle.style.cursor = "pointer";
   shadowToggle.title = "Alternar sombra en forma";
