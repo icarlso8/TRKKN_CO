@@ -226,8 +226,8 @@ export function crearControlesTexto(ref) {
   });
 
   // Estilos para que sea cuadrado y pequeño, ocultando el texto visible
-  fontSelector.style.width = "40px";
-  fontSelector.style.height = "40px";
+  fontSelector.style.width = "30px";
+  fontSelector.style.height = "30px";
   fontSelector.style.padding = "0";
   fontSelector.style.textIndent = "-9999px"; // Oculta texto visible
   fontSelector.style.borderRadius = "6px";
@@ -276,8 +276,8 @@ export function crearControlesTexto(ref) {
   shadowColorPicker.type = "color";
   shadowColorPicker.value = "#000000";
   shadowColorPicker.title = "Color de sombra";
-  shadowColorPicker.style.width = "40px";
-  shadowColorPicker.style.height = "40px";
+  shadowColorPicker.style.width = "30px";
+  shadowColorPicker.style.height = "30px";
   shadowColorPicker.style.padding = "0";
   shadowColorPicker.style.borderRadius = "6px";
   shadowColorPicker.style.cursor = "pointer";
@@ -296,8 +296,8 @@ export function crearControlesTexto(ref) {
 
   const shadowToggle = document.createElement("button");
   shadowToggle.textContent = "🌗";
-  shadowToggle.style.width = "40px";
-  shadowToggle.style.height = "40px";
+  shadowToggle.style.width = "30px";
+  shadowToggle.style.height = "30px";
   shadowToggle.style.borderRadius = "6px";
   shadowToggle.style.cursor = "pointer";
   shadowToggle.title = "Alternar sombra en texto";
@@ -433,8 +433,8 @@ export function crearControlesFormas(ref) {
     }[tipo];
     shapeSelector.appendChild(option);
   });
-  shapeSelector.style.width = "40px";
-  shapeSelector.style.height = "40px";
+  shapeSelector.style.width = "30px";
+  shapeSelector.style.height = "30px";
   shapeSelector.style.borderRadius = "6px";
   shapeSelector.style.cursor = "pointer";
   shapeSelector.title = "Seleccionar forma";
@@ -443,8 +443,8 @@ export function crearControlesFormas(ref) {
   const fillColorPicker = document.createElement("input");
   fillColorPicker.type = "color";
   fillColorPicker.value = "#000000";
-  fillColorPicker.style.width = "40px";
-  fillColorPicker.style.height = "40px";
+  fillColorPicker.style.width = "30px";
+  fillColorPicker.style.height = "30px";
   fillColorPicker.style.borderRadius = "6px";
   fillColorPicker.style.cursor = "pointer";
   fillColorPicker.title = "Color de relleno";
@@ -453,8 +453,8 @@ export function crearControlesFormas(ref) {
   const strokeColorPicker = document.createElement("input");
   strokeColorPicker.type = "color";
   strokeColorPicker.value = "#000000";
-  strokeColorPicker.style.width = "40px";
-  strokeColorPicker.style.height = "40px";
+  strokeColorPicker.style.width = "30px";
+  strokeColorPicker.style.height = "30px";
   strokeColorPicker.style.borderRadius = "6px";
   strokeColorPicker.style.cursor = "pointer";
   strokeColorPicker.title = "Color del borde";
@@ -475,8 +475,8 @@ export function crearControlesFormas(ref) {
   shadowColorPicker.type = "color";
   shadowColorPicker.value = "#000000";
   shadowColorPicker.title = "Color de sombra";
-  shadowColorPicker.style.width = "40px";
-  shadowColorPicker.style.height = "40px";
+  shadowColorPicker.style.width = "30px";
+  shadowColorPicker.style.height = "30px";
   shadowColorPicker.style.borderRadius = "6px";
   shadowColorPicker.style.cursor = "pointer";
   shadowColorPicker.style.marginLeft = "6px";
@@ -494,8 +494,8 @@ export function crearControlesFormas(ref) {
 
   const shadowToggle = document.createElement("button");
   shadowToggle.textContent = "🌗";
-  shadowToggle.style.width = "40px";
-  shadowToggle.style.height = "40px";
+  shadowToggle.style.width = "30px";
+  shadowToggle.style.height = "30px";
   shadowToggle.style.borderRadius = "6px";
   shadowToggle.style.cursor = "pointer";
   shadowToggle.title = "Alternar sombra en forma";
