@@ -1,7 +1,7 @@
 import { cargarTamanosYCanvas } from "./canvasLoader.js";
 
 export async function cargarAudienciaFactores(productoId) {
-  const jsonPath = "../../Anunciante/TQ/json/";
+  const jsonPath = "../../Anunciante/Tigo/json/";
   const form = document.getElementById("formulario");
 
   let section = form.querySelector("fieldset#audienciaFactores");
@@ -147,5 +147,6 @@ export async function cargarAudienciaFactores(productoId) {
 
   section.appendChild(divTamanos);
 }
+
 
 
