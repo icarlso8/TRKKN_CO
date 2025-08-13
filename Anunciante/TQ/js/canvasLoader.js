@@ -150,8 +150,9 @@ export async function cargarTamanosYCanvas() {
       const btnForma = document.createElement("button");
       btnForma.textContent = "💠";
       btnForma.title = "Añadir forma";
-      btnForma.style.width = "40px";
-      btnForma.style.height = "40px";
+      btnForma.style.width = "30px";
+      btnForma.style.height = "30px";
+      btnForma.style.gap = "2px";
       btnForma.style.borderRadius = "6px";
       btnForma.style.cursor = "pointer";
       btnForma.onclick = () => {
@@ -216,6 +217,7 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
 
 
