@@ -214,7 +214,7 @@ export function crearControlesTexto(ref) {
   const container = document.createElement("div");
   container.className = "controles-texto";
   container.style.display = "flex";
-  container.style.gap = "6px";
+  container.style.gap = "2px";
   container.style.alignItems = "center";
   
   const fontSelector = document.createElement("select");
