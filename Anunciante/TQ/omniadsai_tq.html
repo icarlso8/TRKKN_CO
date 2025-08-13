@@ -165,6 +165,29 @@
       gap: 8px;
       margin-bottom: 6px;
     }
+    /* Ajustar tamaño de botones en ambas filas */
+    .fila1 button,
+    .fila2 button {
+      width: 36px;       /* ancho */
+      height: 36px;      /* alto */
+      font-size: 16px;   /* tamaño de emoji o texto */
+      padding: 0;
+      border-radius: 6px;
+    }
+    /* Opcional: hacer también más pequeños los select, color pickers y sliders */
+    .fila1 select,
+    .fila2 select,
+    .fila1 input[type="color"],
+    .fila2 input[type="color"] {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border-radius: 6px;
+    }
+    .fila1 input[type="range"],
+    .fila2 input[type="range"] {
+      height: 20px;
+    }
   </style>
   <script type="module" src="./js/auth.js"></script>
 </head>
