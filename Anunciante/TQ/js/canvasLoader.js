@@ -100,7 +100,7 @@ export async function cargarTamanosYCanvas() {
       controls.style.flexDirection = "column";   // 👈 clave para apilar filas
       controls.style.gap = "10px";
       controls.style.marginTop = "10px";
-      controls.style.marginBottom = "10px"; // Separación entre filas
+      controls.style.marginBottom = "4px"; // Separación entre filas
       controls.className = "controles-canvas";
 
       // --- Botones fila 1 ---
@@ -217,6 +217,7 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
 
 
