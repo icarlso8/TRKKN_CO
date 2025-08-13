@@ -1,6 +1,0 @@
-[
-  { "id": "gamers", "nombre": "Gamers", "emoji": "🎮", "factores_disponibles": ["momento"] },
-  { "id": "melomaniac", "nombre": "Melómanos", "emoji": "🎵", "factores_disponibles": ["momento"] },
-  { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] }
-]
-
