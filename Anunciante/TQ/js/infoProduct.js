@@ -86,7 +86,6 @@ export async function cargarJerarquia() {
   //textarea.style.width = "492px"; "
   //Ese width en línea en el <textarea> está forzando que ese elemento sea casi tan ancho como el contenedor.
   //ignorando un poco el flujo normal, y puede dar la sensación de que el formulario entero no respeta el max-width
-  textarea.style.margin = 5px;
   textarea.style.resize = "vertical";
 
   descripcionWrapper.appendChild(label);
@@ -152,4 +151,5 @@ export async function cargarJerarquia() {
   });
 
 }
+
 
