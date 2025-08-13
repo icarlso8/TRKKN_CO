@@ -209,8 +209,30 @@
   
 <body style="display:none">
   <h1><img src="logo_omniadsai_tq.png" alt="Cargando Logo TQ OmniAdsAI TRKKN..." style= "width: 500px; margin-left: 20px" /></h1>
-  <form id="formulario"></form>
-  <div class="canvas-wrapper" id="canvasContainer"></div>
+
+  <div id="main-container" style="display: flex; gap: 20px; align-items: flex-start;">
+
+    <!-- Columna izquierda: Formularios -->
+    <div id="col-formularios" style="flex: 1; max-width: 540px; display: flex; flex-direction: column; gap: 16px;">
+      <form id="formulario"></form>
+    </div>
+
+    <!-- Columna central: Canvas -->
+    <div id="col-canvas" style="flex: 2; display: flex; flex-direction: column; gap: 20px;">
+      <div class="canvas-wrapper" id="canvasContainer"></div>
+    </div>
+
+    <!-- Columna derecha: Gemini AI -->
+    <div id="col-gemini" style="flex: 1; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
+      <fieldset>
+        <legend>🤖 Gemini AI</legend>
+        <textarea id="gemini-prompt" rows="10" style="width:100%;"></textarea>
+        <button id="gemini-generar" type="button">Generar</button>
+        <div id="gemini-output"></div>
+      </fieldset>
+    </div>
+
+  </div>
 
   <script type="module">
     import { cargarJerarquia } from "./js/infoProduct.js";
