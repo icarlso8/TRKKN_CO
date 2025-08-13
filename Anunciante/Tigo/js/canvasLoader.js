@@ -1,5 +1,5 @@
 export async function cargarTamanosYCanvas() {
-  const jsonPath = "../../Anunciante/TQ/json/";
+  const jsonPath = "../../Anunciante/Tigo/json/";
   const canvasContainer = document.getElementById("canvasContainer");
 
   if (!window.canvasRefs) window.canvasRefs = {};
@@ -217,6 +217,7 @@ export async function cargarTamanosYCanvas() {
     });
   });
 }
+
 
 
 
