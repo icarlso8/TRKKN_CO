@@ -1,0 +1,18 @@
+{
+  "home": {
+    "premium": [
+      { "id": "hbomax", "nombre": "🎥 HBO Max" },
+      { "id": "win", "nombre": "⚽ WIN +" },
+      { "id": "disneyplus", "nombre": "🎬 Disney+" }
+    ]
+  },
+  "movil": {
+    "prepago": [
+      { "id": "pasate", "nombre": "🔃 Pásate a Prepago Tigo" },
+      { "id": "paquete", "nombre": "📦 Compra de Paquetes Prepago Tigo" }
+    ],
+    "pospago": [
+      { "id": "pasapospago", "nombre": "📡 Pásate a Pospago Tigo" }
+    ]
+  }
+}
