@@ -23,12 +23,12 @@ export async function mostrarGaleriaLogos(canvas) {
   const contenedor = document.getElementById("galeriaLogos");
   contenedor.innerHTML = ""; // Limpiar antes de renderizar
   
-  const response = await fetch("../../Anunciante/TQ/json/logos.json");
+  const response = await fetch("../../Anunciante/Tigo/json/logos.json");
   const logos = await response.json();
   
   logos.forEach(logo => {
     const img = document.createElement("img");
-    img.src = "../../Anunciante/TQ/assets/logos/" + logo.nombreArchivo;
+    img.src = "../../Anunciante/Tigo/assets/logos/" + logo.nombreArchivo;
     img.title = logo.nombre;
     img.style.width = "80px";
     img.style.cursor = "pointer";
@@ -59,12 +59,12 @@ export async function mostrarGaleriaIconos(canvas) {
   const contenedor = document.getElementById("galeriaIconos");
   contenedor.innerHTML = ""; // Limpiar antes de renderizar
 
-  const response = await fetch("../../Anunciante/TQ/json/icons.json");
+  const response = await fetch("../../Anunciante/Tigo/json/icons.json");
   const iconos = await response.json();
 
   iconos.forEach(icono => {
     const img = document.createElement("img");
-    img.src = "../../Anunciante/TQ/assets/icons/" + icono.nombreArchivo;
+    img.src = "../../Anunciante/Tigo/assets/icons/" + icono.nombreArchivo;
     img.title = icono.nombre;
     img.style.width = "80px";
     img.style.cursor = "pointer";
@@ -107,7 +107,7 @@ export async function generarCreatividadesConFondos(canvas, audiencia, factorId,
   }
 
   // --- SIN fallback: solo la ruta exacta ---
-  const rutaBase = `../../Anunciante/TQ/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}`;
+  const rutaBase = `../../Anunciante/Tigo/assets/fondos/${audiencia}/${factorId}/${opcionId}/${tamañoId}`;
   console.log("📂 Ruta construida para fondos:", rutaBase);
   const rutaFondosJSON = `${rutaBase}/fondos.json`;
 
@@ -183,7 +183,7 @@ export async function generarCreatividadesConFondos(canvas, audiencia, factorId,
     if (typeof window.totalGeneradas === "undefined") window.totalGeneradas = 0;
     window.totalGeneradas++;
 
-    const nombreCreatividad = `OmniAdsAI_TQ_${audiencia}_${opcionId}_${tamañoId}_${String(window.totalGeneradas).padStart(4, "0")}.png`;
+    const nombreCreatividad = `OmniAdsAI_Tigo_${audiencia}_${opcionId}_${tamañoId}_${String(window.totalGeneradas).padStart(4, "0")}.png`;
 
     // informar cada creatividad generada (done = false → la COMBINACIÓN aún NO terminó)
     callback(dataURL, nombreCreatividad, false, [], false);
