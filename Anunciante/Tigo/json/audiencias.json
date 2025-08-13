@@ -5,7 +5,7 @@
     { "id": "mayortech", "nombre": "Mayortech", "emoji": "👵", "factores_disponibles": ["momento"] },
     { "id": "office", "nombre": "Office", "emoji": "💼", "factores_disponibles": ["momento"] },
     { "id": "partners", "nombre": "Partners", "emoji": "🤝", "factores_disponibles": ["momento"] },
-    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] },
+    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] }
   ],
   "win": [
     { "id": "fitness", "nombre": "Fitness", "emoji": "💪", "factores_disponibles": ["momento"] },
@@ -13,7 +13,7 @@
     { "id": "mayortech", "nombre": "Mayortech", "emoji": "👵", "factores_disponibles": ["momento"] },
     { "id": "office", "nombre": "Office", "emoji": "💼", "factores_disponibles": ["momento"] },
     { "id": "partners", "nombre": "Partners", "emoji": "🤝", "factores_disponibles": ["momento"] },
-    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] },
+    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] }
   ],
   "disneyplus": [
     { "id": "fitness", "nombre": "Fitness", "emoji": "💪", "factores_disponibles": ["momento"] },
@@ -21,7 +21,7 @@
     { "id": "mayortech", "nombre": "Mayortech", "emoji": "👵", "factores_disponibles": ["momento"] },
     { "id": "office", "nombre": "Office", "emoji": "💼", "factores_disponibles": ["momento"] },
     { "id": "partners", "nombre": "Partners", "emoji": "🤝", "factores_disponibles": ["momento"] },
-    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] },
+    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] }
   ],
   "pasate": [
     { "id": "fitness", "nombre": "Fitness", "emoji": "💪", "factores_disponibles": ["momento"] },
@@ -29,7 +29,7 @@
     { "id": "mayortech", "nombre": "Mayortech", "emoji": "👵", "factores_disponibles": ["momento"] },
     { "id": "office", "nombre": "Office", "emoji": "💼", "factores_disponibles": ["momento"] },
     { "id": "partners", "nombre": "Partners", "emoji": "🤝", "factores_disponibles": ["momento"] },
-    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] },
+    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] }
   ],
   "paquete": [
     { "id": "fitness", "nombre": "Fitness", "emoji": "💪", "factores_disponibles": ["momento"] },
@@ -37,7 +37,7 @@
     { "id": "mayortech", "nombre": "Mayortech", "emoji": "👵", "factores_disponibles": ["momento"] },
     { "id": "office", "nombre": "Office", "emoji": "💼", "factores_disponibles": ["momento"] },
     { "id": "partners", "nombre": "Partners", "emoji": "🤝", "factores_disponibles": ["momento"] },
-    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] },
+    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] }
   ],
   "pasapospago": [
     { "id": "fitness", "nombre": "Fitness", "emoji": "💪", "factores_disponibles": ["momento"] },
@@ -45,6 +45,6 @@
     { "id": "mayortech", "nombre": "Mayortech", "emoji": "👵", "factores_disponibles": ["momento"] },
     { "id": "office", "nombre": "Office", "emoji": "💼", "factores_disponibles": ["momento"] },
     { "id": "partners", "nombre": "Partners", "emoji": "🤝", "factores_disponibles": ["momento"] },
-    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] },
+    { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento"] 
   ]
 }
