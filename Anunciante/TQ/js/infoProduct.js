@@ -83,7 +83,9 @@ export async function cargarJerarquia() {
   textarea.name = "descripcion";
   textarea.rows = 3;
   textarea.placeholder = "Escribe detalles clave sobre el producto, campaña, temporada, tendencias, etc.";
-  textarea.style.width = "492px";
+  //textarea.style.width = "492px"; "
+  //Ese width en línea en el <textarea> está forzando que ese elemento sea casi tan ancho como el contenedor.
+  //ignorando un poco el flujo normal, y puede dar la sensación de que el formulario entero no respeta el max-width
   textarea.style.resize = "vertical";
 
   descripcionWrapper.appendChild(label);
@@ -147,4 +149,5 @@ export async function cargarJerarquia() {
       });
     }
   });
+
 }
