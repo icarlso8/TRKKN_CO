@@ -1,0 +1,14 @@
+[
+  {
+    "id": "prompt_1",
+    "nombre": "Copy Persuasivo",
+    "descripcion": "Generar un copy persuasivo para un anuncio.",
+    "plantilla": "Genera un copy persuasivo para {producto} dirigido a {audiencia}."
+  },
+  {
+    "id": "prompt_2",
+    "nombre": "Copy Emocional",
+    "descripcion": "Texto emocional para conectar con el usuario.",
+    "plantilla": "Escribe un texto emocional sobre {producto} para personas que {contexto}."
+  }
+]
