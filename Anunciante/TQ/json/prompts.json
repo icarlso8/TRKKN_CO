@@ -9,6 +9,6 @@
     "id": "prompt_2",
     "nombre": "Copy Emocional",
     "descripcion": "Texto emocional para conectar con el usuario.",
-    "plantilla": "Escribe un texto emocional sobre {producto} para personas que {contexto}."
+    "plantilla": "Escribe un texto emocional sobre {producto} para personas que {descripcion}."
   }
 ]
