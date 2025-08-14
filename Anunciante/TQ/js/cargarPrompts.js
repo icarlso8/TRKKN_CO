@@ -1,6 +1,6 @@
 async function cargarPrompts() {
   try {
-    const res = await fetch('Anunciante/TQ/json/prompts.json');
+    const res = await fetch('../../json/prompts.json');
     const prompts = await res.json();
 
     const select = document.getElementById('promptSelect');
@@ -20,4 +20,5 @@ async function cargarPrompts() {
 }
 
 // Llamar al cargar la página
+
 cargarPrompts();
