@@ -1,24 +1,25 @@
-async function cargarPrompts() {
+export async function cargarPrompts() {
   try {
-    const res = await fetch('../../json/prompts.json');
-    const prompts = await res.json();
+    const response = await fetch("../../Anunciante/TQ/json/prompts.json");
+    if (!response.ok) {
+      throw new Error(`Error al cargar prompts: ${response.status}`);
+    }
 
-    const select = document.getElementById('promptSelect');
-    prompts.forEach(p => {
-      const option = document.createElement('option');
-      option.value = p.id;
-      option.textContent = p.nombre;
+    const prompts = await response.json();
+    const select = document.getElementById("promptSelect");
+
+    // Limpia opciones previas
+    select.innerHTML = "";
+
+    // Agrega las opciones
+    prompts.forEach(prompt => {
+      const option = document.createElement("option");
+      option.value = prompt.id;
+      option.textContent = prompt.nombre;
       select.appendChild(option);
     });
-
-    // Guardar prompts en memoria para usarlos luego
-    window.promptsGuardados = prompts;
-
   } catch (error) {
-    console.error("Error cargando prompts.json:", error);
+    console.error("Error cargando prompts:", error);
   }
 }
 
-// Llamar al cargar la página
-
-cargarPrompts();
