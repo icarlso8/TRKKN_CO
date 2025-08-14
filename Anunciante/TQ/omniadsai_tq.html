@@ -275,6 +275,7 @@
     import { borradoPorTeclado } from "./js/controlesCanvas.js";
     import { cargarTamanosYCanvas } from "./js/canvasLoader.js";
     import { cargarPrompts } from "./js/cargarPrompts.js";
+    import { enviarPromptGas } from "./js/enviarPromptGas.js";
     
     document.addEventListener("DOMContentLoaded", async () => {
       await cargarJerarquia(); // carga productos en select
@@ -282,6 +283,7 @@
       await cargarAudienciaFactores("");
       await borradoPorTeclado();
       await cargarPrompts();
+      await enviarPromptGas();
       // await cargarTamanosYCanvas(); NO LLAMAR cargarTamanosYCanvas() al cargar la página (antes sí la llamabas al cargar audiencias).
       
       // Al cambiar el producto en el dropdown recarga audiencias y factores
