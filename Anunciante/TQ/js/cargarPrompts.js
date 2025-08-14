@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const promptSelect = document.getElementById("promptSelect");
 
     // Cargar prompts desde JSON
-    fetch("Anunciante/TQ/json/prompts.json")
+    fetch("../json/prompts.json")
         .then(response => {
             if (!response.ok) throw new Error("No se pudo cargar prompts.json");
             return response.json();
@@ -21,3 +21,4 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error cargando prompts:", error);
         });
 });
+
