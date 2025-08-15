@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Prueba Gemini vía Backend</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    textarea { width: 100%; min-height: 100px; margin-bottom: 10px; }
+    button { padding: 8px 16px; font-size: 16px; cursor: pointer; }
+  </style>
+  <script type="module" src="./js/auth.js"></script>
+</head>
+<body>
+
+<h2>Prueba Gemini (Backend Seguro)</h2>
+
+<label>Prompt:</label>
+<textarea id="prompt" placeholder="Escribe tu prompt aquí..."></textarea>
+
+<button id="send">Enviar a Gemini</button>
+
+<label>Respuesta:</label>
+<textarea id="respuesta" readonly></textarea>
+
+<script>
+  // Tu endpoint de Google Apps Script
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbwVXklQ2ljmMUxys7fCh5ygUyS3jheoHQO3SIYvLr9ETQcOABgrMdaLrCEiiDBpStmW/exec";
+
+  document.getElementById("send").addEventListener("click", async () => {
+    const prompt = document.getElementById("prompt").value.trim();
+    if (!prompt) return alert("Escribe un prompt primero.");
+
+    try {
+      // Enviamos el prompt al backend, con el action 'geminiPrompt'
+      const resp = await fetch(GAS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" }, // evita preflight
+        body: JSON.stringify({
+          omniToken: "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS", // tu token de seguridad
+          action: "geminiPrompt",
+          prompt: prompt
+        })
+      });
+
+      const data = await resp.json();
+      console.log("Respuesta completa:", data);
+
+      const texto = data?.result || "Sin respuesta";
+      document.getElementById("respuesta").value = texto;
+    } catch (err) {
+      console.error("Error:", err);
+      document.getElementById("respuesta").value = "Error al conectar con el backend.";
+    }
+  });
+</script>
+
+</body>
+</html>
