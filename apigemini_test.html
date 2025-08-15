@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>OAdsAI_GASBackend_Gemini</title>
   <link rel="icon" href="assets/TRKKN_icon.png" type="image/png" />
-  <style>
+  <style> 
     body {
       font-family: sans-serif;
       padding: 20px;
@@ -58,6 +58,10 @@
   </style>
 
   <!-- ✅ Protección de sesión con Firebase -->
+  <!-- display:none inicial en <head> oculta el body por defecto y se quita en el else de onAuthStateChanged " document.getElementById("hide-body-style")?.remove();" -->
+  <style id="hide-body-style">
+    body { display: none; } 
+  </style>
   <!-- El script de autenticación debe ejecutarse antes de que el HTML se pinte, para eso se copia antes del cierre del <head> -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -128,3 +132,4 @@
 
 </body>
 </html>
+
