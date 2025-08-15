@@ -1,0 +1,3 @@
+{
+  "formato": "Genera 3 textos publicitarios (copies) de máximo 50 caracteres para el producto {producto} de la marca {negocio}, dentro del segmento {segmento}. La campaña es \"{campaña}\" y el contexto es: {descripcion}. Público objetivo: {audiencia}. Contexto adicional: {factores}."
+}
