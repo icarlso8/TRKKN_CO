@@ -56,8 +56,31 @@
       margin-top: 5px;
     }
   </style>
-  <script type="module" src="./auth.js"></script>
+
+  <!-- ✅ Protección de sesión con Firebase -->
+  <!-- El script de autenticación debe ejecutarse antes de que el HTML se pinte, para eso se copia antes del cierre del <head> -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { firebaseConfig } from "./firebase-config.js";
+  
+      /* window.addEventListener("DOMContentLoaded", () => { */ /* Ya no es necesario */
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+  
+      onAuthStateChanged(auth, user => {
+        if (!user) {
+          alert("🔒 Inicia sesión Trkkie!");
+          window.location.href = "auth.html";
+        } else {
+          console.log("✅ Usuario autenticado:", user.email);
+          document.getElementById("hide-body-style")?.remove();
+          document.body.style.display = "block";
+        }
+      });
+  </script>
 </head>
+  
 <body>
 
 <h2>Prueba Gemini (Backend Seguro)</h2>
@@ -105,6 +128,7 @@
 
 </body>
 </html>
+
 
 
 
