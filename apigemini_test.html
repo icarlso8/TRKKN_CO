@@ -51,6 +51,10 @@
       border-radius: 6px;
       font-family: monospace;
     }
+    label, textarea, button, pre {
+      display: block;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
@@ -61,8 +65,9 @@
 <textarea id="prompt" placeholder="Escribe tu prompt aquí..."></textarea>
 
 <button id="send">Enviar a Gemini</button>
-
+  
 <label>Respuesta:</label>
+  
 <pre id="respuesta">Esperando respuesta...</pre>
 
 <script>
@@ -99,4 +104,5 @@
 
 </body>
 </html>
+
 
