@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>OAdsAI_GASBackend_Gemini</title>
+  <title>OAdsAI_GASBackend_Gemini+Stability</title>
   <link rel="icon" href="assets/TRKKN_icon.png" type="image/png" />
   <style> 
     body {
@@ -24,10 +24,7 @@
       border: 1px solid #ccc;
       font-size: 14px;
     }
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
+    textarea { min-height: 100px; resize: vertical; }
     button {
       display: inline-block;
       padding: 10px 18px;
@@ -39,97 +36,110 @@
       cursor: pointer;
       margin-bottom: 15px;
     }
-    button:hover {
-      background: #45a049;
-    }
-    #respuesta {
+    button:hover { background: #45a049; }
+    #respuesta, #respuesta_image {
       background: white;
-      white-space: pre-wrap; /* Mantiene saltos de línea */
+      white-space: pre-wrap;
       min-height: 120px;
       border: 1px solid #ccc;
       padding: 10px;
       border-radius: 6px;
       font-family: monospace;
     }
-    label, textarea, button, pre {
-      display: block;
-      margin-top: 5px;
-    }
+    label, textarea, button, pre { display: block; margin-top: 5px; }
   </style>
 
   <!-- ✅ Protección de sesión con Firebase -->
-  <!-- display:none inicial en <head> oculta el body por defecto y se quita en el else de onAuthStateChanged " document.getElementById("hide-body-style")?.remove();" -->
-  <style id="hide-body-style">
-    body { display: none; } 
-  </style>
-  <!-- El script de autenticación debe ejecutarse antes de que el HTML se pinte, para eso se copia antes del cierre del <head> -->
+  <style id="hide-body-style"> body { display: none; } </style>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { firebaseConfig } from "./firebase-config.js";
-  
-      /* window.addEventListener("DOMContentLoaded", () => { */ /* Ya no es necesario */
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-  
-      onAuthStateChanged(auth, user => {
-        if (!user) {
-          alert("🔒 Inicia sesión Trkkie!");
-          window.location.href = "auth.html";
-        } else {
-          console.log("✅ Usuario autenticado:", user.email);
-          document.getElementById("hide-body-style")?.remove();
-          document.body.style.display = "block";
-        }
-      });
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        alert("🔒 Inicia sesión Trkkie!");
+        window.location.href = "auth.html";
+      } else {
+        console.log("✅ Usuario autenticado:", user.email);
+        document.getElementById("hide-body-style")?.remove();
+        document.body.style.display = "block";
+      }
+    });
   </script>
 </head>
-  
 <body>
 
   <h2>Test HTML_GASBackend_Gemini</h2>
   
-  <label>Prompt:</label>
+  <label>Prompt para Texto:</label>
   <textarea id="prompt" placeholder="Escribe tu prompt aquí..."></textarea>
-  
   <button id="send">Enviar a Gemini</button>
-    
   <label>Respuesta:</label>
-    
   <pre id="respuesta">Esperando respuesta...</pre>
-  
+
+  <h2>Test HTML_GASBackend_Stability</h2>
+
+  <label>Prompt para Imagen:</label>
+  <textarea id="prompt_image" placeholder="Describe la imagen a generar..."></textarea>
+  <button id="send_image">Generar Imagen</button>
+  <label>Resultado:</label>
+  <pre id="respuesta_image">Esperando respuesta...</pre>
+
   <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbwVXklQ2ljmMUxys7fCh5ygUyS3jheoHQO3SIYvLr9ETQcOABgrMdaLrCEiiDBpStmW/exec";
-  
+
+    // === Gemini Text-to-Text ===
     document.getElementById("send").addEventListener("click", async () => {
       const prompt = document.getElementById("prompt").value.trim();
       if (!prompt) return alert("Escribe un prompt primero.");
-  
       document.getElementById("respuesta").textContent = "⏳ Generando respuesta...";
-  
+
       try {
         const resp = await fetch(GAS_URL, {
           method: "POST",
-          headers: { "Content-Type": "text/plain" }, // evita preflight
-          body: JSON.stringify({
-            omniToken: "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS",
-            action: "geminiPrompt",
-            prompt: prompt
-          })
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({ omniToken: "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS", action: "geminiPrompt", prompt })
         });
-  
         const data = await resp.json();
-        console.log("Respuesta completa:", data);
-  
-        const texto = data?.output || "Sin respuesta";
-        document.getElementById("respuesta").textContent = texto;
-      } catch (err) {
-        console.error("Error:", err);
+        console.log("Respuesta completa Gemini:", data);
+        document.getElementById("respuesta").textContent = data?.output || data?.error || "Sin respuesta";
+      } catch(err) {
+        console.error("Error Gemini:", err);
         document.getElementById("respuesta").textContent = "❌ Error al conectar con el backend.";
+      }
+    });
+
+    // === Stability AI Text-to-Image ===
+    document.getElementById("send_image").addEventListener("click", async () => {
+      const prompt = document.getElementById("prompt_image").value.trim();
+      if (!prompt) return alert("Escribe un prompt para la imagen primero.");
+      document.getElementById("respuesta_image").textContent = "⏳ Generando imagen...";
+
+      try {
+        const resp = await fetch(GAS_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({ omniToken: "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS", action: "stabilityImage", prompt })
+        });
+        const data = await resp.json();
+        console.log("Respuesta completa Stability:", data);
+
+        if(data?.ok && data?.imageUrl) {
+          document.getElementById("respuesta_image").innerHTML = `<img src="${data.imageUrl}" width="100%" />`;
+        } else {
+          document.getElementById("respuesta_image").textContent = data?.error || "Sin respuesta";
+        }
+      } catch(err) {
+        console.error("Error Stability:", err);
+        document.getElementById("respuesta_image").textContent = "❌ Error al conectar con el backend.";
       }
     });
   </script>
 
 </body>
 </html>
-
