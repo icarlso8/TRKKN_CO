@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>OAdsAI_GASBackend_Gemini</title>
+  <title>OAdsAI_GASBackend</title>
   <link rel="icon" href="assets/TRKKN_icon.png" type="image/png" />
 
   <style> 
@@ -108,6 +108,9 @@
   <img id="imagen" style="display:none;" alt="Imagen generada" />
   
   <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwVXklQ2ljmMUxys7fCh5ygUyS3jheoHQO3SIYvLr9ETQcOABgrMdaLrCEiiDBpStmW/exec";
+    const omniToken = "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS";
+
     async function enviarPrompt(action) {
       const prompt = document.getElementById("prompt").value.trim();
       if (!prompt) return alert("Escribe un prompt primero.");
@@ -116,23 +119,35 @@
       document.getElementById("imagen").style.display = "none";
 
       try {
-        google.script.run.withSuccessHandler(data => {
-          console.log("Respuesta completa:", data);
+        const res = await fetch(GAS_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + omniToken
+          },
+          body: JSON.stringify({ prompt, action })
+        });
 
-          if (action === "text2text") {
-            document.getElementById("respuesta").textContent = data || "Sin respuesta";
-          } else if (action === "text2image") {
-            if (data.startsWith("data:image")) {
-              document.getElementById("respuesta").textContent = "✅ Imagen generada:";
-              const img = document.getElementById("imagen");
-              img.src = data;
-              img.style.display = "block";
-            } else {
-              document.getElementById("respuesta").textContent = data;
-            }
+        const data = await res.json();
+        console.log("Respuesta completa:", data);
+
+        if (data.error) {
+          document.getElementById("respuesta").textContent = "❌ Error: " + data.error;
+          return;
+        }
+
+        if (action === "text2text") {
+          document.getElementById("respuesta").textContent = data.result || "Sin respuesta";
+        } else if (action === "text2image") {
+          if (data.result && data.result.startsWith("data:image")) {
+            document.getElementById("respuesta").textContent = "✅ Imagen generada:";
+            const img = document.getElementById("imagen");
+            img.src = data.result;
+            img.style.display = "block";
+          } else {
+            document.getElementById("respuesta").textContent = data.result || "⚠️ No se generó imagen.";
           }
-        })[action === "text2text" ? "generarTexto" : "generarImagen"](prompt);
-
+        }
       } catch (err) {
         console.error("Error:", err);
         document.getElementById("respuesta").textContent = "❌ Error al conectar con el backend.";
