@@ -38,18 +38,26 @@
       border-radius: 6px;
       cursor: pointer;
       margin-bottom: 15px;
+      margin-right: 10px;
     }
     button:hover {
       background: #45a049;
     }
     #respuesta {
       background: white;
-      white-space: pre-wrap; /* Mantiene saltos de línea */
+      white-space: pre-wrap;
       min-height: 120px;
       border: 1px solid #ccc;
       padding: 10px;
       border-radius: 6px;
       font-family: monospace;
+    }
+    #imagen {
+      display: block;
+      max-width: 100%;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
     }
     label, textarea, button, pre {
       display: block;
@@ -57,79 +65,96 @@
     }
   </style>
 
-  <!-- ✅ Protección de sesión con Firebase -->
-  <!-- display:none inicial en <head> oculta el body por defecto y se quita en el else de onAuthStateChanged " document.getElementById("hide-body-style")?.remove();" -->
+  <!-- ✅ Protección con Firebase -->
   <style id="hide-body-style">
     body { display: none; } 
   </style>
-  <!-- El script de autenticación debe ejecutarse antes de que el HTML se pinte, para eso se copia antes del cierre del <head> -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { firebaseConfig } from "./firebase-config.js";
   
-      /* window.addEventListener("DOMContentLoaded", () => { */ /* Ya no es necesario */
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
   
-      onAuthStateChanged(auth, user => {
-        if (!user) {
-          alert("🔒 Inicia sesión Trkkie!");
-          window.location.href = "auth.html";
-        } else {
-          console.log("✅ Usuario autenticado:", user.email);
-          document.getElementById("hide-body-style")?.remove();
-          document.body.style.display = "block";
-        }
-      });
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        alert("🔒 Inicia sesión Trkkie!");
+        window.location.href = "auth.html";
+      } else {
+        console.log("✅ Usuario autenticado:", user.email);
+        document.getElementById("hide-body-style")?.remove();
+        document.body.style.display = "block";
+      }
+    });
   </script>
 </head>
   
 <body>
-
   <h2>Test HTML_GASBackend_Gemini</h2>
   
   <label>Prompt:</label>
   <textarea id="prompt" placeholder="Escribe tu prompt aquí..."></textarea>
   
-  <button id="send">Enviar a Gemini</button>
+  <!-- 🔘 Dos botones: uno para texto y otro para imágenes -->
+  <button id="sendText">Enviar a Gemini (Texto)</button>
+  <button id="sendImage">Enviar a Gemini (Imagen)</button>
     
   <label>Respuesta:</label>
-    
   <pre id="respuesta">Esperando respuesta...</pre>
+
+  <!-- Contenedor para mostrar imágenes -->
+  <img id="imagen" style="display:none;" alt="Imagen generada" />
   
   <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbwVXklQ2ljmMUxys7fCh5ygUyS3jheoHQO3SIYvLr9ETQcOABgrMdaLrCEiiDBpStmW/exec";
-  
-    document.getElementById("send").addEventListener("click", async () => {
+    const OMNI_TOKEN = "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS";
+
+    // === Función común ===
+    async function enviarPrompt(action) {
       const prompt = document.getElementById("prompt").value.trim();
       if (!prompt) return alert("Escribe un prompt primero.");
-  
-      document.getElementById("respuesta").textContent = "⏳ Generando respuesta...";
-  
+
+      document.getElementById("respuesta").textContent = "⏳ Generando...";
+      document.getElementById("imagen").style.display = "none";
+
       try {
         const resp = await fetch(GAS_URL, {
           method: "POST",
-          headers: { "Content-Type": "text/plain" }, // evita preflight
+          headers: { "Content-Type": "text/plain" },
           body: JSON.stringify({
-            omniToken: "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS",
-            action: "geminiPrompt",
+            omniToken: OMNI_TOKEN,
+            action: action,
             prompt: prompt
           })
         });
-  
+
         const data = await resp.json();
         console.log("Respuesta completa:", data);
-  
-        const texto = data?.output || "Sin respuesta";
-        document.getElementById("respuesta").textContent = texto;
+
+        if (action === "text2text") {
+          const texto = data?.output || "Sin respuesta";
+          document.getElementById("respuesta").textContent = texto;
+        } else if (action === "text2image") {
+          const urlImg = data?.output || "";
+          if (urlImg) {
+            document.getElementById("respuesta").textContent = "✅ Imagen generada:";
+            const img = document.getElementById("imagen");
+            img.src = urlImg;
+            img.style.display = "block";
+          } else {
+            document.getElementById("respuesta").textContent = "❌ No se recibió imagen.";
+          }
+        }
       } catch (err) {
         console.error("Error:", err);
         document.getElementById("respuesta").textContent = "❌ Error al conectar con el backend.";
       }
-    });
-  </script>
+    }
 
+    // Listeners de botones
+    document.getElementById("sendText").addEventListener("click", () => enviarPrompt("text2text"));
+    document.getElementById("sendImage").addEventListener("click", () => enviarPrompt("text2image"));
+  </script>
 </body>
 </html>
-
