@@ -65,7 +65,7 @@
     }
   </style>
 
-  <!-- ✅ Protección con Firebase -->
+  <!-- 🔒 Protección con Firebase -->
   <style id="hide-body-style">
     body { display: none; } 
   </style>
@@ -96,21 +96,21 @@
   <label>Prompt:</label>
   <textarea id="prompt" placeholder="Escribe tu prompt aquí..."></textarea>
   
-  <!-- 🔘 Dos botones: uno para texto y otro para imágenes -->
-  <button id="sendText">Enviar a Gemini (Texto)</button>
-  <button id="sendImage">Enviar a Gemini (Imagen)</button>
+  <!-- 🔘 Botones -->
+  <button id="sendText">Gemini (Texto)</button>
+  <button id="sendImage">Gemini (Imagen)</button>
     
   <label>Respuesta:</label>
   <pre id="respuesta">Esperando respuesta...</pre>
 
-  <!-- Contenedor para mostrar imágenes -->
+  <!-- Contenedor para imágenes -->
   <img id="imagen" style="display:none;" alt="Imagen generada" />
   
   <script>
+    // ⚡ Config GAS
     const GAS_URL = "https://script.google.com/macros/s/AKfycbwVXklQ2ljmMUxys7fCh5ygUyS3jheoHQO3SIYvLr9ETQcOABgrMdaLrCEiiDBpStmW/exec";
     const OMNI_TOKEN = "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS";
 
-    // === Función común ===
     async function enviarPrompt(action) {
       const prompt = document.getElementById("prompt").value.trim();
       if (!prompt) return alert("Escribe un prompt primero.");
@@ -133,8 +133,7 @@
         console.log("Respuesta completa:", data);
 
         if (action === "text2text") {
-          const texto = data?.output || "Sin respuesta";
-          document.getElementById("respuesta").textContent = texto;
+          document.getElementById("respuesta").textContent = data?.output || "Sin respuesta";
         } else if (action === "text2image") {
           const urlImg = data?.output || "";
           if (urlImg) {
@@ -152,7 +151,6 @@
       }
     }
 
-    // Listeners de botones
     document.getElementById("sendText").addEventListener("click", () => enviarPrompt("text2text"));
     document.getElementById("sendImage").addEventListener("click", () => enviarPrompt("text2image"));
   </script>
