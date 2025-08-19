@@ -229,21 +229,28 @@
     }
     /* ===== Splitter layout ===== */
     #col-formularios { width: 540px; flex: none; min-width: 320px; } /* izquierda fija */
-    #col-flex-container { display: flex; flex: 1; gap: 20px; align-items: flex-start; }
-    
-    #col-canvas { flex: 1; min-width: 300px; overflow-y: auto; max-height: 90vh; }
+    #col-flex-container {
+      display: flex;
+      flex: 1;
+      align-items: stretch; /* que todas las columnas ocupen la misma altura */
+    }
+    #col-canvas {
+      flex: 1;
+      min-width: 300px;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    #col-gemini {
+      flex: 0.33;
+      min-width: 250px;
+      max-width: 420px;
+      overflow: auto;
+    }
     #splitter {
       width: 8px;
       cursor: col-resize;
-      /* background: linear-gradient(90deg,#efefef,#f7f7f7); */
-      background: red;
-      border-left: 1px solid #e0e0e0;
-      border-right: 1px solid #e0e0e0;
-      transition: background .12s;
+      background: red; /* déjalo rojo hasta probar */
     }
-    #splitter:hover { background: linear-gradient(90deg,#e8e8e8,#f0f0f0); }
-    
-    #col-gemini { flex: 0.33; min-width: 250px; max-width: 420px; overflow:auto; }
   </style>
   <script type="module" src="./js/auth.js"></script>
 </head>
