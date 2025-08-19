@@ -16,6 +16,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"; //  Trae los módulos de Firebase desde el CDN oficial
 import { firebaseConfig } from "../../../firebase-config.js"; //Ruta Relativa al firebase-config.js (Configuración)
 
+// 👇 importa el splitter
+import { initSplitter } from "./splitter.js";
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
@@ -26,6 +29,9 @@ onAuthStateChanged(auth, user => {
   } else {
     console.log("✅ Usuario autenticado:", user.email);
     document.body.style.display = "block";
+
+    // 👇 inicializa el splitter después de mostrar el body
+    initSplitter();
+    
   }
 });
-
