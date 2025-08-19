@@ -15,6 +15,7 @@
       background: #fff;
       color: #000;
       padding: 20px;
+      overflow-x: hidden; /* Oculta scroll horizontal */
     }
     form {
       display: flex;
@@ -203,8 +204,10 @@
     #main-container {
       display: flex;
       gap: 20px;
+      align-items: flex-start;
+      overflow: hidden; /* Previene desbordamiento horizontal */
+      max-width: 100%; /* Asegura que no exceda el viewport */
     }
-    
     #col-formularios,
     #col-canvas,
     #col-gemini {
@@ -327,6 +330,7 @@
       // cargar audiencias y factores vacíos inicialmente (pasamos string vacío)
       await cargarAudienciaFactores("");
       await borradoPorTeclado();
+      initSplitter();
       // await cargarTamanosYCanvas(); NO LLAMAR cargarTamanosYCanvas() al cargar la página (antes sí la llamabas al cargar audiencias).
       
       // Al cambiar el producto en el dropdown recarga audiencias y factores
