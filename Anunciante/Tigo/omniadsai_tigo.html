@@ -227,6 +227,22 @@
       font-size: 1.1em;
       padding: 0 10px;
     }
+    /* ===== Splitter layout ===== */
+    #col-formularios { width: 540px; flex: none; min-width: 320px; } /* izquierda fija */
+    #col-flex-container { display: flex; flex: 1; gap: 20px; align-items: flex-start; }
+    
+    #col-canvas { flex: 1; min-width: 300px; overflow-y: auto; max-height: 90vh; }
+    #splitter {
+      width: 8px;
+      cursor: col-resize;
+      background: linear-gradient(90deg,#efefef,#f7f7f7);
+      border-left: 1px solid #e0e0e0;
+      border-right: 1px solid #e0e0e0;
+      transition: background .12s;
+    }
+    #splitter:hover { background: linear-gradient(90deg,#e8e8e8,#f0f0f0); }
+    
+    #col-gemini { flex: 0.33; min-width: 250px; max-width: 420px; overflow:auto; }
   </style>
   <script type="module" src="./js/auth.js"></script>
 </head>
@@ -236,34 +252,40 @@
 
   <div id="main-container" style="display: flex; gap: 20px; align-items: flex-start;">
 
-    <!-- Columna izquierda: Formularios -->
-    <div id="col-formularios" style="flex: 1; max-width: 540px; display: flex; flex-direction: column; gap: 16px;">
+    <!-- Columna izquierda: Formularios (Fija) -->
+    <div id="col-formularios" style="display: flex; flex-direction: column; gap: 16px;">
       <form id="formulario"></form>
     </div>
 
-    <!-- Columna central: Canvas -->
-    <div id="col-canvas" style="flex: 2; display: flex; flex-direction: column; gap: 20px;">
-      <fieldset class="canvas-column-group">
-        <legend>🎨 Tamaños / Plantillas</legend>
-        <div class="canvas-wrapper" id="canvasContainer"></div>
-      </fieldset>
-    </div>
+    <!-- Contenedor flexible: central + splitter + derecha -->
+    <div id="col-flex-container">
 
-    <!-- Columna derecha: Gemini AI -->
-    <div id="col-gemini" style="flex: 1; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
-      <fieldset class="canvas-column-group">
-        <legend>
-          <img src="./logo_gemini.png" alt="logo_gemini" style="height: 40px; vertical-align: middle; margin-right: 4px;">
-          Agentes
-        </legend>
-        <textarea id="gemini-prompt" rows="10" style="width:100%;"></textarea>
-        <button id="gemini-generar" type="button">Generar</button>
-        <div id="gemini-output"></div>
-      </fieldset>
-    </div>
+      <!-- Columna central: Canvas -->
+      <div id="col-canvas">
+        <fieldset class="canvas-column-group">
+          <legend>🎨 Tamaños / Plantillas</legend>
+          <div class="canvas-wrapper" id="canvasContainer"></div>
+        </fieldset>
+      </div>
 
-  </div>
+      <!-- Splitter (arrastrable) -->
+      <div id="splitter" role="separator" aria-orientation="vertical" aria-label="Redimensionar columnas"></div>
 
+      <!-- Columna derecha: Gemini AI -->
+      <div id="col-gemini">
+        <fieldset class="canvas-column-group">
+          <legend>
+            <img src="./logo_gemini.png" alt="logo_gemini" style="height: 40px; vertical-align: middle; margin-right: 4px;">
+            Agentes
+          </legend>
+          <textarea id="gemini-prompt" rows="10" style="width:100%;"></textarea>
+          <button id="gemini-generar" type="button">Generar</button>
+          <div id="gemini-output"></div>
+        </fieldset>
+      </div>
+    </div> <!-- fin col-flex-container -->
+  </div> <!-- fin main-container -->
+    
   <script type="module">
     import { cargarJerarquia } from "./js/infoProduct.js";
     import { cargarAudienciaFactores } from "./js/audienciaFactores.js";
