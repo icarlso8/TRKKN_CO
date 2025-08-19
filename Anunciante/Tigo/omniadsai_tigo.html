@@ -233,23 +233,44 @@
       display: flex;
       flex: 1;
       align-items: stretch; /* que todas las columnas ocupen la misma altura */
+      min-width: 0; /* Importante para contener el contenido */
+      overflow: hidden; /* Previene que se salga del contenedor */
     }
     #col-canvas {
-      flex: 1;
-      min-width: 540px;
+      flex: 1 1 540px; /* Flex-grow, flex-shrink, flex-basis */
+      min-width: 300px; /* Ancho mínimo más conservador */
+      max-width: 800px; /* Límite máximo */
       overflow-y: auto;
-      max-height: 90vh;
-    }
-    #col-gemini {
-      flex: 1;
-      min-width: 420px;
-      max-width: 480px;
-      overflow: auto;
+      height: 90vh;
     }
     #splitter {
       width: 8px;
       cursor: col-resize;
-      background: red; /* déjalo rojo hasta probar */
+      background: #cbd5e0;
+      flex: none;
+      transition: background 0.2s ease;
+      position: relative;
+    }
+    #splitter:hover {
+      background: #a0aec0;
+    }
+    #splitter::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 2px;
+      height: 40px;
+      background: #718096;
+      border-radius: 1px;
+    }
+    #col-gemini {
+      flex: 1 1 420px;
+      min-width: 250px; /* Ancho mínimo reducido */
+      max-width: 500px; /* Límite máximo */
+      overflow: auto;
+      height: 90vh;
     }
   </style>
   <script type="module" src="./js/auth.js"></script>
