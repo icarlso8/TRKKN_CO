@@ -1,5 +1,6 @@
 // splitter.js
 export function initSplitter() {
+  console.log("✅ initSplitter cargado");
   const splitter = document.getElementById("splitter");
   const colCentral = document.getElementById("col-canvas");
   const colAgentes = document.getElementById("col-gemini");
@@ -52,3 +53,4 @@ export function initSplitter() {
     document.removeEventListener("touchend", stopResize);
   }
 }
+
