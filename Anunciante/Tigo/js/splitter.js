@@ -3,23 +3,24 @@ export function initSplitter() {
   const colCanvas = document.getElementById('col-canvas');
   const colGemini = document.getElementById('col-gemini');
   const colFlexContainer = document.getElementById('col-flex-container');
+  const mainContainer = document.getElementById('main-container');
   
   let isResizing = false;
   let startX, startCanvasWidth, startGeminiWidth;
 
-  // Configuración de límites
-  const MIN_CANVAS_WIDTH = 300;
-  const MAX_CANVAS_WIDTH = 800;
-  const MIN_GEMINI_WIDTH = 250;
-  const MAX_GEMINI_WIDTH = 500;
+  // Configuración de límites - AUMENTAR el ancho máximo del canvas
+  const MIN_CANVAS_WIDTH = 400; // Aumentar mínimo
+  const MAX_CANVAS_WIDTH = 1000; // Aumentar máximo
+  const MIN_GEMINI_WIDTH = 280; // Aumentar mínimo para mejor visualización
+  const MAX_GEMINI_WIDTH = 600; // Aumentar máximo
 
   // Configuración inicial automática
   function setupInitialLayout() {
     const containerWidth = colFlexContainer.offsetWidth;
     const availableWidth = containerWidth - splitter.offsetWidth;
     
-    // Asignar 60% al canvas y 40% a gemini inicialmente
-    const initialCanvasWidth = Math.min(availableWidth * 0.6, MAX_CANVAS_WIDTH);
+    // Asignar 70% al canvas y 30% a gemini inicialmente (más espacio para canvas)
+    const initialCanvasWidth = Math.min(availableWidth * 0.7, MAX_CANVAS_WIDTH);
     const initialGeminiWidth = availableWidth - initialCanvasWidth;
     
     // Aplicar límites
@@ -31,10 +32,27 @@ export function initSplitter() {
     
     colGemini.style.width = `${finalGeminiWidth}px`;
     colGemini.style.flex = `0 0 ${finalGeminiWidth}px`;
+    
+    console.log('Layout configurado:', {
+      container: containerWidth,
+      canvas: finalCanvasWidth,
+      gemini: finalGeminiWidth,
+      total: finalCanvasWidth + finalGeminiWidth + splitter.offsetWidth
+    });
   }
 
-  // Ejecutar configuración inicial
-  setTimeout(setupInitialLayout, 100); // Pequeño delay para asegurar que el DOM esté renderizado
+  // Ejecutar configuración inicial con mejor timing
+  function initialize() {
+    // Pequeño delay para asegurar que el DOM esté renderizado completamente
+    setTimeout(() => {
+      setupInitialLayout();
+      // Reforzar después de que todos los recursos carguen
+      setTimeout(setupInitialLayout, 500);
+    }, 100);
+  }
+
+  // Inicializar
+  initialize();
 
   splitter.addEventListener('mousedown', function(e) {
     isResizing = true;
@@ -104,4 +122,7 @@ export function initSplitter() {
 
   // Reajustar layout cuando cambie el tamaño de la ventana
   window.addEventListener('resize', setupInitialLayout);
+  
+  // También ajustar cuando se cargue completamente la ventana
+  window.addEventListener('load', setupInitialLayout);
 }
