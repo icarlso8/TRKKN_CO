@@ -1,0 +1,11 @@
+{
+  "gastrofast_advanced": [
+    { "id": "embarazadas", "nombre": "Embarazadas", "emoji": "🤰", "factores_disponibles": ["momento"] },
+    { "id": "oficinistas", "nombre": "Oficinistas", "emoji": "💼", "factores_disponibles": ["momento"] },
+    { "id": "universitarios", "nombre": "Universitarios", "emoji": "🎓", "factores_disponibles": ["momento"] },
+    { "id": "adulto_mayor", "nombre": "Adulto mayor", "emoji": "👵", "factores_disponibles": ["momento"] },
+    { "id": "conductores", "nombre": "Conductores/Repartidores", "emoji": "🚚", "factores_disponibles": ["momento"] },
+    { "id": "medicados", "nombre": "Medicados", "emoji": "😷", "factores_disponibles": ["momento"] },
+    { "id": "foodies", "nombre": "Foodies", "emoji": "🍔", "factores_disponibles": ["momento"] }
+  ]
+}

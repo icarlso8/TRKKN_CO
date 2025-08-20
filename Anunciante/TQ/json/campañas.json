@@ -1,0 +1,11 @@
+{
+  "farmaceutico": {
+    "gastrointestinal": {
+      "gastrofast_advanced": [
+        { "id": "campana1", "nombre": "Gastrofast, ¿Gastro qué?, Gastrofast!" }
+      ]
+    }
+  }
+}
+
+
