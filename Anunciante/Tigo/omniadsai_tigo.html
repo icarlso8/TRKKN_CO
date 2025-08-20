@@ -240,7 +240,7 @@
       overflow: hidden; /* Previene que se salga del contenedor */
     }
     #col-canvas {
-      flex: 1 1 540px; /* Flex-grow, flex-shrink, flex-basis */
+      flex: 1 1 auto; /* Cambiado a auto para mejor adaptación */
       min-width: 300px; /* Ancho mínimo más conservador */
       max-width: 800px; /* Límite máximo */
       overflow-y: auto;
@@ -269,11 +269,34 @@
       border-radius: 1px;
     }
     #col-gemini {
-      flex: 1 1 420px;
+      flex: 1 1 auto; /* Cambiado a auto para mejor adaptación */
       min-width: 250px; /* Ancho mínimo reducido */
       max-width: 500px; /* Límite máximo */
       overflow: auto;
       height: 90vh;
+    }
+    /* Asegurar que el textarea ocupe todo el ancho disponible */
+    #gemini-prompt {
+      width: 100%;
+      box-sizing: border-box;
+      resize: vertical;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 10px;
+      font-family: 'Mulish', sans-serif;
+    }
+    /* Ajustar el fieldset para que ocupe todo el espacio */
+    .canvas-column-group {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      height: 100%; /* Ocupa toda la altura */
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+    .canvas-column-group > * {
+      box-sizing: border-box;
     }
   </style>
   <script type="module" src="./js/auth.js"></script>
