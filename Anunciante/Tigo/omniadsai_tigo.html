@@ -249,56 +249,52 @@
     /* ===== ESTILOS DEL SPLITTER ===== */
     .splitter {
       width: 16px;
-      background: linear-gradient(to right, #f0f0f0, #e8e8e8);
+      background: #fff;
       cursor: col-resize;
       display: flex !important;
       align-items: center;
       justify-content: center;
       position: relative;
-      border-left: 1px solid #d0d0d0;
-      border-right: 1px solid #d0d0d0;
       transition: all 0.2s ease;
       margin: 0;
       z-index: 10;
       flex-shrink: 0;
     }
     .splitter:hover {
-      background: linear-gradient(to right, #e0e0e0, #d8d8d8);
+        background: #f8f9fa;
     }
     .splitter::before {
-      content: "↔";
-      font-size: 16px;
-      color: #888;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 32px;
+        width: 3px;
+        background: #dee2e6;
+        border-radius: 3px;
     }
     .splitter::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      height: 40px;
-      width: 4px;
-      background: #ccc;
-      border-radius: 2px;
-      opacity: 0.6;
-      z-index: 1;
+        content: "• • •";
+        font-size: 12px;
+        color: #adb5bd;
+        letter-spacing: 2px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bold;
     }
     .splitter.active {
-      background: linear-gradient(to right, #d0d0d0, #c8c8c8);
+        background: #e9ecef;
     }
     .splitter.active::before {
-      color: #555;
+        background: #495057;
     }
     .splitter.active::after {
-      background: #888;
-      opacity: 0.8;
+        color: #495057;
     }
-    /* Extender el área clickeable */
+    /* Extender el área clickeable SOLUCIÓN CURSOR LEJANO*/
     .splitter:hover::after {
       left: -6px;
       right: -6px;
