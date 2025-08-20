@@ -200,22 +200,41 @@
       height: 20px;
       box-sizing: border-box;
     }
+    /* ===== ESTILOS GENERALES DEL CONTENEDOR PRINCIPAL ===== */
     #main-container {
       display: flex;
       gap: 0;
       align-items: flex-start;
       position: relative;
+      width: 100%;
     }
-    #col-formularios,
-    #col-canvas,
-    #col-gemini {
+    /* ===== ESTILOS DE COLUMNAS ===== */
+    #col-formularios {
+      width: 480px;
+      min-width: 480px;
       display: flex;
       flex-direction: column;
       gap: 16px;
+      flex-shrink: 0;
     }
     #col-canvas {
+      flex: 1;
+      min-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
       overflow-y: auto;
-      max-height: 90vh; /* se ajusta a la altura de la pantalla */
+      max-height: 90vh;
+    }
+    #col-gemini {
+      width: 480px;
+      min-width: 480px;
+      max-width: calc(100vw - 500px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex-shrink: 0;
     }
     .canvas-column-group {
       border: 1px solid #ddd;
@@ -227,31 +246,7 @@
       font-size: 1.1em;
       padding: 0 10px;
     }
-    /* Columnas con nuevo sistema de tamaño */
-    #col-formularios {
-      width: 480px;
-      min-width: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    #col-gemini {
-      width: 480px;
-      min-width: 480px;
-      max-width: calc(100vw - 500px);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    #col-canvas {
-      flex: 1;
-      min-width: 400px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      position: relative;
-    }
-    /* Splitter entre columna central y Gemini */
+    /* ===== ESTILOS DEL SPLITTER ===== */
     .splitter {
       width: 16px;
       background: linear-gradient(to right, #f0f0f0, #e8e8e8);
@@ -264,6 +259,8 @@
       border-right: 1px solid #d0d0d0;
       transition: all 0.2s ease;
       margin: 0;
+      z-index: 10;
+      flex-shrink: 0;
     }
     .splitter:hover {
       background: linear-gradient(to right, #e0e0e0, #d8d8d8);
@@ -276,6 +273,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      z-index: 2;
     }
     .splitter::after {
       content: "";
@@ -288,6 +286,7 @@
       background: #ccc;
       border-radius: 2px;
       opacity: 0.6;
+      z-index: 1;
     }
     .splitter.active {
       background: linear-gradient(to right, #d0d0d0, #c8c8c8);
@@ -298,6 +297,39 @@
     .splitter.active::after {
       background: #888;
       opacity: 0.8;
+    }
+    /* Extender el área clickeable */
+    .splitter:hover::after {
+      left: -6px;
+      right: -6px;
+    }
+    /* ===== ESTILOS RESPONSIVOS ===== */
+    @media (max-width: 1600px) {
+      #col-formularios {
+        width: 420px;
+        min-width: 420px;
+      }
+      
+      #col-gemini {
+        width: 420px;
+        min-width: 420px;
+      }
+    }
+    
+    @media (max-width: 1400px) {
+      #col-formularios {
+        width: 380px;
+        min-width: 380px;
+      }
+      
+      #col-gemini {
+        width: 380px;
+        min-width: 380px;
+      }
+      
+      #col-canvas {
+        min-width: 350px;
+      }
     }
     /* Textarea de Agentes fijo */
     #gemini-prompt {
