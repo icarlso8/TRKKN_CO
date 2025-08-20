@@ -3,7 +3,7 @@ const GAS_URL   = window.GAS_URL   || "https://script.google.com/macros/s/AKfycb
 const OMNI_TOKEN = window.OMNI_TOKEN || "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS";
 
 // === Ruta del prompts.json (CORREGIDA) ===
-const PROMPTS_URL = "../json/prompts.json";
+const PROMPTS_URL = "../../Anunciante/Tigo/json/prompts.json";
 
 // --- utilidades ---
 const byId = (id) => document.getElementById(id);
@@ -179,3 +179,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error iniciando agentes:", e);
   }
 });
+
