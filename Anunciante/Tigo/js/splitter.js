@@ -10,9 +10,12 @@ export function inicializarSplitter() {
     }
     
     let isResizing = false;
+    let startX, startWidth;
     
     splitter.addEventListener('mousedown', function(e) {
         isResizing = true;
+        startX = e.clientX;
+        startWidth = parseInt(document.defaultView.getComputedStyle(colGemini).width, 10);
         document.body.style.cursor = 'col-resize';
         document.body.style.userSelect = 'none';
         e.preventDefault();
@@ -27,7 +30,7 @@ export function inicializarSplitter() {
         const canvasMinWidth = 400;
         
         // Calcular nuevo ancho para la columna Gemini
-        let newGeminiWidth = rightEdge - e.clientX - 6; // 6px es la mitad del splitter
+        let newGeminiWidth = startWidth + (startX - e.clientX);
         
         // Aplicar límites
         newGeminiWidth = Math.max(geminiMinWidth, newGeminiWidth);
@@ -43,4 +46,11 @@ export function inicializarSplitter() {
         document.body.style.cursor = '';
         document.body.style.userSelect = '';
     });
+    
+    // Prevenir arrastre de imágenes u otros elementos accidentales
+    splitter.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+    });
+    
+    console.log('✅ Splitter inicializado correctamente');
 }
