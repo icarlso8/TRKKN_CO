@@ -227,6 +227,42 @@
       font-size: 1.1em;
       padding: 0 10px;
     }
+    #col-gemini .agente-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    
+    #col-gemini .agente-header {
+      display: flex;
+      justify-content: flex-start;
+    }
+    
+    #col-gemini .agente-btn {
+      font-family: 'Mulish', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    
+    #col-gemini .agente-btn:hover {
+      background: #f5f5f5;
+    }
+    
+    #col-gemini .agente-output {
+      min-height: 80px;
+      padding: 8px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
   </style>
   <script type="module" src="./js/auth.js"></script>
 </head>
@@ -249,16 +285,45 @@
       </fieldset>
     </div>
 
-        <!-- Columna derecha: Gemini AI -->
-    <div id="col-gemini" style="flex: 1; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
+    <!-- Columna derecha: Gemini AI -->
+    <div id="col-gemini" style="flex: 1; max-width: 400px; display: flex; flex-direction: column; gap: 16px;"> 
       <fieldset class="canvas-column-group">
         <legend>
           <img src="./logo_gemini.png" alt="logo_gemini" style="height: 30px; vertical-align: middle; margin-right: 4px;">
           Gemini
         </legend>
-        <textarea id="gemini-prompt" rows="10" style="width:100%;"></textarea>
-        <button id="gemini-generar" type="button">Generar</button>
-        <div id="gemini-output"></div>
+    
+        <!-- ✍️ Copies -->
+        <section class="agente-section">
+          <div class="agente-header">
+            <button type="button" class="agente-btn">✍️ Copies</button>
+          </div>
+          <div id="agente-output-copies" class="agente-output"></div>
+        </section>
+    
+        <!-- 🔎 Insights -->
+        <section class="agente-section">
+          <div class="agente-header">
+            <button type="button" class="agente-btn">🔎 Insights</button>
+          </div>
+          <div id="agente-output-insights" class="agente-output"></div>
+        </section>
+    
+        <!-- 🥊 Competencia -->
+        <section class="agente-section">
+          <div class="agente-header">
+            <button type="button" class="agente-btn">🥊 Competencia</button>
+          </div>
+          <div id="agente-output-competencia" class="agente-output"></div>
+        </section>
+    
+        <!-- 📈 Tendencias -->
+        <section class="agente-section">
+          <div class="agente-header">
+            <button type="button" class="agente-btn">📈 Tendencias</button>
+          </div>
+          <div id="agente-output-tendencias" class="agente-output"></div>
+        </section>
       </fieldset>
     </div>
 
