@@ -208,6 +208,7 @@
       overflow: hidden; /* Previene desbordamiento horizontal */
       max-width: 100%; /* Asegura que no exceda el viewport */
       width: 100%;
+      min-height: auto; /* Permitir que crezca naturalmente */
     }
     #col-formularios,
     #col-canvas,
@@ -223,7 +224,7 @@
     .canvas-column-group {
       border: 1px solid #ddd;
       border-radius: 8px;
-      padding: 16px;
+      padding: 12px;
     }
     
     .canvas-column-group legend {
@@ -239,13 +240,14 @@
       align-items: stretch; /* que todas las columnas ocupen la misma altura */
       min-width: 0; /* Importante para contener el contenido */
       overflow: hidden; /* Previene que se salga del contenedor */
+      gap: 0; /* El splitter ya tiene su propio ancho */
     }
     #col-canvas {
       flex: 1 1 auto; /* Cambiado a auto para mejor adaptación */
       min-width: 300px; /* Ancho mínimo más conservador */
       max-width: 800px; /* Límite máximo */
       overflow-y: auto;
-      height: 90vh;
+      height: 70vh;
     }
     #splitter {
       width: 8px;
@@ -274,18 +276,21 @@
       min-width: 250px; /* Ancho mínimo reducido */
       max-width: 500px; /* Límite máximo */
       overflow: auto;
-      height: 90vh;
+      height: 70vh;
+      padding: 12px; /* Reducir padding un poco */
     }
     /* Asegurar que el textarea ocupe todo el ancho disponible */
     #gemini-prompt {
-      width: 100%;
+      width: 100% !important;
       box-sizing: border-box;
       border: 1px solid #ddd;
       border-radius: 6px;
       padding: 12px;
       font-family: 'Mulish', sans-serif;
       resize: vertical;
-      min-height: 120px;
+      flex: 1;
+      margin: 0;
+      min-height: 100px;
     }
     #gemini-generar {
       padding: 10px 20px;
@@ -324,6 +329,20 @@
     }
     .canvas-column-group > * {
       box-sizing: border-box;
+    }
+    /* Mejorar el layout del fieldset de Gemini */
+    #col-gemini fieldset {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      gap: 10px; /* Espacio entre elementos */
+    }
+    /* Ajustar la sección de resultados para que sea visible */
+    #resultados {
+      margin-top: 20px;
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+      clear: both; /* Asegurar que no flote alrededor de las columnas */
     }
   </style>
   <script type="module" src="./js/auth.js"></script>
