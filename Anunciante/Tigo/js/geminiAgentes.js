@@ -121,39 +121,35 @@ async function loadPrompts() {
 // Vincula botones
 function wireButtons(prompts) {
   const mapSeccion = {
-    copies:      { match: "Copies",       out: "#agente-output-copies" },
-    insights:    { match: "Insights",     out: "#agente-output-insights" },
-    competencia: { match: "Competencia",  out: "#agente-output-competencia" },
-    tendencias:  { match: "Tendencias",   out: "#agente-output-tendencias" }
+    "btn-copies":      { key: "copies",      out: "#agente-output-copies" },
+    "btn-insights":    { key: "insights",    out: "#agente-output-insights" },
+    "btn-competencia": { key: "competencia", out: "#agente-output-competencia" },
+    "btn-tendencias":  { key: "tendencias",  out: "#agente-output-tendencias" }
   };
 
-  document.querySelectorAll("#col-gemini section.agente-section").forEach(section => {
-    const btn = section.querySelector(".agente-btn");
-    const out = section.querySelector(".agente-output");
-    if (!btn || !out) return;
-
-    const label = (btn.textContent || "").trim();
-    const clave = Object.keys(mapSeccion).find(k => label.includes(mapSeccion[k].match));
-    if (!clave) return;
+  Object.entries(mapSeccion).forEach(([btnId, { key, out }]) => {
+    const btn = document.getElementById(btnId);
+    const outDiv = document.querySelector(out);
+    if (!btn || !outDiv) return;
 
     btn.addEventListener("click", async () => {
-      const pdef = prompts[clave];
+      const pdef = prompts[key];
       if (!pdef || !pdef.template) {
-        out.textContent = "⚠️ No hay template para esta sección en prompts.json";
+        outDiv.textContent = "⚠️ No hay template para esta sección en prompts.json";
         return;
       }
 
       const ctx = buildContext();
       const promptFinal = fillTemplate(pdef.template, { ...ctx.raw, ...ctx.norm });
 
-      out.textContent = "⏳ Generando...";
+      outDiv.textContent = "⏳ Generando...";
       btn.disabled = true;
       try {
         const texto = await callGemini(promptFinal);
-        out.textContent = texto || "Sin respuesta";
+        outDiv.textContent = texto || "Sin respuesta";
       } catch (err) {
         console.error(err);
-        out.textContent = `❌ Error: ${err.message || err}`;
+        outDiv.textContent = `❌ Error: ${err.message || err}`;
       } finally {
         btn.disabled = false;
       }
@@ -171,3 +167,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error iniciando agentes:", e);
   }
 });
+
