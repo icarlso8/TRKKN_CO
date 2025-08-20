@@ -245,6 +245,21 @@
       box-sizing: border-box;
       resize: none;       /* ❌ desactiva el redimensionamiento */
     }
+    .btn-seccion {
+      font-family: 'Mulish', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-seccion:hover {
+      background: #f2f2f2;
+      border-radius: 6px;
+    }
   </style>
   <script type="module" src="./js/auth.js"></script>
 </head>
@@ -267,17 +282,37 @@
       </fieldset>
     </div>
 
-    <!-- Columna derecha: Gemini AI -->
-    <div id="col-gemini" style="flex: 1; max-width: 540px; display: flex; flex-direction: column; gap: 16px;">
-      <fieldset class="canvas-column-group">
-        <legend>
-          <img src="./logo_gemini.png" alt="logo_gemini" style="height: 40px; vertical-align: middle; margin-right: 4px;">
-          Agentes
-        </legend>
-        <textarea id="gemini-prompt" rows="10"></textarea>
-        <button id="gemini-generar" type="button">Generar</button>
-        <div id="gemini-output"></div>
-      </fieldset>
+    <!-- Columna Derecha - Gemini -->
+    <div class="columna-derecha">
+      <!-- Logo Gemini -->
+      <div class="header-gemini">
+        <img src="./logo_gemini.png" alt="logo_gemini" 
+             style="height: 40px; vertical-align: middle; margin-right: 4px;">
+      </div>
+    
+      <!-- Sección Copies -->
+      <div class="seccion-gemini">
+        <button class="btn-seccion">✍️ Copies</button>
+        <div class="contenido-seccion" id="contenido-copies"></div>
+      </div>
+    
+      <!-- Sección Insights -->
+      <div class="seccion-gemini">
+        <button class="btn-seccion">🔎 Insights</button>
+        <div class="contenido-seccion" id="contenido-insights"></div>
+      </div>
+    
+      <!-- Sección Competencia -->
+      <div class="seccion-gemini">
+        <button class="btn-seccion">🥊 Competencia</button>
+        <div class="contenido-seccion" id="contenido-competencia"></div>
+      </div>
+    
+      <!-- Sección Tendencias -->
+      <div class="seccion-gemini">
+        <button class="btn-seccion">📈 Tendencias</button>
+        <div class="contenido-seccion" id="contenido-tendencias"></div>
+      </div>
     </div>
 
   </div>
