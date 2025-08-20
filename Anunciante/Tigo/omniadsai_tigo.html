@@ -336,23 +336,26 @@
 <body style="display:none">
   <h1><img src="logo_omniadsai_tigo.png" alt="Cargando Logo Tigo OmniAdsAI TRKKN..." style= "width: 500px; margin-left: 20px" /></h1>
 
-  <div id="main-container" style="display: flex; gap: 20px; align-items: flex-start;">
+  <div id="main-container">
 
     <!-- Columna izquierda: Formularios -->
-    <div id="col-formularios" style="flex: 1; max-width: 540px; display: flex; flex-direction: column; gap: 16px;">
+    <div id="col-formularios">
       <form id="formulario"></form>
     </div>
 
     <!-- Columna central: Canvas -->
-    <div id="col-canvas" style="flex: 2; display: flex; flex-direction: column; gap: 20px;">
+    <div id="col-canvas">
       <fieldset class="canvas-column-group">
         <legend>🎨 Tamaños / Plantillas</legend>
         <div class="canvas-wrapper" id="canvasContainer"></div>
       </fieldset>
     </div>
 
+    <!-- Splitter entre columna central y Gemini -->
+    <div class="splitter" id="canvas-gemini-splitter"></div>
+
     <!-- Columna derecha: Gemini AI -->
-    <div id="col-gemini" style="flex: 1; max-width: 400px; display: flex; flex-direction: column; gap: 16px;"> 
+    <div id="col-gemini"> 
       <fieldset class="canvas-column-group">
         <legend>
           <img src="./logo_geminianimado.webp" alt="logo_gemini" style="height: 30px; vertical-align: middle; margin-right: 4px;">
@@ -392,7 +395,6 @@
         </section>
       </fieldset>
     </div>
-
   </div>
 
   <script type="module">
