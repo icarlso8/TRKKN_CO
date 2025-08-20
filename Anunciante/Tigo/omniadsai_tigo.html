@@ -256,13 +256,14 @@
       width: 12px;
       background: #f0f0f0;
       cursor: col-resize;
-      display: flex;
+      display: flex !important; /* Forzar display */
       align-items: center;
       justify-content: center;
       position: relative;
       border-left: 1px solid #ddd;
       border-right: 1px solid #ddd;
       transition: background 0.2s;
+      margin: 0; /* Eliminar márgenes */
     }
     .splitter:hover {
       background: #e0e0e0;
@@ -273,6 +274,9 @@
       width: 3px;
       background: #ccc;
       border-radius: 2px;
+    }
+    .splitter.active {
+      background: #d0d0d0;
     }
     /* Textarea de Agentes fijo */
     #gemini-prompt {
