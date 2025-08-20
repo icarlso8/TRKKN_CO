@@ -1,9 +1,9 @@
 // === Config: backend GAS ===
 const GAS_URL   = window.GAS_URL   || "https://script.google.com/macros/s/AKfycbwVXklQ2ljmMUxys7fCh5ygUyS3jheoHQO3SIYvLr9ETQcOABgrMdaLrCEiiDBpStmW/exec";
-const OMNI_TOKEN = window.OMNI_TOKEN || "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS"; // <-- reemplaza por tu token (o define window.OMNI_TOKEN antes)
+const OMNI_TOKEN = window.OMNI_TOKEN || "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS";
 
-// === Ruta del prompts.json (ya guardado en Anunciante/Tigo/js) ===
-const PROMPTS_URL = "./json/prompts.json";
+// === Ruta del prompts.json (CORREGIDA) ===
+const PROMPTS_URL = "../json/prompts.json";
 
 // --- utilidades ---
 const byId = (id) => document.getElementById(id);
@@ -69,8 +69,8 @@ const buildContext = () => {
   const segmento   = getVal("segmento");
   const negocio    = getVal("negocio");
   const producto   = getVal("producto");
-  const campania   = getVal("campaña", "campania");
-  const descripcion= getVal("descripcion", "descripcionGeneral", "descripcion_campania");
+  const campania   = getVal("campana");
+  const descripcion= getVal("descripcion");
 
   const audSel     = getCheckedValuesByName("audiencia");
   const audTexto   = toBullets(audSel);
@@ -115,7 +115,19 @@ async function callGemini(promptText) {
 async function loadPrompts() {
   const resp = await fetch(PROMPTS_URL, { cache: "no-store" });
   if (!resp.ok) throw new Error("No se pudo cargar prompts.json");
-  return await resp.json();
+  const data = await resp.json();
+  
+  // Convertir el array a un objeto con claves por id
+  const promptsMap = {};
+  data.prompts.forEach(prompt => {
+    promptsMap[prompt.id] = {
+      template: prompt.plantilla,
+      titulo: prompt.titulo,
+      descripcion: prompt.descripcion
+    };
+  });
+  
+  return promptsMap;
 }
 
 // Vincula botones
@@ -167,5 +179,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error iniciando agentes:", e);
   }
 });
-
-
