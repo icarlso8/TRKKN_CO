@@ -207,6 +207,7 @@
       align-items: flex-start;
       overflow: hidden; /* Previene desbordamiento horizontal */
       max-width: 100%; /* Asegura que no exceda el viewport */
+      width: 100%;
     }
     #col-formularios,
     #col-canvas,
@@ -279,11 +280,37 @@
     #gemini-prompt {
       width: 100%;
       box-sizing: border-box;
-      resize: vertical;
       border: 1px solid #ddd;
       border-radius: 6px;
-      padding: 10px;
+      padding: 12px;
       font-family: 'Mulish', sans-serif;
+      resize: vertical;
+      min-height: 120px;
+    }
+    #gemini-generar {
+      padding: 10px 20px;
+      background: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    
+    #gemini-generar:hover {
+      background: #3367d6;
+    }
+    
+    #gemini-output {
+      margin-top: 15px;
+      padding: 10px;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      background: #f9f9f9;
+      min-height: 100px;
+      max-height: 300px;
+      overflow-y: auto;
     }
     /* Ajustar el fieldset para que ocupe todo el espacio */
     .canvas-column-group {
@@ -328,14 +355,14 @@
 
       <!-- Columna derecha: Gemini AI -->
       <div id="col-gemini">
-        <fieldset class="canvas-column-group">
+        <fieldset class="canvas-column-group" style="display: flex; flex-direction: column; height: 100%;">
           <legend>
             <img src="./logo_gemini.png" alt="logo_gemini" style="height: 40px; vertical-align: middle; margin-right: 4px;">
             Agentes
           </legend>
-          <textarea id="gemini-prompt" rows="10" style="width:100%;"></textarea>
-          <button id="gemini-generar" type="button">Generar</button>
-          <div id="gemini-output"></div>
+          <textarea id="gemini-prompt" rows="10" style="width:100%; flex: 1; box-sizing: border-box;"></textarea>
+          <button id="gemini-generar" type="button" style="margin-top: 10px; padding: 8px 16px;">Generar</button>
+          <div id="gemini-output" style="flex: 1; overflow: auto; margin-top: 10px;"></div>
         </fieldset>
       </div>
     </div> <!-- fin col-flex-container -->
