@@ -13,6 +13,29 @@ export function initSplitter() {
   const MIN_GEMINI_WIDTH = 250;
   const MAX_GEMINI_WIDTH = 500;
 
+  // Configuración inicial automática
+  function setupInitialLayout() {
+    const containerWidth = colFlexContainer.offsetWidth;
+    const availableWidth = containerWidth - splitter.offsetWidth;
+    
+    // Asignar 60% al canvas y 40% a gemini inicialmente
+    const initialCanvasWidth = Math.min(availableWidth * 0.6, MAX_CANVAS_WIDTH);
+    const initialGeminiWidth = availableWidth - initialCanvasWidth;
+    
+    // Aplicar límites
+    const finalCanvasWidth = Math.max(Math.min(initialCanvasWidth, MAX_CANVAS_WIDTH), MIN_CANVAS_WIDTH);
+    const finalGeminiWidth = Math.max(Math.min(initialGeminiWidth, MAX_GEMINI_WIDTH), MIN_GEMINI_WIDTH);
+    
+    colCanvas.style.width = `${finalCanvasWidth}px`;
+    colCanvas.style.flex = `0 0 ${finalCanvasWidth}px`;
+    
+    colGemini.style.width = `${finalGeminiWidth}px`;
+    colGemini.style.flex = `0 0 ${finalGeminiWidth}px`;
+  }
+
+  // Ejecutar configuración inicial
+  setTimeout(setupInitialLayout, 100); // Pequeño delay para asegurar que el DOM esté renderizado
+
   splitter.addEventListener('mousedown', function(e) {
     isResizing = true;
     startX = e.clientX;
@@ -78,4 +101,7 @@ export function initSplitter() {
   splitter.addEventListener('dragstart', function(e) {
     e.preventDefault();
   });
+
+  // Reajustar layout cuando cambie el tamaño de la ventana
+  window.addEventListener('resize', setupInitialLayout);
 }
