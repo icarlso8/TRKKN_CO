@@ -27,8 +27,8 @@ export async function cargarJerarquia() {
 
   const selects = {
     segmento: { label: "🏭 Segmento", opciones: segmentos },
-    negocio: { label: "🧪 Negocio/Marca" },
-    producto: { label: "💊 Producto" },
+    negocio: { label: "📡 Negocio/Marca" },
+    producto: { label: "🛜 Producto" },
     campana: { label: "📣 Campaña" }
   };
 
@@ -150,6 +150,7 @@ export async function cargarJerarquia() {
   });
 
 }
+
 
 
 
