@@ -1,0 +1,28 @@
+{
+  "prompts": [
+    {
+      "id": "copies",
+      "titulo": "Generar Copies Publicitarios",
+      "descripcion": "Crea copies persuasivos y atractivos para la campaña.",
+      "plantilla": "Genera 5 copies creativos y persuasivos para la campaña '{{campaña}}' del producto {{producto}} de {{Anunciante}}, orientada al segmento {{segmento}} en el negocio {{negocio}}. Considera la descripción: {{descripción}}, la audiencia {{audiencia}} y los factores contextuales {{factores_contextuales}}. Los copies deben ser breves, impactantes y adecuados al tono de marketing digital."
+    },
+    {
+      "id": "insights",
+      "titulo": "Generar Insights",
+      "descripcion": "Devuelve un análisis estratégico basado en la campaña y la audiencia.",
+      "plantilla": "Eres un estratega de marketing. Analiza la campaña '{{campaña}}' de {{Anunciante}}, que promueve el producto {{producto}} en el segmento {{segmento}} dentro del negocio {{negocio}}. Se describe como: {{descripción}}. Está dirigida a la audiencia {{audiencia}} y condicionada por los factores contextuales {{factores_contextuales}}. Proporciona insights estratégicos y accionables."
+    },
+    {
+      "id": "competencia",
+      "titulo": "Análisis de Competencia",
+      "descripcion": "Ofrece un análisis comparativo con competidores del sector.",
+      "plantilla": "Realiza un análisis de la competencia para {{Anunciante}} en el negocio {{negocio}}, específicamente sobre el producto {{producto}} y la campaña '{{campaña}}'. Considera el segmento {{segmento}}, la audiencia {{audiencia}} y los factores contextuales {{factores_contextuales}}. Identifica oportunidades, amenazas y diferenciadores frente a competidores."
+    },
+    {
+      "id": "tendencias",
+      "titulo": "Tendencias del Sector",
+      "descripcion": "Identifica tendencias actuales y relevantes en el sector del anunciante.",
+      "plantilla": "Investiga y describe las principales tendencias actuales en el sector {{negocio}} que afectan a empresas como {{Anunciante}}, especialmente en campañas relacionadas con el producto {{producto}} y orientadas al segmento {{segmento}}. Considera la audiencia {{audiencia}}, la descripción de la campaña '{{campaña}}' y los factores contextuales {{factores_contextuales}}. Incluye oportunidades emergentes para destacar."
+    }
+  ]
+}
