@@ -253,30 +253,51 @@
     }
     /* Splitter entre columna central y Gemini */
     .splitter {
-      width: 12px;
-      background: #f0f0f0;
+      width: 16px;
+      background: linear-gradient(to right, #f0f0f0, #e8e8e8);
       cursor: col-resize;
-      display: flex !important; /* Forzar display */
+      display: flex !important;
       align-items: center;
       justify-content: center;
       position: relative;
-      border-left: 1px solid #ddd;
-      border-right: 1px solid #ddd;
-      transition: background 0.2s;
-      margin: 0; /* Eliminar márgenes */
+      border-left: 1px solid #d0d0d0;
+      border-right: 1px solid #d0d0d0;
+      transition: all 0.2s ease;
+      margin: 0;
     }
     .splitter:hover {
-      background: #e0e0e0;
+      background: linear-gradient(to right, #e0e0e0, #d8d8d8);
     }
     .splitter::before {
+      content: "↔";
+      font-size: 16px;
+      color: #888;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .splitter::after {
       content: "";
-      height: 50px;
-      width: 3px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 40px;
+      width: 4px;
       background: #ccc;
       border-radius: 2px;
+      opacity: 0.6;
     }
     .splitter.active {
-      background: #d0d0d0;
+      background: linear-gradient(to right, #d0d0d0, #c8c8c8);
+    }
+    .splitter.active::before {
+      color: #555;
+    }
+    .splitter.active::after {
+      background: #888;
+      opacity: 0.8;
     }
     /* Textarea de Agentes fijo */
     #gemini-prompt {
