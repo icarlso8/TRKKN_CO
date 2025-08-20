@@ -3,7 +3,7 @@ const GAS_URL   = window.GAS_URL   || "https://script.google.com/macros/s/AKfycb
 const OMNI_TOKEN = window.OMNI_TOKEN || "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS"; // <-- reemplaza por tu token (o define window.OMNI_TOKEN antes)
 
 // === Ruta del prompts.json (ya guardado en Anunciante/Tigo/js) ===
-const PROMPTS_URL = "../json/prompts.json";
+const PROMPTS_URL = "./json/prompts.json";
 
 // --- utilidades ---
 const byId = (id) => document.getElementById(id);
@@ -167,4 +167,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error iniciando agentes:", e);
   }
 });
+
 
