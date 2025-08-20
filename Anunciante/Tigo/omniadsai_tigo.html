@@ -204,7 +204,6 @@
       display: flex;
       gap: 20px;
     }
-    
     #col-formularios,
     #col-canvas,
     #col-gemini {
@@ -221,11 +220,25 @@
       border-radius: 8px;
       padding: 16px;
     }
-    
     .canvas-column-group legend {
       font-weight: bold;
       font-size: 1.1em;
       padding: 0 10px;
+    }
+    #col-formularios,
+    #col-gemini {
+      flex: 0 0 540px;   /* fijo a 540px */
+      max-width: 540px;
+      min-width: 540px;
+    }
+    #col-canvas {
+      flex: 1;           /* ocupa el espacio restante */
+      min-width: 0;      /* evita que el contenido empuje las columnas laterales */
+    }
+    #gemini-prompt {
+      width: 480px;           /* ancho fijo */
+      margin: 0 auto;         /* centrado */
+      display: block;
     }
   </style>
   <script type="module" src="./js/auth.js"></script>
@@ -256,7 +269,7 @@
           <img src="./logo_gemini.png" alt="logo_gemini" style="height: 40px; vertical-align: middle; margin-right: 4px;">
           Agentes
         </legend>
-        <textarea id="gemini-prompt" rows="10" style="width:100%;"></textarea>
+        <textarea id="gemini-prompt" rows="10"></textarea>
         <button id="gemini-generar" type="button">Generar</button>
         <div id="gemini-output"></div>
       </fieldset>
