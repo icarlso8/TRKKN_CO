@@ -255,45 +255,43 @@
       align-items: center;
       justify-content: center;
       position: relative;
+      border-left: 1px solid #e9ecef;
+      border-right: 1px solid #e9ecef;
       transition: all 0.2s ease;
       margin: 0;
       z-index: 10;
       flex-shrink: 0;
     }
     .splitter:hover {
-        background: #f8f9fa;
+      background: #f8f9fa;
+      border-color: #dee2e6;
     }
     .splitter::before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        height: 32px;
-        width: 3px;
-        background: #dee2e6;
-        border-radius: 3px;
+      content: "◄►";
+      font-size: 12px;
+      color: #6c757d;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 300;
     }
-    .splitter::after {
-        content: "• • •";
-        font-size: 12px;
-        color: #adb5bd;
-        letter-spacing: 2px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-weight: bold;
+    .splitter:hover::before {
+      content: "◄│►";
+      color: #495057;
     }
+    
     .splitter.active {
-        background: #e9ecef;
+      background: #e9ecef;
+      border-color: #ced4da;
     }
+    
     .splitter.active::before {
-        background: #495057;
+      content: "◄┃►";
+      color: #212529;
+      font-weight: 600;
     }
-    .splitter.active::after {
-        color: #495057;
-    }
+
     /* Extender el área clickeable SOLUCIÓN CURSOR LEJANO*/
     .splitter:hover::after {
       left: -6px;
