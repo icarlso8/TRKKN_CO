@@ -248,7 +248,7 @@
     }
     /* ===== ESTILOS DEL SPLITTER ===== */
     .splitter {
-      width: 16px;
+      width: 12px;
       background: #fff;
       cursor: col-resize;
       display: flex !important;
@@ -260,10 +260,6 @@
       z-index: 10;
       flex-shrink: 0;
     }
-      
-    .splitter:hover {
-      background: #f8f9fa;
-    }
     
     .splitter::before {
       content: "";
@@ -271,41 +267,22 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      height: 40px;
-      width: 4px;
-      background: linear-gradient(to bottom, #e9ecef, #dee2e6, #e9ecef);
-      border-radius: 2px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    
-    .splitter::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      height: 24px;
-      width: 2px;
-      background: #adb5bd;
-      border-radius: 1px;
+      height: 36px;
+      width: 1px;
+      background: #dee2e6;
+      transition: all 0.2s ease;
     }
     
     .splitter:hover::before {
-      background: linear-gradient(to bottom, #dee2e6, #ced4da, #dee2e6);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-    }
-    
-    .splitter:hover::after {
-      background: #6c757d;
+      width: 2px;
+      background: #495057;
+      height: 40px;
     }
     
     .splitter.active::before {
-      background: linear-gradient(to bottom, #ced4da, #adb5bd, #ced4da);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    }
-    
-    .splitter.active::after {
-      background: #495057;
+      width: 3px;
+      background: #212529;
+      height: 44px;
     }
 
     /* Extender el área clickeable SOLUCIÓN CURSOR LEJANO*/
