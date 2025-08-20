@@ -202,7 +202,9 @@
     }
     #main-container {
       display: flex;
-      gap: 20px;
+      gap: 0;
+      align-items: flex-start;
+      position: relative;
     }
     #col-formularios,
     #col-canvas,
@@ -225,19 +227,52 @@
       font-size: 1.1em;
       padding: 0 10px;
     }
+    /* Columnas con nuevo sistema de tamaño */
     #col-formularios {
-      flex: 0 0 480px;   /* fijo a 540px */
-      max-width: 480px;
+      width: 480px;
       min-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
     #col-gemini {
-      flex: 0 0 480px;   /* fijo a 480px */
-      max-width: 480px;
+      width: 480px;
       min-width: 480px;
+      max-width: calc(100vw - 500px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
     #col-canvas {
-      flex: 1;           /* ocupa el espacio restante */
-      min-width: 0;      /* evita que el contenido empuje las columnas laterales */
+      flex: 1;
+      min-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+    }
+    /* Splitter entre columna central y Gemini */
+    .splitter {
+      width: 12px;
+      background: #f0f0f0;
+      cursor: col-resize;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-left: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      transition: background 0.2s;
+    }
+    .splitter:hover {
+      background: #e0e0e0;
+    }
+    .splitter::before {
+      content: "";
+      height: 50px;
+      width: 3px;
+      background: #ccc;
+      border-radius: 2px;
     }
     /* Textarea de Agentes fijo */
     #gemini-prompt {
@@ -365,6 +400,7 @@
     import { cargarAudienciaFactores } from "./js/audienciaFactores.js";
     import { borradoPorTeclado } from "./js/controlesCanvas.js";
     import { cargarTamanosYCanvas } from "./js/canvasLoader.js";
+    import { inicializarSplitter } from "./js/splitter.js";
     import "./js/geminiAgentes.js";
     
     document.addEventListener("DOMContentLoaded", async () => {
@@ -373,6 +409,9 @@
       await cargarAudienciaFactores("");
       await borradoPorTeclado();
       // await cargarTamanosYCanvas(); NO LLAMAR cargarTamanosYCanvas() al cargar la página (antes sí la llamabas al cargar audiencias).
+
+      // Inicializar el splitter después de que todo esté cargado
+      inicializarSplitter();
       
       // Al cambiar el producto en el dropdown recarga audiencias y factores
       const productoSelect = document.getElementById("producto");
