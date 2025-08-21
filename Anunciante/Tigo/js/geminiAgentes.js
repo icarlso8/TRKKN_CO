@@ -154,18 +154,17 @@ function setupClearButtons() {
     const button = document.getElementById(buttonId);
     if (button) {
       // Remover estilos no deseados (borde rojo)
-      //button.style.border = 'none';
-      button.style.border = '1px solid #ccc';
+      button.style.border = 'none';
       button.style.background = 'transparent';
       button.style.cursor = 'pointer';
       button.style.color = '#666';
       button.style.fontSize = '16px';
       button.style.padding = '5px';
-      // button.style.marginLeft = '5px';
+      // button.style.marginLeft = '5px'; Se controla en CSS
       
       // Agregar hover effect similar a los botones principales
       button.addEventListener('mouseenter', () => {
-        button.style.color = '#ff4444';
+        button.style.color = '#fff';
         button.style.transform = 'scale(1.1)';
       });
       
@@ -285,5 +284,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error iniciando agentes:", e);
   }
 });
+
 
 
