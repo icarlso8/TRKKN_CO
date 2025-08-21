@@ -432,11 +432,43 @@
     .btn-borrar:not([style*="display: none"]):hover {
       opacity: 1;
     }
+    /* ===== ESTILOS PARA BOTÓN DE MENÚ ===== */
+    .btn-menu {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 30px;
+      height: 30px;
+      font-size: 40px;
+      padding: 0;
+      border-radius: 6px;
+      border: 1px solid #000000;
+      background-color: #fff;
+      color: #000;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      z-index: 1000;
+      opacity: 0.6;
+    }
+    .btn-menu:hover {
+      background-color: #000000;
+      color: white;
+      transform: scale(1.05);
+      opacity: 1;
+    }
+    .btn-menu:active {
+      transform: scale(0.95);
+    }
   </style>
   <script type="module" src="./js/auth.js"></script>
 </head>
   
 <body style="display:none">
+  <a href="/TRKKN_CO/menu.html" class="btn-menu" title="Ir al menú principal">🔙</a>
   <h1><img src="logo_omniadsai_tigo.png" alt="Cargando Logo Tigo OmniAdsAI TRKKN..." style= "width: 500px; margin-left: 20px" /></h1>
 
   <div id="main-container">
