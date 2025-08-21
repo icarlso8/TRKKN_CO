@@ -3,8 +3,7 @@ const GAS_URL   = window.GAS_URL   || "https://script.google.com/macros/s/AKfycb
 const OMNI_TOKEN = window.OMNI_TOKEN || "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUWS";
 
 // === Ruta del prompts.json (CORREGIDA) ===
-const PROMPTS_URL = "../../Anunciante/Tigo/json/prompts.json"; // RUTA RELATIVA DESDE DONDE SE LLAMA "omniadsai_tigo.html"
-// RUTA ABSOLUTA const PROMPTS_URL = "/TRKKN_CO/Anunciante/Tigo/json/prompts.json";
+const PROMPTS_URL = "../../Anunciante/Tigo/json/prompts.json";
 
 // --- utilidades ---
 const byId = (id) => document.getElementById(id);
@@ -131,13 +130,14 @@ async function loadPrompts() {
   return promptsMap;
 }
 
-// === NUEVO: Configuración de botones de borrado con MutationObserver ===
+// === MEJORADO: Configuración de botones de borrado ===
 function setupClearButtons() {
   // Función para borrar contenido de un área específica
   const clearOutput = (outputSelector) => {
     const outputElement = document.querySelector(outputSelector);
     if (outputElement) {
       outputElement.textContent = "";
+      console.log(`✅ Contenido borrado: ${outputSelector}`);
     }
   };
 
@@ -149,42 +149,84 @@ function setupClearButtons() {
     "btn-clear-tendencias": "#agente-output-tendencias"
   };
 
-  // Configurar event listeners para botones existentes
-  Object.entries(clearButtonsConfig).forEach(([buttonId, outputSelector]) => {
+  // Función para configurar un botón individual
+  const setupButton = (buttonId, outputSelector) => {
     const button = document.getElementById(buttonId);
     if (button) {
-      button.addEventListener("click", () => clearOutput(outputSelector));
+      // Remover estilos no deseados (borde rojo)
+      button.style.border = 'none';
+      button.style.background = 'transparent';
+      button.style.cursor = 'pointer';
+      button.style.color = '#666';
+      button.style.fontSize = '16px';
+      button.style.padding = '5px';
+      button.style.marginLeft = '10px';
+      
+      // Agregar hover effect similar a los botones principales
+      button.addEventListener('mouseenter', () => {
+        button.style.color = '#ff4444';
+        button.style.transform = 'scale(1.1)';
+      });
+      
+      button.addEventListener('mouseleave', () => {
+        button.style.color = '#666';
+        button.style.transform = 'scale(1)';
+      });
+      
+      // Configurar el evento de clic
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clearOutput(outputSelector);
+      });
+      
+      return true;
+    }
+    return false;
+  };
+
+  // Configurar botones existentes inmediatamente
+  let buttonsConfigured = 0;
+  Object.entries(clearButtonsConfig).forEach(([buttonId, outputSelector]) => {
+    if (setupButton(buttonId, outputSelector)) {
+      buttonsConfigured++;
     }
   });
 
-  // Observador para detectar cuando se agreguen nuevos botones de borrado
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'childList') {
-        mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1) { // Element node
-            Object.entries(clearButtonsConfig).forEach(([buttonId, outputSelector]) => {
-              if (node.id === buttonId || node.querySelector(`#${buttonId}`)) {
-                const button = document.getElementById(buttonId);
-                if (button && !button.hasAttribute('data-clear-listener')) {
-                  button.setAttribute('data-clear-listener', 'true');
-                  button.addEventListener("click", () => clearOutput(outputSelector));
-                }
-              }
-            });
-          }
-        });
+  // Si no encontramos botones, usar un observador más agresivo
+  if (buttonsConfigured === 0) {
+    console.log("⏳ Botones de borrado no encontrados, iniciando observador...");
+    
+    const observer = new MutationObserver(() => {
+      let foundCount = 0;
+      Object.entries(clearButtonsConfig).forEach(([buttonId, outputSelector]) => {
+        if (document.getElementById(buttonId) && setupButton(buttonId, outputSelector)) {
+          foundCount++;
+        }
+      });
+      
+      if (foundCount === Object.keys(clearButtonsConfig).length) {
+        observer.disconnect();
+        console.log("✅ Todos los botones de borrado configurados");
       }
     });
-  });
 
-  // Iniciar observación en el documento completo
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
 
-  console.log("✅ Botones de borrado configurados con observador");
+    // También intentar después de un delay por si los botones se cargan async
+    setTimeout(() => {
+      Object.entries(clearButtonsConfig).forEach(([buttonId, outputSelector]) => {
+        if (!document.getElementById(buttonId)?.hasAttribute('data-listener-set')) {
+          setupButton(buttonId, outputSelector);
+        }
+      });
+    }, 1000);
+  } else {
+    console.log(`✅ ${buttonsConfigured} botones de borrado configurados`);
+  }
 }
 
 // Vincula botones
@@ -231,12 +273,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const prompts = await loadPrompts();
     wireButtons(prompts);
+    
+    // Esperar un poco más para asegurar que los botones de borrado estén en el DOM
+    setTimeout(() => {
+      setupClearButtons();
+    }, 300);
+    
     console.log("✅ Agentes Gemini listos.");
   } catch (e) {
     console.error("❌ Error iniciando agentes:", e);
   }
 });
-
-
-
-
