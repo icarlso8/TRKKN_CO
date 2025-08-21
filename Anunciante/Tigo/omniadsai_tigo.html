@@ -248,7 +248,7 @@
     }
     /* ===== ESTILOS DEL SPLITTER ===== */
     .splitter {
-      width: 16px;
+      width: 20px; /* Un poco más ancho para emojis grandes */
       background: #fff;
       cursor: col-resize;
       display: flex !important;
@@ -268,17 +268,18 @@
     }
     .splitter::before {
       content: "↔️";
-      font-size: 12px;
-      color: #6c757d;
+      font-size: 18px; /* Tamaño aumentado */
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-weight: 300;
+      filter: grayscale(0.6); /* Emoji más suave en estado normal */
+      transition: all 0.2s ease;
     }
     .splitter:hover::before {
       content: "🔛";
-      color: #495057;
+      font-size: 20px; /* Un poco más grande al hover */
+      filter: grayscale(0.3); /* Más color */
     }
     .splitter.active {
       background: #e9ecef;
@@ -286,8 +287,21 @@
     }
     .splitter.active::before {
       content: "🔛";
-      color: #212529;
+      font-size: 22px; /* Aún más grande cuando está activo */
+      filter: grayscale(0); /* Color completo */
       font-weight: 600;
+    }
+    /* Mejora para dispositivos con alta densidad de píxeles */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      .splitter::before {
+          font-size: 20px;
+      }
+      .splitter:hover::before {
+          font-size: 22px;
+      }
+      .splitter.active::before {
+          font-size: 24px;
+      }
     }
 
     /* Extender el área clickeable SOLUCIÓN CURSOR LEJANO*/
