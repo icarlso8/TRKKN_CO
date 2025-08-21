@@ -391,6 +391,44 @@
       font-size: 14px;
       white-space: pre-wrap;
     }
+    /* ===== ESTILOS PARA BOTONES DE BORRADO ===== */
+    #col-gemini .agente-header {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 8px; /* Espacio entre botones */
+    }
+    .btn-borrar {
+      width: 30px;
+      height: 30px;
+      font-size: 16px;
+      padding: 0;
+      border-radius: 6px;
+      border: 1px solid #dc3545;
+      background-color: #fff;
+      color: #dc3545;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+    .btn-borrar:hover {
+      background-color: #dc3545;
+      color: white;
+      transform: scale(1.05);
+    }
+    .btn-borrar:active {
+      transform: scale(0.95);
+    }
+    /* Estado inicial para botones de borrar (ocultos hasta que haya contenido) */
+    .btn-borrar {
+      opacity: 0.6;
+    }
+    .btn-borrar:not([style*="display: none"]):hover {
+      opacity: 1;
+    }
   </style>
   <script type="module" src="./js/auth.js"></script>
 </head>
@@ -428,6 +466,7 @@
         <section class="agente-section">
           <div class="agente-header">
             <button id="btn-copies" type="button" class="agente-btn">✍️ Copies</button>
+            <button class="btn-borrar" data-target="copies" title="Borrar contenido">🗑️</button>
           </div>
           <div id="agente-output-copies" class="agente-output"></div>
         </section>
@@ -436,6 +475,7 @@
         <section class="agente-section">
           <div class="agente-header">
             <button id="btn-insights" type="button" class="agente-btn">🔎 Insights</button>
+            <button class="btn-borrar" data-target="insights" title="Borrar contenido">🗑️</button>
           </div>
           <div id="agente-output-insights" class="agente-output"></div>
         </section>
@@ -444,6 +484,7 @@
         <section class="agente-section">
           <div class="agente-header">
             <button id="btn-competencia" type="button" class="agente-btn">🥊 Competencia</button>
+            <button class="btn-borrar" data-target="competencia" title="Borrar contenido">🗑️</button>
           </div>
           <div id="agente-output-competencia" class="agente-output"></div>
         </section>
@@ -452,6 +493,7 @@
         <section class="agente-section">
           <div class="agente-header">
             <button id="btn-tendencias" type="button" class="agente-btn">📈 Tendencias</button>
+            <button class="btn-borrar" data-target="tendencias" title="Borrar contenido">🗑️</button>
           </div>
           <div id="agente-output-tendencias" class="agente-output"></div>
         </section>
