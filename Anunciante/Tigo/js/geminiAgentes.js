@@ -131,6 +131,62 @@ async function loadPrompts() {
   return promptsMap;
 }
 
+// === NUEVO: Configuración de botones de borrado con MutationObserver ===
+function setupClearButtons() {
+  // Función para borrar contenido de un área específica
+  const clearOutput = (outputSelector) => {
+    const outputElement = document.querySelector(outputSelector);
+    if (outputElement) {
+      outputElement.textContent = "";
+    }
+  };
+
+  // Mapeo de botones de borrado y sus áreas correspondientes
+  const clearButtonsConfig = {
+    "btn-clear-copies": "#agente-output-copies",
+    "btn-clear-insights": "#agente-output-insights",
+    "btn-clear-competencia": "#agente-output-competencia",
+    "btn-clear-tendencias": "#agente-output-tendencias"
+  };
+
+  // Configurar event listeners para botones existentes
+  Object.entries(clearButtonsConfig).forEach(([buttonId, outputSelector]) => {
+    const button = document.getElementById(buttonId);
+    if (button) {
+      button.addEventListener("click", () => clearOutput(outputSelector));
+    }
+  });
+
+  // Observador para detectar cuando se agreguen nuevos botones de borrado
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) { // Element node
+            Object.entries(clearButtonsConfig).forEach(([buttonId, outputSelector]) => {
+              if (node.id === buttonId || node.querySelector(`#${buttonId}`)) {
+                const button = document.getElementById(buttonId);
+                if (button && !button.hasAttribute('data-clear-listener')) {
+                  button.setAttribute('data-clear-listener', 'true');
+                  button.addEventListener("click", () => clearOutput(outputSelector));
+                }
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+
+  // Iniciar observación en el documento completo
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+  console.log("✅ Botones de borrado configurados con observador");
+}
+
 // Vincula botones
 function wireButtons(prompts) {
   const mapSeccion = {
@@ -180,6 +236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error iniciando agentes:", e);
   }
 });
+
 
 
 
