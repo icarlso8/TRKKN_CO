@@ -169,7 +169,7 @@ function setupClearButtons() {
       });
       
       button.addEventListener('mouseleave', () => {
-        button.style.color = '#666';
+        button.style.color = 'transparent'; //'#666' borde rojo retirado
         button.style.transform = 'scale(1)';
       });
       
@@ -284,6 +284,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error iniciando agentes:", e);
   }
 });
+
 
 
 
