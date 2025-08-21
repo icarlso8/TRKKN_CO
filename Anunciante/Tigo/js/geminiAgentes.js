@@ -160,7 +160,7 @@ function setupClearButtons() {
       button.style.color = '#666';
       button.style.fontSize = '16px';
       button.style.padding = '5px';
-      button.style.marginLeft = '10px';
+      button.style.marginLeft = '5px';
       
       // Agregar hover effect similar a los botones principales
       button.addEventListener('mouseenter', () => {
@@ -284,3 +284,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error iniciando agentes:", e);
   }
 });
+
