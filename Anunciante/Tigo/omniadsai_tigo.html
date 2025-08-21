@@ -248,7 +248,7 @@
     }
     /* ===== ESTILOS DEL SPLITTER ===== */
     .splitter {
-      width: 20px; /* Un poco más ancho para emojis grandes */
+      width: 24px; /* Un poco más ancho para emojis grandes */
       background: #fff;
       cursor: col-resize;
       display: flex !important;
@@ -268,18 +268,18 @@
     }
     .splitter::before {
       content: "↔️";
-      font-size: 18px; /* Tamaño aumentado */
+      font-size: 22px; /* Tamaño aumentado */
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      filter: grayscale(0.6); /* Emoji más suave en estado normal */
+      /* filter: grayscale(0.6); Emoji más suave en estado normal */
       transition: all 0.2s ease;
     }
     .splitter:hover::before {
       content: "🔛";
-      font-size: 20px; /* Un poco más grande al hover */
-      filter: grayscale(0.3); /* Más color */
+      font-size: 24px; /* Un poco más grande al hover */
+      /* filter: grayscale(0.3); Más color */
     }
     .splitter.active {
       background: #e9ecef;
@@ -287,8 +287,8 @@
     }
     .splitter.active::before {
       content: "🔛";
-      font-size: 22px; /* Aún más grande cuando está activo */
-      filter: grayscale(0); /* Color completo */
+      font-size: 26px; /* Aún más grande cuando está activo */
+      /* filter: grayscale(0); Color completo */
       font-weight: 600;
     }
     /* Mejora para dispositivos con alta densidad de píxeles */
