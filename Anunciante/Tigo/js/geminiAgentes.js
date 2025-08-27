@@ -18,10 +18,32 @@ const getCheckedValuesByName = (name) =>
   Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
     .map(el => (el.value || "").trim()).filter(Boolean);
 
+// Función helper para encontrar elementos por texto
+const findElementByText = (text, tagName = '*') => {
+  const elements = document.getElementsByTagName(tagName);
+  for (let i = 0; i < elements.length; i++) {
+    if (elements[i].textContent.includes(text)) {
+      return elements[i];
+    }
+  }
+  return null;
+};
+
 // Intenta deducir el anunciante por la ruta /Anunciante/{X}/
 const detectarAnunciante = () => {
   const m = location.pathname.match(/\/Anunciante\/([^\/]+)/i);
   return (m && m[1]) ? decodeURIComponent(m[1]) : "Anunciante";
+};
+
+// Obtener textos de checkboxes seleccionados
+const getCheckedTextsByName = (name) => {
+  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
+    .map(el => {
+      // Buscar el label asociado al checkbox para obtener el texto
+      const label = el.closest('label');
+      return label ? label.textContent.trim() : el.value;
+    })
+    .filter(Boolean);
 };
 
 // Factores contextuales en forma { factor: [opciones...] }
@@ -66,28 +88,53 @@ const normalizarClave = (k) =>
 // Construye el contexto
 const buildContext = () => {
   const anunciante = detectarAnunciante();
-  const segmento   = getVal("segmento");
-  const negocio    = getVal("negocio");
-  const producto   = getVal("producto");
-  const campania   = getVal("campana");
-  const descripcion= getVal("descripcion");
+  
+  // Obtener textos en lugar de valores (IDs)
+  const segmentoText = getVal("segmento");
+  const negocioText = getVal("negocio");
+  const productoText = getVal("producto");
+  const campaniaText = getVal("campana");
+  const descripcionText = getVal("descripcion");
 
-  const audSel     = getCheckedValuesByName("audiencia");
-  const audTexto   = toBullets(audSel);
+  // Obtener textos de checkboxes (audiencias)
+  const audSel = getCheckedTextsByName("audiencia");
+  const audTexto = toBullets(audSel);
 
-  const facObj     = getFactoresSeleccionados();
-  const { listaFactores, detalleFactores } = factoresResumen(facObj);
-  const facNombres = toBullets(listaFactores);
-  const facDetalle = detalleFactores.join("\n");
+  // Para factores contextuales, convertir IDs a textos
+  const facObj = getFactoresSeleccionados();
+  
+  const factoresConTextos = {};
+  Object.entries(facObj).forEach(([factorId, opcionIds]) => {
+    // Buscar el texto del factor
+    const factorLabel = findElementByText(factorId, 'legend');
+    const factorTexto = factorLabel ? factorLabel.textContent : factorId;
+    
+    // Convertir IDs de opciones a textos
+    const opcionesTextos = opcionIds.map(opcionId => {
+      const opcionCheckbox = document.querySelector(`input[name="${factorId}"][value="${opcionId}"]`);
+      if (opcionCheckbox) {
+        const opcionLabel = opcionCheckbox.closest('label');
+        return opcionLabel ? opcionLabel.textContent.trim() : opcionId;
+      }
+      return opcionId;
+    });
+    
+    factoresConTextos[factorTexto] = opcionesTextos;
+  });
+
+  const facNombres = toBullets(Object.keys(factoresConTextos));
+  const facDetalle = Object.entries(factoresConTextos)
+    .map(([factor, opciones]) => `${factor}: ${opciones.join(", ")}`)
+    .join("\n");
 
   const values = {
     "anunciante": anunciante,
-    "segmento": segmento,
-    "negocio": negocio,
-    "producto": producto,
-    "campaña": campania,
-    "campania": campania,
-    "descripcion": descripcion,
+    "segmento": segmentoText,
+    "negocio": negocioText,
+    "producto": productoText,
+    "campaña": campaniaText,
+    "campania": campaniaText, // Mantener ambas versiones por compatibilidad
+    "descripcion": descripcionText,
     "audiencia": audTexto,
     "factores_contextuales": facNombres,
     "factores_contextuales_seleccion": facDetalle
@@ -96,7 +143,7 @@ const buildContext = () => {
   const normalized = {};
   Object.entries(values).forEach(([k, v]) => normalized[normalizarClave(k)] = v);
 
-  return { raw: values, norm: normalized };
+  return { raw: values, norm: normalized, textos: values };
 };
 
 // Llama a GAS
@@ -236,7 +283,7 @@ function wireButtons(prompts) {
       const ctx = buildContext();
       const promptFinal = fillTemplate(pdef.template, { ...ctx.raw, ...ctx.norm });
 
-      // ✅ NUEVO: Mostrar en consola el prompt inicial y el final
+      // ✅ Mostrar en consola el prompt inicial y el final
       console.log("=== PROMPT ANALYSIS ===");
       console.log(`🔍 Sección: ${key}`);
       console.log("📋 Prompt inicial (template):");
