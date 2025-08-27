@@ -82,8 +82,82 @@ const normalizarClave = (k) =>
    .replace(/[^\w]/g, "_")                            // espacios/raros -> _
    .toLowerCase();
 
+// Obtener el texto completo de la campaña seleccionada (con emojis)
+const getCampaniaTextoCompleto = () => {
+  const campanaId = getVal("campana");
+  if (!campanaId) return "";
+  
+  // Buscar en todos los niveles de la estructura de campañas
+  const buscarEnCampañas = (obj, targetId) => {
+    for (const key in obj) {
+      if (Array.isArray(obj[key])) {
+        // Es un array de campañas
+        const encontrado = obj[key].find(camp => camp.id === targetId);
+        if (encontrado) return encontrado.nombre;
+      } else if (typeof obj[key] === 'object') {
+        // Es un objeto anidado, buscar recursivamente
+        const resultado = buscarEnCampañas(obj[key], targetId);
+        if (resultado) return resultado;
+      }
+    }
+    return null;
+  };
+  
+  // Cargar campañas.json y buscar el texto completo
+  return fetch('../../Anunciante/Tigo/json/campañas.json')
+    .then(response => response.json())
+    .then(campañasData => {
+      const nombreCompleto = buscarEnCampañas(campañasData, campanaId);
+      return nombreCompleto || campanaId; // Si no se encuentra, devolver el ID
+    })
+    .catch(error => {
+      console.error('Error cargando campañas.json:', error);
+      return campanaId; // En caso de error, devolver el ID
+    });
+};
+
+// Obtener textos completos de factores contextuales (con emojis)
+const getFactoresTextoCompleto = (facObj) => {
+  return fetch('../../Anunciante/Tigo/json/factores.json')
+    .then(response => response.json())
+    .then(factoresData => {
+      const factoresConTextos = {};
+      
+      Object.entries(facObj).forEach(([factorId, opcionIds]) => {
+        // Buscar el factor en factores.json
+        const factorData = factoresData.find(f => f.id === factorId);
+        if (factorData) {
+          const factorTexto = `${factorData.emoji} ${factorData.nombre}`;
+          
+          // Convertir IDs de opciones a textos completos
+          const opcionesTextos = opcionIds.map(opcionId => {
+            const opcionData = factorData.opciones.find(o => o.id === opcionId);
+            return opcionData ? `${opcionData.emoji} ${opcionData.nombre}` : opcionId;
+          });
+          
+          factoresConTextos[factorTexto] = opcionesTextos;
+        } else {
+          // Si no se encuentra el factor, usar el ID
+          factoresConTextos[factorId] = opcionIds;
+        }
+      });
+      
+      return factoresConTextos;
+    })
+    .catch(error => {
+      console.error('Error cargando factores.json:', error);
+      
+      // En caso de error, usar los IDs como fallback
+      const factoresFallback = {};
+      Object.entries(facObj).forEach(([factorId, opcionIds]) => {
+        factoresFallback[factorId] = opcionIds;
+      });
+      return factoresFallback;
+    });
+};
+
 // Construye el contexto
-const buildContext = () => {
+const buildContext = async () => {
   const anunciante = detectarAnunciante();
   
   // Obtener textos en lugar de valores (IDs) para selects
@@ -91,8 +165,8 @@ const buildContext = () => {
   const negocioText = getSelectedText("negocio");
   const productoText = getSelectedText("producto");
   
-  // Para inputs, mantenemos el valor directamente
-  const campaniaText = getVal("campana");
+  // Para la campaña, obtener el texto completo con emojis
+  const campaniaTexto = await getCampaniaTextoCompleto();
   const descripcionText = getVal("descripcion");
 
   // Obtener textos de checkboxes (audiencias)
@@ -100,31 +174,13 @@ const buildContext = () => {
   // Quitar bullets y saltos de línea innecesarios
   const audTexto = audSel.join(", ");
 
-  // Para factores contextuales, convertir IDs a textos
+  // Para factores contextuales, convertir IDs a textos completos con emojis
   const facObj = getFactoresSeleccionados();
-  
-  const factoresConTextos = {};
-  Object.entries(facObj).forEach(([factorId, opcionIds]) => {
-    // Buscar el texto del factor
-    const factorLabel = findElementByText(factorId, 'legend');
-    const factorTexto = factorLabel ? factorLabel.textContent : factorId;
-    
-    // Convertir IDs de opciones a textos
-    const opcionesTextos = opcionIds.map(opcionId => {
-      const opcionCheckbox = document.querySelector(`input[name="${factorId}"][value="${opcionId}"]`);
-      if (opcionCheckbox) {
-        const opcionLabel = opcionCheckbox.closest('label');
-        return opcionLabel ? opcionLabel.textContent.trim() : opcionId;
-      }
-      return opcionId;
-    });
-    
-    factoresConTextos[factorTexto] = opcionesTextos;
-  });
+  const factoresConTextos = await getFactoresTextoCompleto(facObj);
 
   const facNombres = Object.keys(factoresConTextos).join(", ");
   const facDetalle = Object.entries(factoresConTextos)
-    .map(([factor, opciones]) => `${factor}: ${opciones.join(", ")}`)
+    .map(([factor, opciones]) => `${factor}: ${Array.isArray(opciones) ? opciones.join(", ") : opciones}`)
     .join("; ");
 
   const values = {
@@ -132,8 +188,8 @@ const buildContext = () => {
     "segmento": segmentoText,
     "negocio": negocioText,
     "producto": productoText,
-    "campaña": campaniaText,
-    "campania": campaniaText, // Mantener ambas versiones por compatibilidad
+    "campaña": campaniaTexto,
+    "campania": campaniaTexto, // Mantener ambas versiones por compatibilidad
     "descripcion": descripcionText,
     "audiencia": audTexto,
     "factores_contextuales": facNombres,
@@ -294,7 +350,7 @@ function wireButtons(prompts) {
         return;
       }
 
-      const ctx = buildContext();
+      const ctx = await buildContext(); // Ahora es async
       const promptFinal = fillTemplate(pdef.template, { ...ctx.raw, ...ctx.norm });
 
       // ✅ Mostrar en consola el prompt inicial y el final
