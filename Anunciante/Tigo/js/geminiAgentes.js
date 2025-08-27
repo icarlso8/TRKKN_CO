@@ -91,13 +91,40 @@ const getCampaniaTextoCompleto = () => {
   return selectedOption ? selectedOption.text.trim() : getVal("campana");
 };
 
-// Función mejorada para encontrar fieldset por el name de los inputs
-const findFieldsetByInputName = (inputName) => {
-  const input = document.querySelector(`input[name="${inputName}"]`);
-  if (input) {
-    return input.closest('fieldset.form-group');
+// Función para encontrar el título específico de un factor contextual
+const findTituloFactorContextual = (factorId) => {
+  // Buscar el primer input con este name
+  const primerInput = document.querySelector(`input[name="${factorId}"]`);
+  if (!primerInput) return factorId;
+  
+  // Buscar el contenedor padre que agrupe este factor
+  let contenedorFactor = primerInput.closest('.form-group, .factor-group, fieldset');
+  
+  // Si no encontramos un contenedor específico, buscar hacia arriba
+  if (!contenedorFactor || contenedorFactor.tagName === 'BODY') {
+    contenedorFactor = primerInput.closest('div') || primerInput.parentElement;
   }
-  return null;
+  
+  // Buscar un título dentro del contenedor del factor (h4, h5, h6, strong, etc.)
+  const titulos = contenedorFactor.querySelectorAll('h4, h5, h6, strong, .factor-title');
+  for (let i = 0; i < titulos.length; i++) {
+    if (titulos[i].textContent.trim() && !titulos[i].textContent.includes('Audiencia')) {
+      return titulos[i].textContent.trim();
+    }
+  }
+  
+  // Si no encontramos título, buscar en elementos anteriores
+  let elementoAnterior = contenedorFactor.previousElementSibling;
+  while (elementoAnterior) {
+    if (elementoAnterior.matches('h4, h5, h6, strong, .factor-title')) {
+      if (elementoAnterior.textContent.trim() && !elementoAnterior.textContent.includes('Audiencia')) {
+        return elementoAnterior.textContent.trim();
+      }
+    }
+    elementoAnterior = elementoAnterior.previousElementSibling;
+  }
+  
+  return factorId; // Fallback al ID si no se encuentra título
 };
 
 // Obtener textos completos de factores contextuales (con emojis) desde el DOM
@@ -105,24 +132,8 @@ const getFactoresTextoCompleto = (facObj) => {
   const factoresConTextos = {};
   
   Object.entries(facObj).forEach(([factorId, opcionIds]) => {
-    // Buscar el fieldset del factor por el name de los inputs
-    const factorFieldset = findFieldsetByInputName(factorId);
-    
-    let factorTexto = factorId;
-    
-    if (factorFieldset) {
-      // Obtener el texto del legend (nombre del factor)
-      const legend = factorFieldset.querySelector('legend');
-      if (legend) {
-        factorTexto = legend.textContent.trim();
-      } else {
-        // Si no hay legend, buscar el título anterior (h2, h3, etc.)
-        const previousHeading = factorFieldset.previousElementSibling;
-        if (previousHeading && previousHeading.tagName.match(/^H[1-6]$/i)) {
-          factorTexto = previousHeading.textContent.trim();
-        }
-      }
-    }
+    // Obtener el título completo del factor contextual
+    const factorTexto = findTituloFactorContextual(factorId);
     
     // Convertir IDs de opciones a textos completos
     const opcionesTextos = opcionIds.map(opcionId => {
