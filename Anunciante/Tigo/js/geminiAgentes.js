@@ -236,6 +236,17 @@ function wireButtons(prompts) {
       const ctx = buildContext();
       const promptFinal = fillTemplate(pdef.template, { ...ctx.raw, ...ctx.norm });
 
+      // ✅ NUEVO: Mostrar en consola el prompt inicial y el final
+      console.log("=== PROMPT ANALYSIS ===");
+      console.log(`🔍 Sección: ${key}`);
+      console.log("📋 Prompt inicial (template):");
+      console.log(pdef.template);
+      console.log("🔄 Prompt final (con placeholders reemplazados):");
+      console.log(promptFinal);
+      console.log("📊 Contexto utilizado:");
+      console.log(ctx.norm);
+      console.log("=======================");
+
       outDiv.textContent = "⏳ Generando...";
       btn.disabled = true;
       try {
