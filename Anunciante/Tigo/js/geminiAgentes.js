@@ -91,14 +91,29 @@ const getCampaniaTextoCompleto = () => {
   return selectedOption ? selectedOption.text.trim() : getVal("campana");
 };
 
+// Función helper para encontrar fieldset por el texto del legend
+const findFieldsetByLegendText = (text) => {
+  const legends = document.querySelectorAll('fieldset.form-group legend');
+  for (let i = 0; i < legends.length; i++) {
+    if (legends[i].textContent.includes(text)) {
+      return legends[i].closest('fieldset');
+    }
+  }
+  return null;
+};
+
 // Obtener textos completos de factores contextuales (con emojis) desde el DOM
 const getFactoresTextoCompleto = (facObj) => {
   const factoresConTextos = {};
   
   Object.entries(facObj).forEach(([factorId, opcionIds]) => {
-    // Buscar el fieldset del factor por su ID o nombre
-    const factorFieldset = document.querySelector(`fieldset[data-factor="${factorId}"]`) || 
-                          document.querySelector(`fieldset.form-group legend:contains("${factorId}")`)?.closest('fieldset');
+    // Buscar el fieldset del factor
+    let factorFieldset = document.querySelector(`fieldset[data-factor="${factorId}"]`);
+    
+    // Si no se encuentra por data-attribute, buscar por el texto del legend
+    if (!factorFieldset) {
+      factorFieldset = findFieldsetByLegendText(factorId);
+    }
     
     let factorTexto = factorId;
     
