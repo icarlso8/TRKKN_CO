@@ -29,6 +29,14 @@ const findElementByText = (text, tagName = '*') => {
   return null;
 };
 
+// Obtener texto de la opción seleccionada en un select
+const getSelectedText = (selectId) => {
+  const select = byId(selectId);
+  if (!select) return "";
+  const selectedOption = select.options[select.selectedIndex];
+  return selectedOption ? selectedOption.text.trim() : "";
+};
+
 // Intenta deducir el anunciante por la ruta /Anunciante/{X}/
 const detectarAnunciante = () => {
   const m = location.pathname.match(/\/Anunciante\/([^\/]+)/i);
@@ -61,17 +69,6 @@ const getFactoresSeleccionados = () => {
   return factores;
 };
 
-const toBullets = (arr) => arr && arr.length ? arr.map(a => `• ${a}`).join("\n") : "";
-const factoresResumen = (obj) => {
-  const entries = Object.entries(obj).filter(([, vals]) => vals && vals.length);
-  const nombres = entries.map(([k]) => k);
-  const lineas  = entries.map(([k, vals]) => `${k}: ${vals.join(", ")}`);
-  return {
-    listaFactores: nombres,
-    detalleFactores: lineas
-  };
-};
-
 // Reemplaza {{placeholder}}
 const fillTemplate = (template, map) =>
   (template || "").replace(/\{\{([^}]+)\}\}/g, (_, rawKey) => {
@@ -89,16 +86,19 @@ const normalizarClave = (k) =>
 const buildContext = () => {
   const anunciante = detectarAnunciante();
   
-  // Obtener textos en lugar de valores (IDs)
-  const segmentoText = getVal("segmento");
-  const negocioText = getVal("negocio");
-  const productoText = getVal("producto");
+  // Obtener textos en lugar de valores (IDs) para selects
+  const segmentoText = getSelectedText("segmento");
+  const negocioText = getSelectedText("negocio");
+  const productoText = getSelectedText("producto");
+  
+  // Para inputs, mantenemos el valor directamente
   const campaniaText = getVal("campana");
   const descripcionText = getVal("descripcion");
 
   // Obtener textos de checkboxes (audiencias)
   const audSel = getCheckedTextsByName("audiencia");
-  const audTexto = toBullets(audSel);
+  // Quitar bullets y saltos de línea innecesarios
+  const audTexto = audSel.join(", ");
 
   // Para factores contextuales, convertir IDs a textos
   const facObj = getFactoresSeleccionados();
@@ -122,10 +122,10 @@ const buildContext = () => {
     factoresConTextos[factorTexto] = opcionesTextos;
   });
 
-  const facNombres = toBullets(Object.keys(factoresConTextos));
+  const facNombres = Object.keys(factoresConTextos).join(", ");
   const facDetalle = Object.entries(factoresConTextos)
     .map(([factor, opciones]) => `${factor}: ${opciones.join(", ")}`)
-    .join("\n");
+    .join("; ");
 
   const values = {
     "anunciante": anunciante,
