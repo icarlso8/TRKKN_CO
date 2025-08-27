@@ -4,6 +4,8 @@ const OMNI_TOKEN = window.OMNI_TOKEN || "gIe1TET33hc4i1w9K0WvcS6DHMIYjCgm5fgRqUW
 
 // === Ruta del prompts.json (CORREGIDA) ===
 const PROMPTS_URL = "../../Anunciante/Tigo/json/prompts.json";
+// === Ruta del factores.json ===
+const FACTORES_URL = "../../Anunciante/Tigo/json/factores.json";
 
 // --- utilidades ---
 const byId = (id) => document.getElementById(id);
@@ -91,59 +93,49 @@ const getCampaniaTextoCompleto = () => {
   return selectedOption ? selectedOption.text.trim() : getVal("campana");
 };
 
-// Función para encontrar el título específico de un factor contextual
-const findTituloFactorContextual = (factorId) => {
-  // Buscar el primer input con este name
-  const primerInput = document.querySelector(`input[name="${factorId}"]`);
-  if (!primerInput) return factorId;
-  
-  // Buscar el contenedor padre que agrupe este factor
-  let contenedorFactor = primerInput.closest('.form-group, .factor-group, fieldset');
-  
-  // Si no encontramos un contenedor específico, buscar hacia arriba
-  if (!contenedorFactor || contenedorFactor.tagName === 'BODY') {
-    contenedorFactor = primerInput.closest('div') || primerInput.parentElement;
+// Cargar factores.json
+async function loadFactores() {
+  try {
+    const resp = await fetch(FACTORES_URL, { cache: "no-store" });
+    if (!resp.ok) throw new Error("No se pudo cargar factores.json");
+    return await resp.json();
+  } catch (error) {
+    console.error("Error cargando factores.json:", error);
+    return [];
   }
-  
-  // Buscar un título dentro del contenedor del factor (h4, h5, h6, strong, etc.)
-  const titulos = contenedorFactor.querySelectorAll('h4, h5, h6, strong, .factor-title');
-  for (let i = 0; i < titulos.length; i++) {
-    if (titulos[i].textContent.trim() && !titulos[i].textContent.includes('Audiencia')) {
-      return titulos[i].textContent.trim();
-    }
-  }
-  
-  // Si no encontramos título, buscar en elementos anteriores
-  let elementoAnterior = contenedorFactor.previousElementSibling;
-  while (elementoAnterior) {
-    if (elementoAnterior.matches('h4, h5, h6, strong, .factor-title')) {
-      if (elementoAnterior.textContent.trim() && !elementoAnterior.textContent.includes('Audiencia')) {
-        return elementoAnterior.textContent.trim();
-      }
-    }
-    elementoAnterior = elementoAnterior.previousElementSibling;
-  }
-  
-  return factorId; // Fallback al ID si no se encuentra título
-};
+}
 
-// Obtener textos completos de factores contextuales (con emojis) desde el DOM
-const getFactoresTextoCompleto = (facObj) => {
+// Obtener textos completos de factores contextuales desde el JSON
+const getFactoresTextoCompleto = async (facObj) => {
+  const factoresData = await loadFactores();
   const factoresConTextos = {};
   
   Object.entries(facObj).forEach(([factorId, opcionIds]) => {
-    // Obtener el título completo del factor contextual
-    const factorTexto = findTituloFactorContextual(factorId);
+    // Buscar el factor en el JSON
+    const factorData = factoresData.find(f => f.id === factorId);
+    
+    let factorTexto = factorId;
+    if (factorData) {
+      factorTexto = `${factorData.emoji} ${factorData.nombre}`;
+    }
     
     // Convertir IDs de opciones a textos completos
     const opcionesTextos = opcionIds.map(opcionId => {
-      // Buscar el checkbox por su valor
+      if (factorData) {
+        // Buscar la opción en el JSON
+        const opcionData = factorData.opciones.find(o => o.id === opcionId);
+        if (opcionData) {
+          return `${opcionData.emoji} ${opcionData.nombre}`;
+        }
+      }
+      
+      // Fallback: buscar en el DOM si no se encuentra en el JSON
       const checkbox = document.querySelector(`input[name="${factorId}"][value="${opcionId}"]`);
       if (checkbox) {
-        // Buscar el label asociado al checkbox
         const label = checkbox.closest('label');
         return label ? label.textContent.trim() : opcionId;
       }
+      
       return opcionId;
     });
     
@@ -154,7 +146,7 @@ const getFactoresTextoCompleto = (facObj) => {
 };
 
 // Construye el contexto
-const buildContext = () => {
+const buildContext = async () => {
   const anunciante = detectarAnunciante();
   
   // Obtener textos en lugar de valores (IDs) para selects
@@ -171,9 +163,9 @@ const buildContext = () => {
   // Quitar bullets y saltos de línea innecesarios
   const audTexto = audSel.join(", ");
 
-  // Para factores contextuales, convertir IDs a textos completos con emojis
+  // Para factores contextuales, usar el JSON para obtener textos completos
   const facObj = getFactoresSeleccionados();
-  const factoresConTextos = getFactoresTextoCompleto(facObj);
+  const factoresConTextos = await getFactoresTextoCompleto(facObj);
 
   const facNombres = Object.keys(factoresConTextos).join(", ");
   const facDetalle = Object.entries(factoresConTextos)
@@ -347,7 +339,7 @@ function wireButtons(prompts) {
         return;
       }
 
-      const ctx = buildContext();
+      const ctx = await buildContext(); // Ahora es async
       const promptFinal = fillTemplate(pdef.template, { ...ctx.raw, ...ctx.norm });
 
       // ✅ Mostrar en consola el prompt inicial y el final
