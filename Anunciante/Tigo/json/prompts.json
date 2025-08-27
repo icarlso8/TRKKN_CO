@@ -4,7 +4,7 @@
       "id": "copies",
       "titulo": "Generar Copies Publicitarios",
       "descripcion": "Crea copies persuasivos y atractivos para la campaña.",
-      "plantilla": "Genera 5 copies creativos y persuasivos haciendo uso de emojis, lenguaje directo y llamado a la acción claro, para la campaña '{{campaña}}' del producto {{producto}} de {{Anunciante}}, orientada al segmento {{segmento}} en el negocio {{negocio}}. Considera la descripción: {{descripción}}, la audiencia {{audiencia}} y los factores contextuales {{factores_contextuales}}. Los copies deben ser breves, impactantes y adecuados al tono de marketing digital. Incluye descripción de la imagen que puede ser adecuada para cada copy y notas adicionales respecto a la adacptación, Pruebas A/B, Segmentación, Plataformas, entre otros aspectos que consideres resaltar."
+      "plantilla": "Genera 5 copies creativos y persuasivos haciendo uso de emojis, lenguaje directo y llamado a la acción claro, para la campaña '{{campaña}}' del producto {{producto}} del anunciante {{Anunciante}}, orientada al segmento {{segmento}} de la marca o línea de negocio {{negocio}}. Considera la descripción: {{descripción}}, la audiencia {{audiencia}} y los factores contextuales {{factores_contextuales}}. Los copies deben ser breves, impactantes y adecuados al tono de marketing digital, incluye para cada copy, el enfoque, la descripción de la imagen que puede ser adecuada para cada copy, las posibles variaciones de la imagen y un call to action corto. Al final deja notas adicionales respecto a la adaptación, segmentación, plataformas, entre otros aspectos que consideres que es importante resaltar."
     },
     {
       "id": "insights",
@@ -27,3 +27,4 @@
   ]
 
 }
+
