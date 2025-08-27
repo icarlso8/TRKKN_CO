@@ -142,6 +142,20 @@ const buildContext = () => {
 
   const normalized = {};
   Object.entries(values).forEach(([k, v]) => normalized[normalizarClave(k)] = v);
+  
+  // Asegurar que todas las variantes de "campaña" y "factores_contextuales" estén disponibles
+  // en el objeto normalizado para compatibilidad con los templates
+  if (!normalized.campania && normalized.campana) {
+    normalized.campania = normalized.campana;
+  }
+  if (!normalized.campana && normalized.campania) {
+    normalized.campana = normalized.campania;
+  }
+  
+  // Asegurar variantes de factores_contextuales
+  if (normalized.factores_contextuales) {
+    normalized.factores_contextuales_seleccion = normalized.factores_contextuales_seleccion || "";
+  }
 
   return { raw: values, norm: normalized, textos: values };
 };
