@@ -130,7 +130,7 @@ async function loadPrompts() {
   return promptsMap;
 }
 
-// === MEJORADO: Configuración de botones de borrado ===
+// === SOLUCIÓN COMPLETA: Función setupClearButtons corregida ===
 function setupClearButtons() {
   // Función para borrar contenido de un área específica
   const clearOutput = (outputSelector) => {
@@ -149,29 +149,12 @@ function setupClearButtons() {
     "btn-clear-tendencias": "#agente-output-tendencias"
   };
 
-  // Función para configurar un botón individual
+  // Función para configurar un botón individual (VERSIÓN CORREGIDA)
   const setupButton = (buttonId, outputSelector) => {
     const button = document.getElementById(buttonId);
     if (button) {
-      // Remover estilos no deseados (borde rojo)
-      button.style.border = 'none';
-      button.style.background = 'transparent';
-      button.style.cursor = 'pointer';
-      button.style.color = '#666';
-      button.style.fontSize = '16px';
-      button.style.padding = '5px';
-      // button.style.marginLeft = '5px'; Se controla en CSS
-      
-      // Agregar hover effect similar a los botones principales
-      button.addEventListener('mouseenter', () => {
-        button.style.color = '#fff';
-        button.style.transform = 'scale(1.1)';
-      });
-      
-      button.addEventListener('mouseleave', () => {
-        button.style.color = 'transparent'; //'#666' borde rojo retirado
-        button.style.transform = 'scale(1)';
-      });
+      // ✅ ELIMINAR TODA la sobrescritura de estilos - dejar que CSS controle todo
+      // SOLO agregar el evento de clic
       
       // Configurar el evento de clic
       button.addEventListener("click", (e) => {
@@ -284,7 +267,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error iniciando agentes:", e);
   }
 });
-
-
-
-
