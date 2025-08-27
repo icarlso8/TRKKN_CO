@@ -11,7 +11,7 @@
     "tamanos_disponibles": ["300x250", "728x90", "300x600", "320x480", "160x600", "320x50", "300x50"]
   },
     {
-    "id": "TEST",
+    "id": "test",
     "nombre": "TEST",
     "emoji": "💬",
     "tipo": "checkbox",
@@ -22,4 +22,5 @@
     "tamanos_disponibles": ["300x250", "728x90", "300x600", "320x480", "160x600", "320x50", "300x50"]
   }
 ]
+
 
