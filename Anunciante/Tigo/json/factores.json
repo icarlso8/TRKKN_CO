@@ -9,5 +9,17 @@
       { "id": "noche", "nombre": "Noche", "emoji": "🌙" }
     ],
     "tamanos_disponibles": ["300x250", "728x90", "300x600", "320x480", "160x600", "320x50", "300x50"]
+  },
+    {
+    "id": "TEST",
+    "nombre": "TEST",
+    "emoji": "💬",
+    "tipo": "checkbox",
+    "opciones": [
+      { "id": "uno", "nombre": "Uno", "emoji": "1️⃣" },
+      { "id": "dos", "nombre": "Dos", "emoji": "2️⃣" }
+    ],
+    "tamanos_disponibles": ["300x250", "728x90", "300x600", "320x480", "160x600", "320x50", "300x50"]
   }
 ]
+
