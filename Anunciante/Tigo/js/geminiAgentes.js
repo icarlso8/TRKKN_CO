@@ -91,13 +91,11 @@ const getCampaniaTextoCompleto = () => {
   return selectedOption ? selectedOption.text.trim() : getVal("campana");
 };
 
-// Función helper para encontrar fieldset por el texto del legend
-const findFieldsetByLegendText = (text) => {
-  const legends = document.querySelectorAll('fieldset.form-group legend');
-  for (let i = 0; i < legends.length; i++) {
-    if (legends[i].textContent.includes(text)) {
-      return legends[i].closest('fieldset');
-    }
+// Función mejorada para encontrar fieldset por el name de los inputs
+const findFieldsetByInputName = (inputName) => {
+  const input = document.querySelector(`input[name="${inputName}"]`);
+  if (input) {
+    return input.closest('fieldset.form-group');
   }
   return null;
 };
@@ -107,13 +105,8 @@ const getFactoresTextoCompleto = (facObj) => {
   const factoresConTextos = {};
   
   Object.entries(facObj).forEach(([factorId, opcionIds]) => {
-    // Buscar el fieldset del factor
-    let factorFieldset = document.querySelector(`fieldset[data-factor="${factorId}"]`);
-    
-    // Si no se encuentra por data-attribute, buscar por el texto del legend
-    if (!factorFieldset) {
-      factorFieldset = findFieldsetByLegendText(factorId);
-    }
+    // Buscar el fieldset del factor por el name de los inputs
+    const factorFieldset = findFieldsetByInputName(factorId);
     
     let factorTexto = factorId;
     
@@ -122,6 +115,12 @@ const getFactoresTextoCompleto = (facObj) => {
       const legend = factorFieldset.querySelector('legend');
       if (legend) {
         factorTexto = legend.textContent.trim();
+      } else {
+        // Si no hay legend, buscar el título anterior (h2, h3, etc.)
+        const previousHeading = factorFieldset.previousElementSibling;
+        if (previousHeading && previousHeading.tagName.match(/^H[1-6]$/i)) {
+          factorTexto = previousHeading.textContent.trim();
+        }
       }
     }
     
