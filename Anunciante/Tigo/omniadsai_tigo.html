@@ -405,8 +405,8 @@
       margin-left: 5px;
       padding: 0;
       border-radius: 6px;
-      border: 1px solid #000000;
-      background-color: #fff;
+      border: none; /* ❌ ELIMINADO: borde negro */
+      background-color: transparent; /* ❌ ELIMINADO: fondo blanco */
       color: #dc3545;
       cursor: pointer;
       display: flex;
@@ -417,8 +417,8 @@
       opacity: 0.6; /* Opacidad inicial siempre visible */
     }
     .btn-borrar:hover {
-      background-color: #000000;
-      color: white;
+      background-color: transparent; /* ❌ ELIMINADO: fondo negro */
+      /* color: white; */
       transform: scale(1.05);
       opacity: 1; /* Opacidad completa al hacer hover */
     }
