@@ -8,6 +8,14 @@
       "hbomax": [
         { "id": "hbo_c1", "nombre": "🎥 HBO Max C1" },
         { "id": "hbo_c2", "nombre": "🎥 HBO Max C2" }
+      ],
+      "win": [
+        { "id": "win_c1", "nombre": "⚽ Win + C1" },
+        { "id": "win_c2", "nombre": "⚽ Win + C2" }
+      ],
+       "anteriorpremium": [
+        { "id": "anteriorpremium_c1", "nombre": "⏹️ Premium Anterior C1" },
+        { "id": "anteriorpremium_c2", "nombre": "⏹️ Premium Anterior C2" }
       ]
     }
   },
@@ -20,13 +28,22 @@
       "paquete": [
         { "id": "50mb_c1", "nombre": "🚀 50 Mb C1" },
         { "id": "50mb_c2", "nombre": "🚀 50 Mb C2" }
+      ],
+      "anteriorprepago": [
+        { "id": "anteriorprepago_c1", "nombre": "⏹️ Prepago Anterior C1" },
+        { "id": "anteriorprepago_c2", "nombre": "⏹️ Prepago Anterior C2" }
       ]
     },
     "pospago": {
       "pasapospago": [
         { "id": "500mb_c1", "nombre": "📡 500 Mb C1" },
         { "id": "500mb_c2", "nombre": "📡 500 Mb C2" }
+      ],
+      "anteriorprepago": [
+        { "id": "anteriorpospago_c1", "nombre": "⏹️ Pospago Anterior C1" },
+        { "id": "anteriorpospago_c2", "nombre": "⏹️ Pospago Anterior C2" }
       ]
     }
   }
 }
+
