@@ -4,7 +4,7 @@
       "id": "copies",
       "titulo": "Generar Copies Publicitarios",
       "descripcion": "Crea copies persuasivos y atractivos para la campaña.",
-      "plantilla": "Genera 5 copies creativos y persuasivos haciendo uso de emojis, lenguaje directo y llamado a la acción claro, para la campaña '{{campaña}}' del producto '{{producto}}' del anunciante '{{Anunciante}}' en el país 'Colombia', orientada al segmento '{{segmento}}' de la marca o línea de negocio '{{negocio}}'. Considera la descripción: '{{descripción}}', la audiencia '{{audiencia}}' y los factores contextuales '{{factores_contextuales}}' seleccionados '{{factores_contextuales_seleccion}}'. Los copies deben ser breves con menos de 50 caracteres, impactantes y adecuados al tono del marketing digital, incluye para cada copy, el enfoque, la descripción de la imagen adecuada para cada copy, las posibles variaciones de la imagen y un call to action corto con emojis. Al final deja notas adicionales respecto a la adaptación, segmentación, plataformas, entre otros aspectos que consideres importante resaltar."
+      "plantilla": "Genera 5 copies creativos y persuasivos haciendo uso de emojis, lenguaje directo y llamado a la acción claro, para la campaña '{{campaña}}' del producto '{{producto}}' del anunciante '{{Anunciante}}' en el país 'Colombia', orientada al segmento '{{segmento}}' de la marca o línea de negocio '{{negocio}}'. Considera la descripción: '{{descripción}}', la(s) audiencia(s) '{{audiencia}}' y los factores contextuales seleccionados para dicha(s) audiencia(s)'{{factores_contextuales_seleccion}}'. Los copies deben ser breves con menos de 50 caracteres, impactantes y adecuados al tono del marketing digital, incluye para cada copy, el enfoque, la descripción de la imagen adecuada para cada copy, las posibles variaciones de la imagen y un call to action corto con emojis. Al final deja notas adicionales respecto a la adaptación, segmentación, plataformas, entre otros aspectos que consideres importante resaltar."
     },
     {
       "id": "insights",
@@ -27,6 +27,7 @@
   ]
 
 }
+
 
 
 
