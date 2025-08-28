@@ -28,10 +28,11 @@
       "id": "barra_insights",
       "titulo": "Insights para Barra de Indicadores",
       "descripcion": "Insights breves para mostrar en la barra de indicadores",
-      "plantilla": "Genera 20 insights con emojis (máximo 180 caracteres cada uno), que sean muy relevantes (NO superficiales) y sobre las NOTICIAS ACTUALIZADAS DE FUENTES CONFIABLES más importantes del sector al que pertenece el anunciante: '{{anunciante}}' en el país 'Colombia'. Los insights deben ser datos interesantes, estadísticas relevantes o tendencias del sector y oportunidades de mejora respecto a la competencia en términos de los productos y servicios más demandados, temporadas de oferta y demanda."
+      "plantilla": "Genera 10 insights con emojis (máximo 180 caracteres cada uno), que sean muy relevantes (NO superficiales) y sobre las NOTICIAS ACTUALIZADAS DE FUENTES CONFIABLES más importantes del sector al que pertenece el anunciante '{{anunciante}}' en el país 'Colombia'. Los insights deben ser datos interesantes, estadísticas relevantes o tendencias del sector y oportunidades de mejora respecto a la competencia en términos de los productos y servicios más demandados, temporadas de oferta y demanda."
     }
   ]
 }
+
 
 
 
