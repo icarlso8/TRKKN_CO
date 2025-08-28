@@ -53,14 +53,14 @@ class BarraIndicadores {
         
         const styles = `
             #barra-indicadores {
-                background: linear-gradient(90deg, #2c3e50, #34495e);
-                color: white;
+                background: #fff;
+                color: #000;
                 padding: 8px 0;
-                border-bottom: 2px solid #e74c3c;
+                border-bottom: 1px solid #e0e0e0;
                 font-family: 'Mulish', sans-serif;
                 position: relative;
                 z-index: 1000;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             }
             
             .indicadores-container {
@@ -72,9 +72,9 @@ class BarraIndicadores {
             }
             
             .btn-control {
-                background: rgba(255, 255, 255, 0.2);
-                border: none;
-                color: white;
+                background: #f5f5f5;
+                border: 1px solid #ddd;
+                color: #333;
                 padding: 8px 16px;
                 border-radius: 6px;
                 cursor: pointer;
@@ -85,7 +85,7 @@ class BarraIndicadores {
             }
             
             .btn-control:hover {
-                background: rgba(255, 255, 255, 0.3);
+                background: #e8e8e8;
                 transform: translateY(-1px);
             }
             
@@ -111,8 +111,9 @@ class BarraIndicadores {
                 font-size: 15px;
                 display: flex;
                 align-items: center;
-                border-right: 1px solid rgba(255, 255, 255, 0.3);
+                border-right: 1px solid #eee;
                 height: 100%;
+                color: #000;
             }
             
             .indicador-item:last-child {
@@ -184,7 +185,7 @@ class BarraIndicadores {
             data.prompts.forEach(prompt => {
                 this.prompts[prompt.id] = prompt.plantilla;
             });
-
+            
             // DEBUG: Mostrar todos los prompts cargados
             console.log("📝 Prompts cargados:", Object.keys(this.prompts));
             console.log("🔍 Prompt 'barra_insights':", this.prompts['barra_insights']);
@@ -198,8 +199,8 @@ class BarraIndicadores {
     async cargarIndicadoresIniciales() {
         const anunciante = this.detectarAnunciante();
         
-        // Usar el prompt de insights del JSON si está disponible, sino usar uno por defecto
-        const promptBase = this.prompts['barra_insights'] || "Genera 5 insights breves (máximo 60 caracteres cada uno) con emojis relevantes sobre el sector de {{anunciante}} en Colombia. Los insights deben ser datos interesantes, estadísticas relevantes o tendencias del sector.";
+        // Usar el prompt específico para barra de insights
+        const promptBase = this.prompts['barra_insights'] || "Genera 5 insights breves (máximo 60 caracteres cada uno) con emojis relevantes sobre el sector de {{anunciante}} en Colombia.";
         
         // Reemplazar placeholders básicos
         let prompt = promptBase.replace('{{anunciante}}', anunciante);
@@ -222,11 +223,11 @@ class BarraIndicadores {
             console.error('Error cargando insights:', error);
             // Indicadores por defecto
             this.indicadores = [
-                '📊 Sector en crecimiento constante (+15% interanual)',
-                '🚀 Oportunidades digitales emergentes en el mercado',
-                '👥 Audiencia activa: 78% engagement en redes sociales',
-                '💡 Innovación constante: +200% adopción tecnológica',
-                '📈 Tendencia positiva: 92% satisfacción cliente'
+                '📊 Sector en crecimiento constante',
+                '🚀 Oportunidades digitales emergentes',
+                '👥 Audiencia activa en redes sociales',
+                '💡 Innovación constante en el sector',
+                '📈 Tendencia positiva en engagement'
             ];
             this.mostrarIndicadores();
         }
@@ -415,8 +416,8 @@ class BarraIndicadores {
     async actualizarConContexto(contexto) {
         this.contextoActual = contexto;
         
-        // Usar el prompt de insights del JSON si está disponible
-        const promptBase = this.prompts['barra_insights_2'] || "Genera 3 insights breves (máximo 60 caracteres) con emojis para {{anunciante}} sobre el producto {{producto}} dirigido a {{audiencia}}. Considera: {{factores_contextuales}}";
+        // Usar el prompt específico para barra de insights
+        const promptBase = this.prompts['barra_insights'] || "Genera 3 insights breves (máximo 60 caracteres) con emojis para {{anunciante}} sobre el producto {{producto}} dirigido a {{audiencia}}. Considera: {{factores_contextuales}}";
         
         // Reemplazar placeholders con el contexto actual
         let prompt = promptBase;
@@ -462,5 +463,3 @@ window.actualizarBarraIndicadores = function(contexto) {
         window.barraIndicadores.actualizarConContexto(contexto);
     }
 };
-
-
