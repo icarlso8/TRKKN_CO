@@ -66,7 +66,7 @@ class BarraIndicadores {
                 width: 100%;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.1);
                 // de 28px a 24px
-                height: 24px;
+                height: 10px;
             }
             
             .indicadores-container {
@@ -107,7 +107,7 @@ class BarraIndicadores {
             }
             
             #btn-ver-mas:hover {
-                // box-shadow: 0 1px 3px rgba(0,0,0,0.15); sombra
+                box-shadow: 0 1px 3px rgba(0,0,0,0.15); sombra
                 transform: translateY(-1px);
             }
             
@@ -589,6 +589,7 @@ window.actualizarBarraIndicadores = function(contexto) {
         window.barraIndicadores.actualizarConContexto(contexto);
     }
 };
+
 
 
 
