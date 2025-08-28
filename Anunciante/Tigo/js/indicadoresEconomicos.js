@@ -56,11 +56,9 @@ class BarraIndicadores {
                 background: #fff;
                 color: #000;
                 padding: 8px 0;
-                border-bottom: 1px solid #e0e0e0;
                 font-family: 'Mulish', sans-serif;
                 position: relative;
                 z-index: 1000;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             }
             
             .indicadores-container {
@@ -192,43 +190,43 @@ class BarraIndicadores {
             
         } catch (error) {
             console.error('Error cargando prompts:', error);
+            throw error; // Propagar el error para manejarlo externamente
         }
     }
 
     // Cargar indicadores iniciales basados en el anunciante
     async cargarIndicadoresIniciales() {
-        const anunciante = this.detectarAnunciante();
-        
-        // Usar el prompt específico para barra de insights
-        const promptBase = this.prompts['barra_insights'] || "Genera 5 insights breves (máximo 60 caracteres cada uno) con emojis relevantes sobre el sector de {{anunciante}} en Colombia.";
-        
-        // Reemplazar placeholders básicos
-        let prompt = promptBase.replace('{{anunciante}}', anunciante);
-        
-        // Mostrar en consola el análisis del prompt
-        console.log("=== BARRA INDICADORES - PROMPT ANALYSIS ===");
-        console.log("📋 Prompt inicial (template):");
-        console.log(promptBase);
-        console.log("🔄 Prompt final (con placeholders reemplazados):");
-        console.log(prompt);
-        console.log("📊 Contexto utilizado:");
-        console.log({ anunciante });
-        console.log("=======================");
-        
         try {
+            const anunciante = this.detectarAnunciante();
+            
+            // Usar EXCLUSIVAMENTE el prompt específico para barra de insights
+            if (!this.prompts['barra_insights']) {
+                throw new Error("No se encontró el prompt 'barra_insights' en prompts.json");
+            }
+            
+            const promptBase = this.prompts['barra_insights'];
+            
+            // Reemplazar placeholders básicos
+            let prompt = promptBase.replace('{{anunciante}}', anunciante);
+            
+            // Mostrar en consola el análisis del prompt
+            console.log("=== BARRA INDICADORES - PROMPT ANALYSIS ===");
+            console.log("📋 Prompt inicial (template):");
+            console.log(promptBase);
+            console.log("🔄 Prompt final (con placeholders reemplazados):");
+            console.log(prompt);
+            console.log("📊 Contexto utilizado:");
+            console.log({ anunciante });
+            console.log("=======================");
+            
             const insights = await this.obtenerInsightsGemini(prompt);
             this.indicadores = insights;
             this.mostrarIndicadores();
+            
         } catch (error) {
             console.error('Error cargando insights:', error);
-            // Indicadores por defecto
-            this.indicadores = [
-                '📊 Sector en crecimiento constante',
-                '🚀 Oportunidades digitales emergentes',
-                '👥 Audiencia activa en redes sociales',
-                '💡 Innovación constante en el sector',
-                '📈 Tendencia positiva en engagement'
-            ];
+            // NO usar indicadores por defecto - dejar vacío o mostrar error
+            this.indicadores = [];
             this.mostrarIndicadores();
         }
     }
@@ -302,7 +300,12 @@ class BarraIndicadores {
     // Mostrar indicadores en la barra
     mostrarIndicadores() {
         const content = document.getElementById('indicadores-content');
-        if (!content || this.indicadores.length === 0) return;
+        if (!content) return;
+        
+        if (this.indicadores.length === 0) {
+            content.innerHTML = '<div class="indicador-item">⏳ Cargando insights...</div>';
+            return;
+        }
         
         content.innerHTML = this.indicadores
             .map(indicador => `
@@ -329,17 +332,7 @@ class BarraIndicadores {
             'datos|estadística|número|porcentaje': '📊',
             'ventas|precio|oferta|descuento|compra': '💰',
             'engagement|interacción|comentario|like': '❤️',
-            'oportunidad|potencial|futuro|crecer': '🎯',
-            'audiencia|cliente|usuario|persona': '👥',
-            'campaña|marketing|publicidad|promoción': '🎯',
-            'producto|servicio|item|artículo': '📦',
-            'segmento|nicho|mercado|target': '🔍',
-            'negocio|empresa|marca|compañía': '💼',
-            'calidad|excelente|premium|mejor': '⭐',
-            'rápido|velocidad|inmediato|instantáneo': '⚡',
-            'ahorro|económico|barato|precio': '💲',
-            'seguro|protección|confianza|garantía': '🛡️',
-            'sostenible|ecológico|ambiente|verde': '🌱'
+            'oportunidad|potencial|futuro|crecer': '🎯'
         };
         
         const textoLower = texto.toLowerCase();
@@ -348,7 +341,7 @@ class BarraIndicadores {
             if (regex.test(textoLower)) return emoji;
         }
         
-        return '📌'; // Emoji por defecto
+        return '📌';
     }
 
     // Iniciar animación de la barra
@@ -398,7 +391,11 @@ class BarraIndicadores {
 
     // Acción para Ver Más
     verMas() {
-        // Podría abrir un modal con insights detallados
+        if (this.indicadores.length === 0) {
+            alert('⏳ No hay insights disponibles todavía.');
+            return;
+        }
+        
         const modalContent = this.indicadores.map((insight, index) => 
             `${index + 1}. ${insight}`
         ).join('\n\n');
@@ -414,38 +411,43 @@ class BarraIndicadores {
 
     // Método para actualizar con datos del formulario
     async actualizarConContexto(contexto) {
-        this.contextoActual = contexto;
-        
-        // Usar el prompt específico para barra de insights
-        const promptBase = this.prompts['barra_insights'] || "Genera 3 insights breves (máximo 60 caracteres) con emojis para {{anunciante}} sobre el producto {{producto}} dirigido a {{audiencia}}. Considera: {{factores_contextuales}}";
-        
-        // Reemplazar placeholders con el contexto actual
-        let prompt = promptBase;
-        const contextoUtilizado = {};
-        
-        for (const [key, value] of Object.entries(contexto)) {
-            if (value) {
-                const placeholder = `{{${key}}}`;
-                if (prompt.includes(placeholder)) {
-                    prompt = prompt.replace(new RegExp(placeholder, 'gi'), value);
-                    contextoUtilizado[key] = value;
+        try {
+            this.contextoActual = contexto;
+            
+            // Usar EXCLUSIVAMENTE el prompt específico para barra de insights
+            if (!this.prompts['barra_insights']) {
+                throw new Error("No se encontró el prompt 'barra_insights' en prompts.json");
+            }
+            
+            const promptBase = this.prompts['barra_insights'];
+            
+            // Reemplazar placeholders con el contexto actual
+            let prompt = promptBase;
+            const contextoUtilizado = {};
+            
+            for (const [key, value] of Object.entries(contexto)) {
+                if (value) {
+                    const placeholder = `{{${key}}}`;
+                    if (prompt.includes(placeholder)) {
+                        prompt = prompt.replace(new RegExp(placeholder, 'gi'), value);
+                        contextoUtilizado[key] = value;
+                    }
                 }
             }
-        }
-        
-        // Mostrar en consola el análisis del prompt
-        console.log("=== BARRA INDICADORES - PROMPT ANALYSIS ===");
-        console.log("📋 Prompt inicial (template):");
-        console.log(promptBase);
-        console.log("🔄 Prompt final (con placeholders reemplazados):");
-        console.log(prompt);
-        console.log("📊 Contexto utilizado:");
-        console.log(contextoUtilizado);
-        console.log("=======================");
-        
-        try {
+            
+            // Mostrar en consola el análisis del prompt
+            console.log("=== BARRA INDICADORES - PROMPT ANALYSIS ===");
+            console.log("📋 Prompt inicial (template):");
+            console.log(promptBase);
+            console.log("🔄 Prompt final (con placeholders reemplazados):");
+            console.log(prompt);
+            console.log("📊 Contexto utilizado:");
+            console.log(contextoUtilizado);
+            console.log("=======================");
+            
             const insights = await this.obtenerInsightsGemini(prompt);
             this.agregarIndicadores(insights);
+            
         } catch (error) {
             console.error('Error actualizando insights:', error);
         }
