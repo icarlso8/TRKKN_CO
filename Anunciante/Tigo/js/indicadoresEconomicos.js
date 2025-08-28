@@ -55,7 +55,8 @@ class BarraIndicadores {
             #barra-indicadores {
                 background: #fff;
                 color: #000;
-                padding: 2px 0; // de 4px 0 a 2px 0
+                // de 4px 0 a 2px 0
+                padding: 2px 0;
                 font-family: 'Mulish', sans-serif;
                 position: fixed;
                 top: 0;
@@ -64,7 +65,8 @@ class BarraIndicadores {
                 z-index: 1000;
                 width: 100%;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-                height: 24px; // de 28px a 24px
+                // de 28px a 24px
+                height: 24px;
             }
             
             .indicadores-container {
@@ -105,7 +107,7 @@ class BarraIndicadores {
             }
             
             #btn-ver-mas:hover {
-                /* box-shadow: 0 1px 3px rgba(0,0,0,0.15); */
+                // box-shadow: 0 1px 3px rgba(0,0,0,0.15); sombra
                 transform: translateY(-1px);
             }
             
@@ -587,6 +589,7 @@ window.actualizarBarraIndicadores = function(contexto) {
         window.barraIndicadores.actualizarConContexto(contexto);
     }
 };
+
 
 
 
