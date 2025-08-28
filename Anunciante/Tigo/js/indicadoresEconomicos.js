@@ -6,6 +6,8 @@ class BarraIndicadores {
         this.paused = false;
         this.currentIndex = 0;
         this.velocidad = 3000; // 3 segundos por indicador
+        this.prompts = {}; // Para almacenar los prompts cargados
+        this.contextoActual = {}; // Para almacenar el contexto actual
         
         this.init();
     }
@@ -13,13 +15,18 @@ class BarraIndicadores {
     // Inicializar la barra
     init() {
         this.createBarraDOM();
-        this.cargarIndicadoresIniciales();
+        this.cargarPrompts().then(() => {
+            this.cargarIndicadoresIniciales();
+        });
         this.iniciarAnimacion();
         this.setupEventListeners();
     }
 
     // Crear la estructura HTML de la barra
     createBarraDOM() {
+        // Verificar si la barra ya existe para no duplicarla
+        if (document.getElementById('barra-indicadores')) return;
+        
         const barraContainer = document.createElement('div');
         barraContainer.id = 'barra-indicadores';
         barraContainer.innerHTML = `
@@ -41,59 +48,71 @@ class BarraIndicadores {
 
     // Añadir estilos CSS
     addStyles() {
+        // Verificar si los estilos ya fueron añadidos
+        if (document.getElementById('estilos-barra-indicadores')) return;
+        
         const styles = `
             #barra-indicadores {
                 background: linear-gradient(90deg, #2c3e50, #34495e);
                 color: white;
                 padding: 8px 0;
                 border-bottom: 2px solid #e74c3c;
-                font-family: 'Arial', sans-serif;
+                font-family: 'Mulish', sans-serif;
                 position: relative;
                 z-index: 1000;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
             
             .indicadores-container {
                 display: flex;
                 align-items: center;
-                max-width: 1200px;
+                max-width: 1400px;
                 margin: 0 auto;
-                padding: 0 15px;
+                padding: 0 20px;
             }
             
             .btn-control {
                 background: rgba(255, 255, 255, 0.2);
                 border: none;
                 color: white;
-                padding: 6px 12px;
-                border-radius: 4px;
+                padding: 8px 16px;
+                border-radius: 6px;
                 cursor: pointer;
-                font-size: 12px;
-                transition: background 0.3s;
+                font-size: 14px;
+                font-family: 'Mulish', sans-serif;
+                transition: all 0.3s ease;
+                flex-shrink: 0;
             }
             
             .btn-control:hover {
                 background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-1px);
             }
             
             .indicadores-scroll {
                 flex: 1;
                 overflow: hidden;
-                margin: 0 15px;
-                height: 24px;
+                margin: 0 20px;
+                height: 28px;
+                position: relative;
             }
             
             .indicadores-content {
                 display: flex;
                 transition: transform 0.5s ease-in-out;
                 white-space: nowrap;
+                position: absolute;
+                height: 100%;
+                align-items: center;
             }
             
             .indicador-item {
-                padding: 0 20px;
-                font-size: 14px;
+                padding: 0 25px;
+                font-size: 15px;
                 display: flex;
                 align-items: center;
                 border-right: 1px solid rgba(255, 255, 255, 0.3);
+                height: 100%;
             }
             
             .indicador-item:last-child {
@@ -101,8 +120,8 @@ class BarraIndicadores {
             }
             
             .indicador-emoji {
-                margin-right: 8px;
-                font-size: 16px;
+                margin-right: 10px;
+                font-size: 18px;
             }
             
             @media (max-width: 768px) {
@@ -110,24 +129,76 @@ class BarraIndicadores {
                     display: none;
                 }
                 
+                .indicadores-container {
+                    padding: 0 15px;
+                }
+                
+                .btn-control {
+                    padding: 6px 12px;
+                    font-size: 12px;
+                }
+                
                 .indicador-item {
-                    padding: 0 10px;
+                    padding: 0 15px;
+                    font-size: 13px;
+                }
+                
+                .indicador-emoji {
+                    font-size: 16px;
+                    margin-right: 8px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                #barra-indicadores {
+                    padding: 6px 0;
+                }
+                
+                .indicadores-scroll {
+                    margin: 0 10px;
+                    height: 24px;
+                }
+                
+                .indicador-item {
+                    padding: 0 12px;
                     font-size: 12px;
                 }
             }
         `;
         
         const styleSheet = document.createElement('style');
+        styleSheet.id = 'estilos-barra-indicadores';
         styleSheet.textContent = styles;
         document.head.appendChild(styleSheet);
+    }
+
+    // Cargar prompts desde el archivo JSON
+    async cargarPrompts() {
+        try {
+            const resp = await fetch('../../Anunciante/Tigo/json/prompts.json', { cache: "no-store" });
+            if (!resp.ok) throw new Error("No se pudo cargar prompts.json");
+            const data = await resp.json();
+            
+            // Convertir el array a un objeto con claves por id
+            this.prompts = {};
+            data.prompts.forEach(prompt => {
+                this.prompts[prompt.id] = prompt.plantilla;
+            });
+            
+        } catch (error) {
+            console.error('Error cargando prompts:', error);
+        }
     }
 
     // Cargar indicadores iniciales basados en el anunciante
     async cargarIndicadoresIniciales() {
         const anunciante = this.detectarAnunciante();
         
-        // Prompt para insights del sector
-        const prompt = `Como experto en marketing digital y análisis de sector, genera 5 insights breves (máximo 60 caracteres cada uno) con emojis relevantes sobre el sector de ${anunciante} en Colombia. Los insights deben ser datos interesantes, estadísticas relevantes o tendencias del sector.`;
+        // Usar el prompt de insights del JSON si está disponible, sino usar uno por defecto
+        const promptBase = this.prompts['insights'] || "Genera 5 insights breves (máximo 60 caracteres cada uno) con emojis relevantes sobre el sector de {{anunciante}} en Colombia. Los insights deben ser datos interesantes, estadísticas relevantes o tendencias del sector.";
+        
+        // Reemplazar placeholders básicos
+        let prompt = promptBase.replace('{{anunciante}}', anunciante);
         
         try {
             const insights = await this.obtenerInsightsGemini(prompt);
@@ -137,11 +208,11 @@ class BarraIndicadores {
             console.error('Error cargando insights:', error);
             // Indicadores por defecto
             this.indicadores = [
-                '📊 Sector en crecimiento constante',
-                '🚀 Oportunidades digitales emergentes',
-                '👥 Audiencia activa en redes sociales',
-                '💡 Innovación constante en el sector',
-                '📈 Tendencia positiva en engagement'
+                '📊 Sector en crecimiento constante (+15% interanual)',
+                '🚀 Oportunidades digitales emergentes en el mercado',
+                '👥 Audiencia activa: 78% engagement en redes sociales',
+                '💡 Innovación constante: +200% adopción tecnológica',
+                '📈 Tendencia positiva: 92% satisfacción cliente'
             ];
             this.mostrarIndicadores();
         }
@@ -184,23 +255,33 @@ class BarraIndicadores {
     // Procesar la respuesta de Gemini para extraer insights
     procesarRespuestaInsights(respuesta) {
         // Intentar extraer insights numerados o con emojis
-        const lines = respuesta.split('\n').filter(line => 
-            line.trim().length > 0 && 
-            (line.includes('•') || line.includes('🚀') || line.includes('📊') || 
-             line.match(/^\d+[\.\)]/) || line.length < 100)
-        );
+        const lines = respuesta.split('\n')
+            .map(line => line.trim())
+            .filter(line => 
+                line.length > 0 && 
+                line.length < 80 &&
+                (line.includes('•') || 
+                 line.match(/[🚀📊👥💡📈🎯❤️💰🔍📦💼]/) ||
+                 line.match(/^\d+[\.\)\-]/) ||
+                 !line.includes('  ') && line.split(' ').length <= 12)
+            );
         
         if (lines.length >= 3) {
-            return lines.slice(0, 5).map(line => 
+            return lines.slice(0, 8).map(line => 
                 line.replace(/^[•\d\s\.\)\-]+/, '').trim()
             );
         }
         
         // Fallback: dividir por puntos y tomar frases cortas
         return respuesta.split(/[\.!?]/)
-            .filter(phrase => phrase.trim().length > 10 && phrase.trim().length < 80)
-            .slice(0, 5)
-            .map(phrase => phrase.trim() + '.');
+            .map(phrase => phrase.trim())
+            .filter(phrase => phrase.length > 15 && phrase.length < 70)
+            .slice(0, 6)
+            .map(phrase => {
+                // Añadir emoji basado en contenido
+                const emoji = this.obtenerEmoji(phrase);
+                return emoji !== '📌' ? `${emoji} ${phrase}.` : `${phrase}.`;
+            });
     }
 
     // Mostrar indicadores en la barra
@@ -211,30 +292,45 @@ class BarraIndicadores {
         content.innerHTML = this.indicadores
             .map(indicador => `
                 <div class="indicador-item">
-                    <span class="indicador-emoji">${this.obtenerEmoji(indicador)}</span>
                     <span class="indicador-texto">${indicador}</span>
                 </div>
             `)
             .join('');
+        
+        // Reiniciar animación
+        this.currentIndex = 0;
+        this.actualizarPosicion();
     }
 
-    // Obtener emoji apropiado para el indicador
+    // Obtener emoji apropiado para el texto
     obtenerEmoji(texto) {
         const emojis = {
-            'crecimiento': '📈',
-            'digital': '💻',
-            'redes': '👥',
-            'innovación': '💡',
-            'éxito': '🏆',
-            'tendencia': '🚀',
-            'datos': '📊',
-            'ventas': '💰',
-            'engagement': '❤️',
-            'oportunidad': '🎯'
+            'crecimiento|aumento|incremento|sube': '📈',
+            'digital|tecnología|app|online|internet': '💻',
+            'redes|social|facebook|instagram|twitter': '👥',
+            'innovación|nuevo|moderno|avanzado': '💡',
+            'éxito|logro|triunfo|ganar|vencer': '🏆',
+            'tendencia|moda|popular|viral': '🚀',
+            'datos|estadística|número|porcentaje': '📊',
+            'ventas|precio|oferta|descuento|compra': '💰',
+            'engagement|interacción|comentario|like': '❤️',
+            'oportunidad|potencial|futuro|crecer': '🎯',
+            'audiencia|cliente|usuario|persona': '👥',
+            'campaña|marketing|publicidad|promoción': '🎯',
+            'producto|servicio|item|artículo': '📦',
+            'segmento|nicho|mercado|target': '🔍',
+            'negocio|empresa|marca|compañía': '💼',
+            'calidad|excelente|premium|mejor': '⭐',
+            'rápido|velocidad|inmediato|instantáneo': '⚡',
+            'ahorro|económico|barato|precio': '💲',
+            'seguro|protección|confianza|garantía': '🛡️',
+            'sostenible|ecológico|ambiente|verde': '🌱'
         };
         
-        for (const [palabra, emoji] of Object.entries(emojis)) {
-            if (texto.toLowerCase().includes(palabra)) return emoji;
+        const textoLower = texto.toLowerCase();
+        for (const [palabras, emoji] of Object.entries(emojis)) {
+            const regex = new RegExp(palabras.split('|').join('|'), 'i');
+            if (regex.test(textoLower)) return emoji;
         }
         
         return '📌'; // Emoji por defecto
@@ -245,7 +341,7 @@ class BarraIndicadores {
         if (this.intervalId) clearInterval(this.intervalId);
         
         this.intervalId = setInterval(() => {
-            if (this.paused) return;
+            if (this.paused || this.indicadores.length <= 1) return;
             
             this.currentIndex = (this.currentIndex + 1) % this.indicadores.length;
             this.actualizarPosicion();
@@ -255,7 +351,7 @@ class BarraIndicadores {
     // Actualizar posición del scroll
     actualizarPosicion() {
         const content = document.getElementById('indicadores-content');
-        if (!content) return;
+        if (!content || this.indicadores.length === 0) return;
         
         const itemWidth = content.scrollWidth / this.indicadores.length;
         content.style.transform = `translateX(-${this.currentIndex * itemWidth}px)`;
@@ -281,14 +377,18 @@ class BarraIndicadores {
         const btn = document.getElementById('btn-play-pause');
         if (btn) {
             btn.textContent = this.paused ? '▶️' : '⏸️';
+            btn.title = this.paused ? 'Reanudar' : 'Pausar';
         }
     }
 
     // Acción para Ver Más
     verMas() {
-        // Aquí puedes redirigir a una página con más información
-        // o mostrar un modal con insights detallados
-        console.log('Ver más insights del sector');
+        // Podría abrir un modal con insights detallados
+        const modalContent = this.indicadores.map((insight, index) => 
+            `${index + 1}. ${insight}`
+        ).join('\n\n');
+        
+        alert(`💡 Insights detallados:\n\n${modalContent}`);
     }
 
     // Método para añadir nuevos indicadores dinámicamente
@@ -298,16 +398,26 @@ class BarraIndicadores {
     }
 
     // Método para actualizar con datos del formulario
-    actualizarConContexto(contexto) {
-        const prompt = `Genera 3 insights breves (máximo 60 caracteres) con emojis para ${contexto.anunciante} sobre el producto ${contexto.producto} dirigido a ${contexto.audiencia}. Considera: ${contexto.factores_contextuales_seleccion || 'factores contextuales'}`;
+    async actualizarConContexto(contexto) {
+        this.contextoActual = contexto;
         
-        this.obtenerInsightsGemini(prompt)
-            .then(insights => {
-                this.agregarIndicadores(insights);
-            })
-            .catch(error => {
-                console.error('Error actualizando insights:', error);
-            });
+        // Usar el prompt de insights del JSON si está disponible
+        const promptBase = this.prompts['insights'] || "Genera 3 insights breves (máximo 60 caracteres) con emojis para {{anunciante}} sobre el producto {{producto}} dirigido a {{audiencia}}. Considera: {{factores_contextuales}}";
+        
+        // Reemplazar placeholders con el contexto actual
+        let prompt = promptBase;
+        for (const [key, value] of Object.entries(contexto)) {
+            if (value) {
+                prompt = prompt.replace(new RegExp(`{{${key}}}`, 'gi'), value);
+            }
+        }
+        
+        try {
+            const insights = await this.obtenerInsightsGemini(prompt);
+            this.agregarIndicadores(insights);
+        } catch (error) {
+            console.error('Error actualizando insights:', error);
+        }
     }
 }
 
@@ -316,5 +426,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.barraIndicadores = new BarraIndicadores();
 });
 
-// Exportar para uso en otros archivos
-window.BarraIndicadores = BarraIndicadores;
+// Función global para actualizar desde otros scripts
+window.actualizarBarraIndicadores = function(contexto) {
+    if (window.barraIndicadores && typeof window.barraIndicadores.actualizarConContexto === 'function') {
+        window.barraIndicadores.actualizarConContexto(contexto);
+    }
+};
