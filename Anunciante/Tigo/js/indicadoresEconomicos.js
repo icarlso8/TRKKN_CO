@@ -55,7 +55,7 @@ class BarraIndicadores {
             #barra-indicadores {
                 background: #fff;
                 color: #000;
-                padding: 8px 0;
+                padding: 4px 0;
                 font-family: 'Mulish', sans-serif;
                 position: fixed;
                 top: 0;
@@ -63,42 +63,57 @@ class BarraIndicadores {
                 right: 0;
                 z-index: 1000;
                 width: 100%;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                height: 28px;
             }
             
             .indicadores-container {
                 display: flex;
                 align-items: center;
                 width: 100%;
+                height: 100%;
                 margin: 0 auto;
-                padding: 0 20px;
+                padding: 0 15px;
                 box-sizing: border-box;
             }
             
             .btn-control {
-                background: #f5f5f5;
-                border: 1px solid #ddd;
+                background: transparent;
+                border: none;
                 color: #333;
-                padding: 8px 16px;
-                border-radius: 6px;
+                padding: 4px 8px;
                 cursor: pointer;
-                font-size: 14px;
+                font-size: 13px;
                 font-family: 'Mulish', sans-serif;
-                transition: all 0.3s ease;
+                transition: all 0.2s ease;
                 flex-shrink: 0;
                 white-space: nowrap;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 3px;
             }
             
-            .btn-control:hover {
-                background: #e8e8e8;
+            #btn-play-pause:hover {
+                transform: scale(1.1);
+            }
+            
+            #btn-ver-mas {
+                font-size: 12px;
+                font-weight: 500;
+            }
+            
+            #btn-ver-mas:hover {
+                box-shadow: 0 1px 3px rgba(0,0,0,0.15);
                 transform: translateY(-1px);
             }
             
             .indicadores-scroll {
                 flex: 1;
                 overflow: hidden;
-                margin: 0 20px;
-                height: 28px;
+                margin: 0 15px;
+                height: 20px;
                 position: relative;
             }
             
@@ -112,8 +127,8 @@ class BarraIndicadores {
             }
             
             .indicador-item {
-                padding: 0 25px;
-                font-size: 15px;
+                padding: 0 20px;
+                font-size: 14px;
                 display: flex;
                 align-items: center;
                 border-right: 1px solid #eee;
@@ -130,8 +145,8 @@ class BarraIndicadores {
             }
             
             .indicador-emoji {
-                margin-right: 10px;
-                font-size: 18px;
+                margin-right: 8px;
+                font-size: 16px;
             }
             
             @media (max-width: 768px) {
@@ -140,39 +155,46 @@ class BarraIndicadores {
                 }
                 
                 .indicadores-container {
-                    padding: 0 15px;
+                    padding: 0 10px;
                 }
                 
                 .btn-control {
-                    padding: 6px 12px;
+                    padding: 3px 6px;
                     font-size: 12px;
+                    height: 18px;
+                }
+                
+                .indicadores-scroll {
+                    margin: 0 10px;
+                    height: 18px;
                 }
                 
                 .indicador-item {
                     padding: 0 15px;
-                    font-size: 13px;
+                    font-size: 12px;
                     max-width: 100ch;
                 }
                 
                 .indicador-emoji {
-                    font-size: 16px;
-                    margin-right: 8px;
+                    font-size: 14px;
+                    margin-right: 6px;
                 }
             }
 
             @media (max-width: 480px) {
                 #barra-indicadores {
-                    padding: 6px 0;
-                }
-                
-                .indicadores-scroll {
-                    margin: 0 10px;
+                    padding: 3px 0;
                     height: 24px;
                 }
                 
+                .indicadores-scroll {
+                    margin: 0 8px;
+                    height: 18px;
+                }
+                
                 .indicador-item {
-                    padding: 0 12px;
-                    font-size: 12px;
+                    padding: 0 10px;
+                    font-size: 11px;
                     max-width: 80ch;
                 }
             }
@@ -389,6 +411,7 @@ class BarraIndicadores {
         const btnPlayPause = document.getElementById('btn-play-pause');
         const btnVerMas = document.getElementById('btn-ver-mas');
         const barra = document.getElementById('barra-indicadores');
+        const indicadoresScroll = document.querySelector('.indicadores-scroll');
         
         if (btnPlayPause) {
             btnPlayPause.addEventListener('click', () => this.togglePlayPause());
@@ -398,18 +421,19 @@ class BarraIndicadores {
             btnVerMas.addEventListener('click', () => this.verMas());
         }
         
-        if (barra) {
+        if (barra && indicadoresScroll) {
+            // Pausar al pasar el cursor por la barra
             barra.addEventListener('mouseenter', () => {
                 this.paused = true;
-                const btn = document.getElementById('btn-play-pause');
-                if (btn) {
-                    btn.textContent = '▶️';
-                    btn.title = 'Reanudar';
-                }
             });
             
+            // Reanudar al quitar el cursor de la barra
             barra.addEventListener('mouseleave', () => {
-                // No reanudar automáticamente, mantener el estado actual
+                // Solo reanudar si el botón de pausa no está activado manualmente
+                const btn = document.getElementById('btn-play-pause');
+                if (btn && btn.textContent === '⏸️') {
+                    this.paused = false;
+                }
             });
         }
     }
@@ -453,6 +477,7 @@ class BarraIndicadores {
         modalContent.style.maxHeight = '80%';
         modalContent.style.overflowY = 'auto';
         modalContent.style.boxSizing = 'border-box';
+        modalContent.style.position = 'relative';
         
         const closeButton = document.createElement('button');
         closeButton.textContent = 'X';
@@ -460,11 +485,12 @@ class BarraIndicadores {
         closeButton.style.top = '10px';
         closeButton.style.right = '10px';
         closeButton.style.background = '#f5f5f5';
-        closeButton.style.border = '1px solid #ddd';
+        closeButton.style.border = 'none';
         closeButton.style.borderRadius = '50%';
         closeButton.style.width = '30px';
         closeButton.style.height = '30px';
         closeButton.style.cursor = 'pointer';
+        closeButton.style.fontWeight = 'bold';
         closeButton.addEventListener('click', () => {
             document.body.removeChild(modal);
         });
