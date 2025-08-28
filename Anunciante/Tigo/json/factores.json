@@ -11,16 +11,19 @@
     "tamanos_disponibles": ["300x250", "728x90", "300x600", "320x480", "160x600", "320x50", "300x50"]
   },
     {
-    "id": "test",
-    "nombre": "TEST",
-    "emoji": "💬",
+    "id": "ciudad",
+    "nombre": "Ciudad",
+    "emoji": "🏙️",
     "tipo": "checkbox",
     "opciones": [
-      { "id": "uno", "nombre": "Uno", "emoji": "1️⃣" },
-      { "id": "dos", "nombre": "Dos", "emoji": "2️⃣" }
+      { "id": "bogota", "nombre": "Bogotá D.C.", "emoji": "🏛️" },
+      { "id": "medellin", "nombre": "Medellín", "emoji": "🚇" },
+      { "id": "cali", "nombre": "Cali", "emoji": "💃" },
+      { "id": "cartagena", "nombre": "Cartagena", "emoji": "🏖️" }
     ],
     "tamanos_disponibles": ["300x250", "728x90", "300x600", "320x480", "160x600", "320x50", "300x50"]
   }
 ]
+
 
 
