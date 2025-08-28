@@ -28,7 +28,7 @@
       "id": "barra_insights",
       "titulo": "Insights para Barra de Indicadores",
       "descripcion": "Insights breves para mostrar en la barra de indicadores",
-      "plantilla": "Genera 5 insights breves (máximo 60 caracteres cada uno) con emojis relevantes sobre el sector de {{anunciante}} en Colombia. Los insights deben ser datos interesantes, estadísticas relevantes o tendencias del sector."
+      "plantilla": "Genera 5 insights breves (máximo 60 caracteres cada uno) con emojis relevantes sobre {{anunciante}} en Colombia. Enfócate en: {{producto}} para el segmento {{segmento}}, audiencia {{audiencia}}, considerando {{factores_contextuales_seleccion}}. Los insights deben ser datos concretos, estadísticas impactantes o tendencias accionables. Formato: [Emoji] [Insight breve]. Ejemplo: '📈 Crecimiento del 25% en adopción digital'."
     }
   ]
 }
