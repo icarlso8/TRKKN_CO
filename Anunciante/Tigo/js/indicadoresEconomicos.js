@@ -88,7 +88,7 @@ class BarraIndicadores {
                 transition: all 0.2s ease;
                 flex-shrink: 0;
                 white-space: nowrap;
-                height: 60px;
+                height: 40px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -96,7 +96,7 @@ class BarraIndicadores {
             }
             
             #btn-play-pause:hover {
-                transform: scale(1.1);
+                transform: scale(1.5);
             }
             
             #btn-ver-mas {
@@ -587,4 +587,5 @@ window.actualizarBarraIndicadores = function(contexto) {
         window.barraIndicadores.actualizarConContexto(contexto);
     }
 };
+
 
