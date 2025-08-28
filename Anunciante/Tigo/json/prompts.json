@@ -28,10 +28,11 @@
       "id": "barra_insights",
       "titulo": "Insights para Barra de Indicadores",
       "descripcion": "Insights breves para mostrar en la barra de indicadores",
-      "plantilla": "Genera 10 insights breves (máximo 100 caracteres cada uno) con emojis relevantes sobre el sector del {{anunciante}} en Colombia. Los insights deben ser datos interesantes, estadísticas relevantes o tendencias del sector."
+      "plantilla": "Genera 50 insights breves (máximo 120 caracteres cada uno) con emojis relevantes sobre el sector del {{anunciante}} en Colombia. Los insights deben ser datos interesantes, estadísticas relevantes o tendencias del sector."
     }
   ]
 }
+
 
 
 
