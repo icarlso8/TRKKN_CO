@@ -184,6 +184,10 @@ class BarraIndicadores {
             data.prompts.forEach(prompt => {
                 this.prompts[prompt.id] = prompt.plantilla;
             });
+
+            // DEBUG: Mostrar todos los prompts cargados
+            console.log("📝 Prompts cargados:", Object.keys(this.prompts));
+            console.log("🔍 Prompt 'insights':", this.prompts['insights']);
             
         } catch (error) {
             console.error('Error cargando prompts:', error);
@@ -458,3 +462,4 @@ window.actualizarBarraIndicadores = function(contexto) {
         window.barraIndicadores.actualizarConContexto(contexto);
     }
 };
+
