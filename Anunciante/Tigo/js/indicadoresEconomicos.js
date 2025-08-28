@@ -55,7 +55,7 @@ class BarraIndicadores {
             #barra-indicadores {
                 background: #fff;
                 color: #000;
-                padding: 2px 0;
+                padding: 6px 0;
                 font-family: 'Mulish', sans-serif;
                 position: fixed;
                 top: 0;
@@ -64,7 +64,7 @@ class BarraIndicadores {
                 z-index: 1000;
                 width: 100%;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-                height: 24px;
+                height: 32px;
             }
             
             .indicadores-container {
@@ -81,14 +81,14 @@ class BarraIndicadores {
                 background: transparent;
                 border: none;
                 color: #333;
-                padding: 2px 4px;
+                padding: 4px 8px;
                 cursor: pointer;
-                font-size: 20px;
+                font-size: 13px;
                 font-family: 'Mulish', sans-serif;
                 transition: all 0.2s ease;
                 flex-shrink: 0;
                 white-space: nowrap;
-                height: 30px;
+                height: 20px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -100,13 +100,12 @@ class BarraIndicadores {
             }
             
             #btn-ver-mas {
-                font-size: 14px;
-                font-weight: 800;
+                font-size: 12px;
+                font-weight: 500;
             }
             
             #btn-ver-mas:hover {
-                box-shadow: 0 1px 3px rgba(0,0,0,0.15); sombra
-                transform: translateY(-2px);
+                transform: translateY(-1px);
             }
             
             .indicadores-scroll {
@@ -135,7 +134,7 @@ class BarraIndicadores {
                 height: 100%;
                 color: #000;
                 white-space: nowrap;
-                max-width: 120ch;
+                max-width: 180ch;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
@@ -147,6 +146,20 @@ class BarraIndicadores {
             .indicador-emoji {
                 margin-right: 8px;
                 font-size: 16px;
+            }
+            
+            .indicador-fuente {
+                font-size: 11px;
+                color: #666;
+                margin-left: 8px;
+                text-decoration: none;
+                font-style: italic;
+                opacity: 0.8;
+            }
+            
+            .indicador-fuente:hover {
+                text-decoration: underline;
+                color: #3366cc;
             }
             
             @media (max-width: 768px) {
@@ -172,12 +185,17 @@ class BarraIndicadores {
                 .indicador-item {
                     padding: 0 15px;
                     font-size: 12px;
-                    max-width: 100ch;
+                    max-width: 120ch;
                 }
                 
                 .indicador-emoji {
                     font-size: 14px;
                     margin-right: 6px;
+                }
+                
+                .indicador-fuente {
+                    font-size: 10px;
+                    margin-left: 5px;
                 }
             }
 
@@ -196,6 +214,11 @@ class BarraIndicadores {
                     padding: 0 10px;
                     font-size: 11px;
                     max-width: 80ch;
+                }
+                
+                .indicador-fuente {
+                    font-size: 9px;
+                    margin-left: 4px;
                 }
             }
         `;
@@ -243,9 +266,6 @@ class BarraIndicadores {
             
             // Reemplazar placeholders básicos
             let prompt = promptBase.replace('{{anunciante}}', anunciante);
-            
-            // Modificar el prompt para solicitar 20 insights de hasta 120 caracteres
-            prompt += " Proporciona exactamente 10 insights relevantes, cada uno con un máximo de 180 caracteres.";
             
             // Mostrar en consola el análisis del prompt
             console.log("=== BARRA INDICADORES - PROMPT ANALYSIS ===");
@@ -305,34 +325,63 @@ class BarraIndicadores {
 
     // Procesar la respuesta de Gemini para extraer insights
     procesarRespuestaInsights(respuesta) {
-        // Intentar extraer 20 insights
-        const lines = respuesta.split('\n')
-            .map(line => line.trim())
-            .filter(line => 
-                line.length > 0 && 
-                line.length <= 180 && // cantidad de caracteres de 120 a 180
-                (line.includes('•') || 
-                 line.match(/[🚀📊👥💡📈🎯❤️💰🔍📦💼]/) ||
-                 line.match(/^\d+[\.\)\-]/) ||
-                 !line.includes('  ') && line.split(' ').length <= 20)
-            );
+        // Expresión regular para encontrar insights con fuentes en el formato [texto] (Fuente: nombre|url)
+        const regex = /\[(.*?)\]\(Fuente:\s*(.*?)\|(.*?)\)/g;
+        let insights = [];
+        let match;
         
-        if (lines.length >= 5) {
-            return lines.slice(0, 10).map(line => // número de insights de 20 a 10
-                line.replace(/^[•\d\s\.\)\-]+/, '').trim()
-            );
+        // Primero intentamos extraer con el formato estructurado
+        while ((match = regex.exec(respuesta)) !== null) {
+            if (match[1].length <= 180) {
+                insights.push({
+                    texto: match[1].trim(),
+                    fuente: match[2].trim(),
+                    url: match[3].trim()
+                });
+            }
+            
+            if (insights.length >= 10) break;
         }
         
-        // Fallback: dividir por puntos y tomar frases cortas
-        return respuesta.split(/[\.!?]/)
-            .map(phrase => phrase.trim())
-            .filter(phrase => phrase.length > 15 && phrase.length <= 180)  // número de caracteres de 120 a 180
-            .slice(0, 10) // número de insights de 20 a 10
-            .map(phrase => {
-                // Añadir emoji basado en contenido
-                const emoji = this.obtenerEmoji(phrase);
-                return emoji !== '📌' ? `${emoji} ${phrase}.` : `${phrase}.`;
-            });
+        // Si no encontramos insights con el formato estructurado, usamos el método anterior
+        if (insights.length === 0) {
+            const lines = respuesta.split('\n')
+                .map(line => line.trim())
+                .filter(line => 
+                    line.length > 0 && 
+                    line.length <= 180 &&
+                    (line.includes('•') || 
+                     line.match(/[🚀📊👥💡📈🎯❤️💰🔍📦💼]/) ||
+                     line.match(/^\d+[\.\)\-]/) ||
+                     !line.includes('  ') && line.split(' ').length <= 20)
+                );
+            
+            // Eliminamos la limitación de líneas (antes era: if (lines.length >= 5))
+            if (lines.length > 0) {
+                insights = lines.slice(0, 10).map(line => ({
+                    texto: line.replace(/^[•\d\s\.\)\-]+/, '').trim(),
+                    fuente: "Fuente general",
+                    url: "#"
+                }));
+            } else {
+                // Fallback
+                insights = respuesta.split(/[\.!?]/)
+                    .map(phrase => phrase.trim())
+                    .filter(phrase => phrase.length > 15 && phrase.length <= 180)
+                    .slice(0, 10)
+                    .map(phrase => {
+                        const emoji = this.obtenerEmoji(phrase);
+                        const texto = emoji !== '📌' ? `${emoji} ${phrase}.` : `${phrase}.`;
+                        return {
+                            texto: texto,
+                            fuente: "Fuente general",
+                            url: "#"
+                        };
+                    });
+            }
+        }
+        
+        return insights;
     }
 
     // Mostrar indicadores en la barra
@@ -346,9 +395,13 @@ class BarraIndicadores {
         }
         
         content.innerHTML = this.indicadores
-            .map(indicador => `
+            .map(insight => `
                 <div class="indicador-item">
-                    <span class="indicador-texto">${indicador}</span>
+                    <span class="indicador-texto">${insight.texto}</span>
+                    ${insight.fuente !== "Fuente general" ? 
+                        `<a href="${insight.url}" target="_blank" class="indicador-fuente">(${insight.fuente})</a>` : 
+                        ''
+                    }
                 </div>
             `)
             .join('');
@@ -505,7 +558,11 @@ class BarraIndicadores {
         insightsList.innerHTML = this.indicadores
             .map((insight, index) => `
                 <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: ${index < this.indicadores.length - 1 ? '1px solid #eee' : 'none'}">
-                    <strong>${index + 1}.</strong> ${insight}
+                    <strong>${index + 1}.</strong> ${insight.texto}
+                    ${insight.fuente !== "Fuente general" ? 
+                        `<br><small>Fuente: <a href="${insight.url}" target="_blank">${insight.fuente}</a></small>` : 
+                        ''
+                    }
                 </div>
             `)
             .join('');
@@ -542,9 +599,8 @@ class BarraIndicadores {
             
             const promptBase = this.prompts['barra_insights'];
             
-            // Modificar el prompt para solicitar 20 insights de hasta 120 caracteres
-            let prompt = promptBase + " Proporciona exactamente 10 insights relevantes, cada uno con un máximo de 180 caracteres.";
-            
+            // Reemplazar placeholders con el contexto actual
+            let prompt = promptBase;
             const contextoUtilizado = {};
             
             for (const [key, value] of Object.entries(contexto)) {
@@ -587,13 +643,3 @@ window.actualizarBarraIndicadores = function(contexto) {
         window.barraIndicadores.actualizarConContexto(contexto);
     }
 };
-
-
-
-
-
-
-
-
-
-
