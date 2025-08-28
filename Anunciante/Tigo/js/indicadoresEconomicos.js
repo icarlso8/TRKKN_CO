@@ -83,7 +83,7 @@ class BarraIndicadores {
                 color: #333;
                 padding: 4px 8px;
                 cursor: pointer;
-                font-size: 13px;
+                font-size: 20px;
                 font-family: 'Mulish', sans-serif;
                 transition: all 0.2s ease;
                 flex-shrink: 0;
@@ -96,7 +96,7 @@ class BarraIndicadores {
             }
             
             #btn-play-pause:hover {
-                transform: scale(1.5);
+                transform: scale(1.2);
             }
             
             #btn-ver-mas {
@@ -587,5 +587,6 @@ window.actualizarBarraIndicadores = function(contexto) {
         window.barraIndicadores.actualizarConContexto(contexto);
     }
 };
+
 
 
