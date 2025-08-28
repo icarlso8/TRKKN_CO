@@ -55,7 +55,7 @@ class BarraIndicadores {
             #barra-indicadores {
                 background: #fff;
                 color: #000;
-                padding: 6px 0;
+                padding: 2px 0;
                 font-family: 'Mulish', sans-serif;
                 position: fixed;
                 top: 0;
@@ -64,7 +64,7 @@ class BarraIndicadores {
                 z-index: 1000;
                 width: 100%;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-                height: 32px;
+                height: 24px;
             }
             
             .indicadores-container {
@@ -81,14 +81,14 @@ class BarraIndicadores {
                 background: transparent;
                 border: none;
                 color: #333;
-                padding: 4px 8px;
+                padding: 2px 4px;
                 cursor: pointer;
-                font-size: 13px;
+                font-size: 20px;
                 font-family: 'Mulish', sans-serif;
                 transition: all 0.2s ease;
                 flex-shrink: 0;
                 white-space: nowrap;
-                height: 20px;
+                height: 30px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -100,12 +100,13 @@ class BarraIndicadores {
             }
             
             #btn-ver-mas {
-                font-size: 12px;
-                font-weight: 500;
+                font-size: 14px;
+                font-weight: 800;
             }
             
             #btn-ver-mas:hover {
-                transform: translateY(-1px);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+                transform: translateY(-2px);
             }
             
             .indicadores-scroll {
@@ -134,7 +135,7 @@ class BarraIndicadores {
                 height: 100%;
                 color: #000;
                 white-space: nowrap;
-                max-width: 180ch;
+                max-width: 120ch;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
@@ -185,7 +186,7 @@ class BarraIndicadores {
                 .indicador-item {
                     padding: 0 15px;
                     font-size: 12px;
-                    max-width: 120ch;
+                    max-width: 100ch;
                 }
                 
                 .indicador-emoji {
@@ -325,8 +326,8 @@ class BarraIndicadores {
 
     // Procesar la respuesta de Gemini para extraer insights
     procesarRespuestaInsights(respuesta) {
-        // Expresión regular para encontrar insights con fuentes en el formato [texto] (Fuente: nombre|url)
-        const regex = /\[(.*?)\]\(Fuente:\s*(.*?)\|(.*?)\)/g;
+        // Expresión regular mejorada para encontrar insights con fuentes y URLs completas
+        const regex = /\[(.*?)\]\(Fuente:\s*(.*?)\|(https?:\/\/[^\s]+)\)/g;
         let insights = [];
         let match;
         
