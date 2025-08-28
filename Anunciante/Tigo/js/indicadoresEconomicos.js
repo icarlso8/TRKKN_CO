@@ -96,7 +96,7 @@ class BarraIndicadores {
             }
             
             #btn-play-pause:hover {
-                transform: scale(1.05);
+                transform: scale(1.1);
             }
             
             #btn-ver-mas {
@@ -587,6 +587,7 @@ window.actualizarBarraIndicadores = function(contexto) {
         window.barraIndicadores.actualizarConContexto(contexto);
     }
 };
+
 
 
 
