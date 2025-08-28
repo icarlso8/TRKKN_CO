@@ -326,18 +326,24 @@ class BarraIndicadores {
 
     // Procesar la respuesta de Gemini para extraer insights
     procesarRespuestaInsights(respuesta) {
-        // Expresión regular mejorada para encontrar insights con fuentes y URLs completas
-        const regex = /\[(.*?)\]\(Fuente:\s*(.*?)\|(https?:\/\/[^\s]+)\)/g;
+        // Expresión regular mejorada para encontrar insights con fuentes y URLs
+        const regex = /\[(.*?)\]\(Fuente:\s*(.*?)\|(.*?)\)/g;
         let insights = [];
         let match;
         
         // Primero intentamos extraer con el formato estructurado
         while ((match = regex.exec(respuesta)) !== null) {
             if (match[1].length <= 180) {
+                // Verificar y completar la URL si es necesario
+                let urlCompleta = match[3].trim();
+                if (!urlCompleta.startsWith('http')) {
+                    urlCompleta = 'https://' + urlCompleta;
+                }
+                
                 insights.push({
                     texto: match[1].trim(),
                     fuente: match[2].trim(),
-                    url: match[3].trim()
+                    url: urlCompleta
                 });
             }
             
@@ -357,7 +363,7 @@ class BarraIndicadores {
                      !line.includes('  ') && line.split(' ').length <= 20)
                 );
             
-            // Eliminamos la limitación de líneas (antes era: if (lines.length >= 5))
+            // Eliminamos la limitación de líneas
             if (lines.length > 0) {
                 insights = lines.slice(0, 10).map(line => ({
                     texto: line.replace(/^[•\d\s\.\)\-]+/, '').trim(),
