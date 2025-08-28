@@ -2,10 +2,10 @@
 class BarraIndicadores {
     constructor() {
         this.indicadores = [];
-        this.intervalId = null;
+        this.animationId = null;
         this.paused = false;
-        this.currentIndex = 0;
-        this.velocidad = 3000; // 3 segundos por indicador
+        this.scrollPosition = 0;
+        this.velocidad = 1; // Velocidad de desplazamiento (píxeles por frame)
         this.prompts = {}; // Para almacenar los prompts cargados
         this.contextoActual = {}; // Para almacenar el contexto actual
         
@@ -57,16 +57,22 @@ class BarraIndicadores {
                 color: #000;
                 padding: 8px 0;
                 font-family: 'Mulish', sans-serif;
-                position: relative;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
                 z-index: 1000;
+                width: 100%;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             
             .indicadores-container {
                 display: flex;
                 align-items: center;
-                max-width: 1400px;
+                width: 100%;
                 margin: 0 auto;
                 padding: 0 20px;
+                box-sizing: border-box;
             }
             
             .btn-control {
@@ -80,6 +86,7 @@ class BarraIndicadores {
                 font-family: 'Mulish', sans-serif;
                 transition: all 0.3s ease;
                 flex-shrink: 0;
+                white-space: nowrap;
             }
             
             .btn-control:hover {
@@ -97,11 +104,11 @@ class BarraIndicadores {
             
             .indicadores-content {
                 display: flex;
-                transition: transform 0.5s ease-in-out;
                 white-space: nowrap;
                 position: absolute;
                 height: 100%;
                 align-items: center;
+                will-change: transform;
             }
             
             .indicador-item {
@@ -112,6 +119,10 @@ class BarraIndicadores {
                 border-right: 1px solid #eee;
                 height: 100%;
                 color: #000;
+                white-space: nowrap;
+                max-width: 120ch;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             
             .indicador-item:last-child {
@@ -140,6 +151,7 @@ class BarraIndicadores {
                 .indicador-item {
                     padding: 0 15px;
                     font-size: 13px;
+                    max-width: 100ch;
                 }
                 
                 .indicador-emoji {
@@ -161,6 +173,7 @@ class BarraIndicadores {
                 .indicador-item {
                     padding: 0 12px;
                     font-size: 12px;
+                    max-width: 80ch;
                 }
             }
         `;
@@ -208,6 +221,9 @@ class BarraIndicadores {
             
             // Reemplazar placeholders básicos
             let prompt = promptBase.replace('{{anunciante}}', anunciante);
+            
+            // Modificar el prompt para solicitar 20 insights de hasta 120 caracteres
+            prompt += " Proporciona exactamente 20 insights relevantes, cada uno con un máximo de 120 caracteres.";
             
             // Mostrar en consola el análisis del prompt
             console.log("=== BARRA INDICADORES - PROMPT ANALYSIS ===");
@@ -267,20 +283,20 @@ class BarraIndicadores {
 
     // Procesar la respuesta de Gemini para extraer insights
     procesarRespuestaInsights(respuesta) {
-        // Intentar extraer insights numerados o con emojis
+        // Intentar extraer 20 insights
         const lines = respuesta.split('\n')
             .map(line => line.trim())
             .filter(line => 
                 line.length > 0 && 
-                line.length < 80 &&
+                line.length <= 120 &&
                 (line.includes('•') || 
                  line.match(/[🚀📊👥💡📈🎯❤️💰🔍📦💼]/) ||
                  line.match(/^\d+[\.\)\-]/) ||
-                 !line.includes('  ') && line.split(' ').length <= 12)
+                 !line.includes('  ') && line.split(' ').length <= 20)
             );
         
-        if (lines.length >= 3) {
-            return lines.slice(0, 8).map(line => 
+        if (lines.length >= 5) {
+            return lines.slice(0, 20).map(line => 
                 line.replace(/^[•\d\s\.\)\-]+/, '').trim()
             );
         }
@@ -288,8 +304,8 @@ class BarraIndicadores {
         // Fallback: dividir por puntos y tomar frases cortas
         return respuesta.split(/[\.!?]/)
             .map(phrase => phrase.trim())
-            .filter(phrase => phrase.length > 15 && phrase.length < 70)
-            .slice(0, 6)
+            .filter(phrase => phrase.length > 15 && phrase.length <= 120)
+            .slice(0, 20)
             .map(phrase => {
                 // Añadir emoji basado en contenido
                 const emoji = this.obtenerEmoji(phrase);
@@ -316,8 +332,7 @@ class BarraIndicadores {
             .join('');
         
         // Reiniciar animación
-        this.currentIndex = 0;
-        this.actualizarPosicion();
+        this.scrollPosition = 0;
     }
 
     // Obtener emoji apropiado para el texto
@@ -344,31 +359,36 @@ class BarraIndicadores {
         return '📌';
     }
 
-    // Iniciar animación de la barra
+    // Iniciar animación continua de la barra
     iniciarAnimacion() {
-        if (this.intervalId) clearInterval(this.intervalId);
+        if (this.animationId) cancelAnimationFrame(this.animationId);
         
-        this.intervalId = setInterval(() => {
-            if (this.paused || this.indicadores.length <= 1) return;
+        const animate = () => {
+            if (!this.paused && this.indicadores.length > 1) {
+                const content = document.getElementById('indicadores-content');
+                if (content) {
+                    this.scrollPosition -= this.velocidad;
+                    
+                    // Si hemos llegado al final, reiniciamos la posición
+                    if (-this.scrollPosition >= content.scrollWidth / 2) {
+                        this.scrollPosition = 0;
+                    }
+                    
+                    content.style.transform = `translateX(${this.scrollPosition}px)`;
+                }
+            }
             
-            this.currentIndex = (this.currentIndex + 1) % this.indicadores.length;
-            this.actualizarPosicion();
-        }, this.velocidad);
-    }
-
-    // Actualizar posición del scroll
-    actualizarPosicion() {
-        const content = document.getElementById('indicadores-content');
-        if (!content || this.indicadores.length === 0) return;
+            this.animationId = requestAnimationFrame(animate);
+        };
         
-        const itemWidth = content.scrollWidth / this.indicadores.length;
-        content.style.transform = `translateX(-${this.currentIndex * itemWidth}px)`;
+        this.animationId = requestAnimationFrame(animate);
     }
 
     // Configurar event listeners
     setupEventListeners() {
         const btnPlayPause = document.getElementById('btn-play-pause');
         const btnVerMas = document.getElementById('btn-ver-mas');
+        const barra = document.getElementById('barra-indicadores');
         
         if (btnPlayPause) {
             btnPlayPause.addEventListener('click', () => this.togglePlayPause());
@@ -376,6 +396,21 @@ class BarraIndicadores {
         
         if (btnVerMas) {
             btnVerMas.addEventListener('click', () => this.verMas());
+        }
+        
+        if (barra) {
+            barra.addEventListener('mouseenter', () => {
+                this.paused = true;
+                const btn = document.getElementById('btn-play-pause');
+                if (btn) {
+                    btn.textContent = '▶️';
+                    btn.title = 'Reanudar';
+                }
+            });
+            
+            barra.addEventListener('mouseleave', () => {
+                // No reanudar automáticamente, mantener el estado actual
+            });
         }
     }
 
@@ -389,18 +424,78 @@ class BarraIndicadores {
         }
     }
 
-    // Acción para Ver Más
+    // Acción para Ver Más - Mostrar todos los insights
     verMas() {
         if (this.indicadores.length === 0) {
             alert('⏳ No hay insights disponibles todavía.');
             return;
         }
         
-        const modalContent = this.indicadores.map((insight, index) => 
-            `${index + 1}. ${insight}`
-        ).join('\n\n');
+        // Crear un modal con todos los insights
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.style.zIndex = '2000';
+        modal.style.fontFamily = "'Mulish', sans-serif";
         
-        alert(`💡 Insights detallados:\n\n${modalContent}`);
+        const modalContent = document.createElement('div');
+        modalContent.style.backgroundColor = 'white';
+        modalContent.style.padding = '30px';
+        modalContent.style.borderRadius = '10px';
+        modalContent.style.maxWidth = '90%';
+        modalContent.style.maxHeight = '80%';
+        modalContent.style.overflowY = 'auto';
+        modalContent.style.boxSizing = 'border-box';
+        
+        const closeButton = document.createElement('button');
+        closeButton.textContent = 'X';
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '10px';
+        closeButton.style.right = '10px';
+        closeButton.style.background = '#f5f5f5';
+        closeButton.style.border = '1px solid #ddd';
+        closeButton.style.borderRadius = '50%';
+        closeButton.style.width = '30px';
+        closeButton.style.height = '30px';
+        closeButton.style.cursor = 'pointer';
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+        
+        const title = document.createElement('h2');
+        title.textContent = '💡 Todos los Insights';
+        title.style.marginTop = '0';
+        title.style.marginBottom = '20px';
+        title.style.textAlign = 'center';
+        
+        const insightsList = document.createElement('div');
+        insightsList.innerHTML = this.indicadores
+            .map((insight, index) => `
+                <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: ${index < this.indicadores.length - 1 ? '1px solid #eee' : 'none'}">
+                    <strong>${index + 1}.</strong> ${insight}
+                </div>
+            `)
+            .join('');
+        
+        modalContent.appendChild(closeButton);
+        modalContent.appendChild(title);
+        modalContent.appendChild(insightsList);
+        modal.appendChild(modalContent);
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+            }
+        });
+        
+        document.body.appendChild(modal);
     }
 
     // Método para añadir nuevos indicadores dinámicamente
@@ -421,8 +516,9 @@ class BarraIndicadores {
             
             const promptBase = this.prompts['barra_insights'];
             
-            // Reemplazar placeholders con el contexto actual
-            let prompt = promptBase;
+            // Modificar el prompt para solicitar 20 insights de hasta 120 caracteres
+            let prompt = promptBase + " Proporciona exactamente 20 insights relevantes, cada uno con un máximo de 120 caracteres.";
+            
             const contextoUtilizado = {};
             
             for (const [key, value] of Object.entries(contexto)) {
