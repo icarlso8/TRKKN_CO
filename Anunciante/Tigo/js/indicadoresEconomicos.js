@@ -245,7 +245,7 @@ class BarraIndicadores {
             let prompt = promptBase.replace('{{anunciante}}', anunciante);
             
             // Modificar el prompt para solicitar 20 insights de hasta 120 caracteres
-            prompt += " Proporciona exactamente 20 insights relevantes, cada uno con un máximo de 120 caracteres.";
+            prompt += " Proporciona exactamente 10 insights relevantes, cada uno con un máximo de 180 caracteres.";
             
             // Mostrar en consola el análisis del prompt
             console.log("=== BARRA INDICADORES - PROMPT ANALYSIS ===");
@@ -310,7 +310,7 @@ class BarraIndicadores {
             .map(line => line.trim())
             .filter(line => 
                 line.length > 0 && 
-                line.length <= 120 &&
+                line.length <= 180 && // cantidad de caracteres de 120 a 180
                 (line.includes('•') || 
                  line.match(/[🚀📊👥💡📈🎯❤️💰🔍📦💼]/) ||
                  line.match(/^\d+[\.\)\-]/) ||
@@ -318,7 +318,7 @@ class BarraIndicadores {
             );
         
         if (lines.length >= 5) {
-            return lines.slice(0, 20).map(line => 
+            return lines.slice(0, 10).map(line => // número de insights de 20 a 10
                 line.replace(/^[•\d\s\.\)\-]+/, '').trim()
             );
         }
@@ -326,8 +326,8 @@ class BarraIndicadores {
         // Fallback: dividir por puntos y tomar frases cortas
         return respuesta.split(/[\.!?]/)
             .map(phrase => phrase.trim())
-            .filter(phrase => phrase.length > 15 && phrase.length <= 120)
-            .slice(0, 20)
+            .filter(phrase => phrase.length > 15 && phrase.length <= 180)  // número de caracteres de 120 a 180
+            .slice(0, 10) // número de insights de 20 a 10
             .map(phrase => {
                 // Añadir emoji basado en contenido
                 const emoji = this.obtenerEmoji(phrase);
@@ -543,7 +543,7 @@ class BarraIndicadores {
             const promptBase = this.prompts['barra_insights'];
             
             // Modificar el prompt para solicitar 20 insights de hasta 120 caracteres
-            let prompt = promptBase + " Proporciona exactamente 20 insights relevantes, cada uno con un máximo de 120 caracteres.";
+            let prompt = promptBase + " Proporciona exactamente 10 insights relevantes, cada uno con un máximo de 180 caracteres.";
             
             const contextoUtilizado = {};
             
@@ -587,6 +587,7 @@ window.actualizarBarraIndicadores = function(contexto) {
         window.barraIndicadores.actualizarConContexto(contexto);
     }
 };
+
 
 
 
