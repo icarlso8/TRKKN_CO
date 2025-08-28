@@ -10,7 +10,7 @@
       "id": "insights",
       "titulo": "Generar Insights",
       "descripcion": "Devuelve un análisis estratégico basado en la campaña y la audiencia.",
-      "plantilla": "Genera 5 insights breves (máximo 60 caracteres cada uno) con emojis relevantes sobre el sector de {{anunciante}} en Colombia. Los insights deben ser datos interesantes, estadísticas relevantes o tendencias del sector. Considera específicamente el producto {{producto}}, el segmento {{segmento}}, la audiencia {{audiencia}} y los factores contextuales {{factores_contextuales_seleccion}}. Los insights deben ser accionables, relevantes para estrategias de marketing digital y útiles para la toma de decisiones. Incluye datos concretos cuando sea posible (porcentajes, crecimiento, métricas)."
+      "plantilla": "Eres un estratega de marketing. Analiza la campaña '{{campaña}}' de {{Anunciante}}, que promueve el producto {{producto}} en el segmento {{segmento}} dentro del negocio {{negocio}}. Se describe como: {{descripción}}. Está dirigida a la audiencia {{audiencia}} y condicionada por los factores contextuales {{factores_contextuales}}. Proporciona insights estratégicos y accionables."
     },
     {
       "id": "competencia",
@@ -32,3 +32,4 @@
     }
   ]
 }
+
