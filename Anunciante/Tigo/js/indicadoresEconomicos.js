@@ -135,7 +135,7 @@ class BarraIndicadores {
                 height: 100%;
                 color: #000;
                 white-space: nowrap;
-                max-width: 120ch;
+                max-width: 200ch;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
@@ -156,11 +156,6 @@ class BarraIndicadores {
                 text-decoration: none;
                 font-style: italic;
                 opacity: 0.8;
-            }
-            
-            .indicador-fuente:hover {
-                text-decoration: underline;
-                color: #3366cc;
             }
             
             @media (max-width: 768px) {
@@ -186,7 +181,7 @@ class BarraIndicadores {
                 .indicador-item {
                     padding: 0 15px;
                     font-size: 12px;
-                    max-width: 100ch;
+                    max-width: 150ch;
                 }
                 
                 .indicador-emoji {
@@ -214,7 +209,7 @@ class BarraIndicadores {
                 .indicador-item {
                     padding: 0 10px;
                     font-size: 11px;
-                    max-width: 80ch;
+                    max-width: 120ch;
                 }
                 
                 .indicador-fuente {
@@ -326,28 +321,22 @@ class BarraIndicadores {
 
     // Procesar la respuesta de Gemini para extraer insights
     procesarRespuestaInsights(respuesta) {
-        // Expresión regular mejorada para encontrar insights con fuentes y URLs
-        const regex = /\[(.*?)\]\(Fuente:\s*(.*?)\|(.*?)\)/g;
+        // Expresión regular para encontrar insights con fuentes en el formato [texto] (Fuente: nombre)
+        const regex = /\[(.*?)\]\(Fuente:\s*(.*?)\)/g;
         let insights = [];
         let match;
         
         // Primero intentamos extraer con el formato estructurado
         while ((match = regex.exec(respuesta)) !== null) {
-            if (match[1].length <= 180) {
-                // Verificar y completar la URL si es necesario
-                let urlCompleta = match[3].trim();
-                if (!urlCompleta.startsWith('http')) {
-                    urlCompleta = 'https://' + urlCompleta;
-                }
-                
+            if (match[1].length <= 200) {
                 insights.push({
                     texto: match[1].trim(),
                     fuente: match[2].trim(),
-                    url: urlCompleta
+                    tieneFuente: true
                 });
             }
             
-            if (insights.length >= 10) break;
+            if (insights.length >= 20) break;
         }
         
         // Si no encontramos insights con el formato estructurado, usamos el método anterior
@@ -356,33 +345,33 @@ class BarraIndicadores {
                 .map(line => line.trim())
                 .filter(line => 
                     line.length > 0 && 
-                    line.length <= 180 &&
+                    line.length <= 200 &&
                     (line.includes('•') || 
                      line.match(/[🚀📊👥💡📈🎯❤️💰🔍📦💼]/) ||
                      line.match(/^\d+[\.\)\-]/) ||
-                     !line.includes('  ') && line.split(' ').length <= 20)
+                     !line.includes('  ') && line.split(' ').length <= 25)
                 );
             
             // Eliminamos la limitación de líneas
             if (lines.length > 0) {
-                insights = lines.slice(0, 10).map(line => ({
+                insights = lines.slice(0, 20).map(line => ({
                     texto: line.replace(/^[•\d\s\.\)\-]+/, '').trim(),
-                    fuente: "Fuente general",
-                    url: "#"
+                    fuente: "",
+                    tieneFuente: false
                 }));
             } else {
                 // Fallback
                 insights = respuesta.split(/[\.!?]/)
                     .map(phrase => phrase.trim())
-                    .filter(phrase => phrase.length > 15 && phrase.length <= 180)
-                    .slice(0, 10)
+                    .filter(phrase => phrase.length > 15 && phrase.length <= 200)
+                    .slice(0, 20)
                     .map(phrase => {
                         const emoji = this.obtenerEmoji(phrase);
                         const texto = emoji !== '📌' ? `${emoji} ${phrase}.` : `${phrase}.`;
                         return {
                             texto: texto,
-                            fuente: "Fuente general",
-                            url: "#"
+                            fuente: "",
+                            tieneFuente: false
                         };
                     });
             }
@@ -405,8 +394,8 @@ class BarraIndicadores {
             .map(insight => `
                 <div class="indicador-item">
                     <span class="indicador-texto">${insight.texto}</span>
-                    ${insight.fuente !== "Fuente general" ? 
-                        `<a href="${insight.url}" target="_blank" class="indicador-fuente">(${insight.fuente})</a>` : 
+                    ${insight.tieneFuente ? 
+                        `<span class="indicador-fuente">(Fuente: ${insight.fuente})</span>` : 
                         ''
                     }
                 </div>
@@ -566,8 +555,8 @@ class BarraIndicadores {
             .map((insight, index) => `
                 <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: ${index < this.indicadores.length - 1 ? '1px solid #eee' : 'none'}">
                     <strong>${index + 1}.</strong> ${insight.texto}
-                    ${insight.fuente !== "Fuente general" ? 
-                        `<br><small>Fuente: <a href="${insight.url}" target="_blank">${insight.fuente}</a></small>` : 
+                    ${insight.tieneFuente ? 
+                        `<br><small>Fuente: ${insight.fuente}</small>` : 
                         ''
                     }
                 </div>
