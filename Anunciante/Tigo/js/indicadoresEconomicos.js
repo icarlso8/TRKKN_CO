@@ -88,7 +88,7 @@ class BarraIndicadores {
                 transition: all 0.2s ease;
                 flex-shrink: 0;
                 white-space: nowrap;
-                height: 20px;
+                height: 60px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -587,3 +587,4 @@ window.actualizarBarraIndicadores = function(contexto) {
         window.barraIndicadores.actualizarConContexto(contexto);
     }
 };
+
