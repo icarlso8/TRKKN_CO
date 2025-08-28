@@ -200,6 +200,16 @@ class BarraIndicadores {
         // Reemplazar placeholders básicos
         let prompt = promptBase.replace('{{anunciante}}', anunciante);
         
+        // Mostrar en consola el análisis del prompt
+        console.log("=== BARRA INDICADORES - PROMPT ANALYSIS ===");
+        console.log("📋 Prompt inicial (template):");
+        console.log(promptBase);
+        console.log("🔄 Prompt final (con placeholders reemplazados):");
+        console.log(prompt);
+        console.log("📊 Contexto utilizado:");
+        console.log({ anunciante });
+        console.log("=======================");
+        
         try {
             const insights = await this.obtenerInsightsGemini(prompt);
             this.indicadores = insights;
@@ -406,11 +416,27 @@ class BarraIndicadores {
         
         // Reemplazar placeholders con el contexto actual
         let prompt = promptBase;
+        const contextoUtilizado = {};
+        
         for (const [key, value] of Object.entries(contexto)) {
             if (value) {
-                prompt = prompt.replace(new RegExp(`{{${key}}}`, 'gi'), value);
+                const placeholder = `{{${key}}}`;
+                if (prompt.includes(placeholder)) {
+                    prompt = prompt.replace(new RegExp(placeholder, 'gi'), value);
+                    contextoUtilizado[key] = value;
+                }
             }
         }
+        
+        // Mostrar en consola el análisis del prompt
+        console.log("=== BARRA INDICADORES - PROMPT ANALYSIS ===");
+        console.log("📋 Prompt inicial (template):");
+        console.log(promptBase);
+        console.log("🔄 Prompt final (con placeholders reemplazados):");
+        console.log(prompt);
+        console.log("📊 Contexto utilizado:");
+        console.log(contextoUtilizado);
+        console.log("=======================");
         
         try {
             const insights = await this.obtenerInsightsGemini(prompt);
