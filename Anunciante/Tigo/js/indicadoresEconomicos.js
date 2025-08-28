@@ -187,7 +187,7 @@ class BarraIndicadores {
 
             // DEBUG: Mostrar todos los prompts cargados
             console.log("📝 Prompts cargados:", Object.keys(this.prompts));
-            console.log("🔍 Prompt 'insights':", this.prompts['insights']);
+            console.log("🔍 Prompt 'barra_insights':", this.prompts['barra_insights']);
             
         } catch (error) {
             console.error('Error cargando prompts:', error);
@@ -199,7 +199,7 @@ class BarraIndicadores {
         const anunciante = this.detectarAnunciante();
         
         // Usar el prompt de insights del JSON si está disponible, sino usar uno por defecto
-        const promptBase = this.prompts['insights'] || "Genera 5 insights breves (máximo 60 caracteres cada uno) con emojis relevantes sobre el sector de {{anunciante}} en Colombia. Los insights deben ser datos interesantes, estadísticas relevantes o tendencias del sector.";
+        const promptBase = this.prompts['barra_insights'] || "Genera 5 insights breves (máximo 60 caracteres cada uno) con emojis relevantes sobre el sector de {{anunciante}} en Colombia. Los insights deben ser datos interesantes, estadísticas relevantes o tendencias del sector.";
         
         // Reemplazar placeholders básicos
         let prompt = promptBase.replace('{{anunciante}}', anunciante);
@@ -416,7 +416,7 @@ class BarraIndicadores {
         this.contextoActual = contexto;
         
         // Usar el prompt de insights del JSON si está disponible
-        const promptBase = this.prompts['insights'] || "Genera 3 insights breves (máximo 60 caracteres) con emojis para {{anunciante}} sobre el producto {{producto}} dirigido a {{audiencia}}. Considera: {{factores_contextuales}}";
+        const promptBase = this.prompts['barra_insights_2'] || "Genera 3 insights breves (máximo 60 caracteres) con emojis para {{anunciante}} sobre el producto {{producto}} dirigido a {{audiencia}}. Considera: {{factores_contextuales}}";
         
         // Reemplazar placeholders con el contexto actual
         let prompt = promptBase;
@@ -462,4 +462,5 @@ window.actualizarBarraIndicadores = function(contexto) {
         window.barraIndicadores.actualizarConContexto(contexto);
     }
 };
+
 
