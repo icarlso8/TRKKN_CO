@@ -48,15 +48,16 @@
     { "id": "streaming", "nombre": "Streaming", "emoji": "📺", "factores_disponibles": ["momento", "ciudad"] }
   ],
     "anteriorpremium": [
-    { "id": "antes", "nombre": "Campaña Anterior", "emoji": "⏮️", "factores_disponibles": ["ninguno"] }
+    { "id": "antes", "nombre": "Campaña Anterior", "emoji": "⏮️", "factores_disponibles": "ninguno" }
   ],
     "anteriorprepago": [
-    { "id": "antes", "nombre": "Campaña Anterior", "emoji": "⏮️", "factores_disponibles": ["ninguno"] }
+    { "id": "antes", "nombre": "Campaña Anterior", "emoji": "⏮️", "factores_disponibles": "ninguno" }
   ],
     "anteriorpospago": [
-    { "id": "antes", "nombre": "Campaña Anterior", "emoji": "⏮️", "factores_disponibles": ["ninguno"] }
+    { "id": "antes", "nombre": "Campaña Anterior", "emoji": "⏮️", "factores_disponibles": "ninguno" }
   ]
 }
+
 
 
 
