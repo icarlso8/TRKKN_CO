@@ -30,10 +30,11 @@ export async function mostrarGaleriaLogos(canvas) {
     const img = document.createElement("img");
     img.src = "../../Anunciante/Tigo/assets/logos/" + logo.nombreArchivo;
     img.title = logo.nombre;
-    img.style.width = "80px";
-    img.style.cursor = "pointer";
-    img.style.border = "1px solid #ccc";
-    img.style.borderRadius = "4px";
+    // ⚠️ ELIMINAR ESTOS ESTILOS EN LÍNEA:
+    // img.style.width = "80px";
+    // img.style.cursor = "pointer";
+    // img.style.border = "1px solid #ccc";
+    //img.style.borderRadius = "4px";
     img.onclick = () => {
       fabric.Image.fromURL(img.src, function(fabImg) {
         fabImg.scaleToWidth(100);
@@ -66,10 +67,11 @@ export async function mostrarGaleriaIconos(canvas) {
     const img = document.createElement("img");
     img.src = "../../Anunciante/Tigo/assets/icons/" + icono.nombreArchivo;
     img.title = icono.nombre;
-    img.style.width = "80px";
-    img.style.cursor = "pointer";
-    img.style.border = "1px solid #ccc";
-    img.style.borderRadius = "4px";
+    // ⚠️ ELIMINAR ESTOS ESTILOS EN LÍNEA:
+    // img.style.width = "80px";
+    // img.style.cursor = "pointer";
+    // img.style.border = "1px solid #ccc";
+    // img.style.borderRadius = "4px";
     img.onclick = () => {
       fabric.Image.fromURL(img.src, function(fabImg) {
         fabImg.scaleToWidth(60);
