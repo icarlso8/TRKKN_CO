@@ -34,7 +34,7 @@ export async function mostrarGaleriaLogos(canvas) {
     // img.style.width = "80px";
     // img.style.cursor = "pointer";
     // img.style.border = "1px solid #ccc";
-    //img.style.borderRadius = "4px";
+    // img.style.borderRadius = "4px";
     img.onclick = () => {
       fabric.Image.fromURL(img.src, function(fabImg) {
         fabImg.scaleToWidth(100);
