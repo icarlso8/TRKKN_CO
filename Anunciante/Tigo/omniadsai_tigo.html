@@ -451,6 +451,48 @@
     .btn-menu:active {
       transform: scale(0.95);
     }
+    /*STYLES PARA MODALES */
+    /* Modal para elegir logo - MODIFICADO */
+    #modalLogos {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7); /* Fondo gris más oscuro */
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+    /* Modal para elegir ícono - MODIFICADO */
+    #modalIconos {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7); /* Fondo gris más oscuro */
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+    /* Contenedor de imágenes - MODIFICADO */
+    #galeriaLogos, #galeriaIconos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    /* Imágenes dentro de los modales - NUEVO ESTILO */
+    #galeriaLogos img, #galeriaIconos img {
+      object-fit: contain; /* Mantiene proporciones sin distorsión */
+      width: auto;
+      height: auto;
+      max-width: 80px;
+      max-height: 80px;
+    }
   </style>
   <script type="module" src="./js/auth.js"></script>
 </head>
