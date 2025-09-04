@@ -473,7 +473,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      /* background: rgba(0, 0, 0, 0.7); Fondo gris más oscuro */
+      background: rgba(0, 0, 0, 0.7); /* necesario para el marco del modal */
       z-index: 999;
       justify-content: center;
       align-items: center;
@@ -496,7 +496,7 @@
     }
     /* Imágenes dentro de los modales */
     #galeriaLogos img, #galeriaIconos img {
-      background: rgba(0, 0, 0, 0.5); /* Fondo gris más oscuro */
+      background: rgba(0, 0, 0, 0.4); /* Fondo gris más oscuro (1 (Transparente) <-> 0 (sin opacidad) 0*/
       object-fit: contain; /* Mantiene proporciones sin distorsión */
       width: auto;
       height: auto;
