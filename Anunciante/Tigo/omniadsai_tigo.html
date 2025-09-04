@@ -452,7 +452,7 @@
       transform: scale(0.95);
     }
     /*STYLES PARA MODALES */
-    /* Modal para elegir logo - MODIFICADO */
+    /* Modal para elegir logo - NUEVOS ESTILOS */
     #modalLogos {
       display: none;
       position: fixed;
@@ -465,7 +465,7 @@
       justify-content: center;
       align-items: center;
     }
-    /* Modal para elegir ícono - MODIFICADO */
+    /* Modal para elegir ícono - NUEVOS ESTILOS */
     #modalIconos {
       display: none;
       position: fixed;
@@ -478,20 +478,45 @@
       justify-content: center;
       align-items: center;
     }
-    /* Contenedor de imágenes - MODIFICADO */
+    /* Contenido del modal */
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 90%;
+      max-height: 80%;
+      overflow: auto;
+    }
+    /* Contenedor de imágenes */
     #galeriaLogos, #galeriaIconos {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       justify-content: center;
     }
-    /* Imágenes dentro de los modales - NUEVO ESTILO */
+    /* Imágenes dentro de los modales */
     #galeriaLogos img, #galeriaIconos img {
       object-fit: contain; /* Mantiene proporciones sin distorsión */
       width: auto;
       height: auto;
       max-width: 80px;
       max-height: 80px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    /* Botón de cerrar */
+    .modal-close {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .modal-close:hover {
+      background: #5a6268;
     }
   </style>
   <script type="module" src="./js/auth.js"></script>
@@ -663,21 +688,21 @@
     });
   </script>
 
-  <!-- Modal para elegir logo -->
-  <div id="modalLogos" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999; justify-content:center; align-items:center;">
-    <div style="background:white; padding:20px; border-radius:8px; max-width:90%; max-height:80%; overflow:auto;">
+  <!-- Modal para elegir logo - QUITAR ESTILOS EN LÍNEA -->
+  <div id="modalLogos">
+    <div class="modal-content">
       <h3>Selecciona un logo</h3>
-      <div id="galeriaLogos" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
-      <button onclick="document.getElementById('modalLogos').style.display='none'" style="margin-top:10px;">Cerrar</button>
+      <div id="galeriaLogos"></div>
+      <button class="modal-close" onclick="document.getElementById('modalLogos').style.display='none'">Cerrar</button>
     </div>
   </div>
 
-  <!-- Modal para elegir ícono -->
-  <div id="modalIconos" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999; justify-content:center; align-items:center;">
-    <div style="background:white; padding:20px; border-radius:8px; max-width:90%; max-height:80%; overflow:auto;">
+  <!-- Modal para elegir ícono - QUITAR ESTILOS EN LÍNEA -->
+  <div id="modalIconos">
+    <div class="modal-content">
       <h3>Selecciona un ícono</h3>
-      <div id="galeriaIconos" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
-      <button onclick="document.getElementById('modalIconos').style.display='none'" style="margin-top:10px;">Cerrar</button>
+      <div id="galeriaIconos"></div>
+      <button class="modal-close" onclick="document.getElementById('modalIconos').style.display='none'">Cerrar</button>
     </div>
   </div>
 
